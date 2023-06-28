@@ -46,4 +46,6 @@ Thumbs.db
 config.service.ts
 config.json
 *.properties
+debug.log
+npm-debug.log.4044449283
 
