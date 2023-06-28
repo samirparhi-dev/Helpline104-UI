@@ -1,0 +1,52 @@
+.gridListHeight {
+height: 100%;
+}
+
+.question{
+  
+     width: 95%;
+     word-wrap: break-word;
+     background-color : #fc463c
+}
+
+
+.questionSet{
+     width: 95%;
+     height: 500px;
+        overflow: scroll;
+   
+}
+
+.md-tabs-content {
+        display: flex;
+        flex: 1;
+        overflow: scroll;
+      }
+
+
+      .emg-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.emg-radio-button {
+  margin: 5px;
+}
+
+#outcome{
+  width: 500px;
+}
+
+.rowAlignment  { 
+	text-align: left; 
+   font-size: 20px;
+        font-family: "Times New Roman", Times, serif;
+}
+
+.headerAlignment {
+  width:60px;
+}
+
+.dataAlignment {
+  width:100px;
+}

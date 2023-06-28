@@ -1,0 +1,463 @@
+<div class="row">
+<div class="col-xs-12 col-sm-12">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <strong><h4 class="f-s-b pull-left">{{currentLanguageSet?.searchRegisterBeneficiary}}</h4></strong>
+      <button md-raised-button color="primary" *ngIf="recentPrescriptionData.length>0" type="button" class="pull-right m-t-5" (click)="recentPresData()">{{currentLanguageSet?.showPrescription}}</button>
+  </div> 
+  <div *ngIf="quesVisibilityFlag">
+    <div class="col-xs-12 col-sm-6 col-md-5 col-lg-5 m-t-10">
+      <form autocomplete="off">
+        <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{currentLanguageSet?.haveYouCalledEarlier}}
+          <em>*</em>
+        </label>
+        <md-radio-group name="calledEarlier" [(ngModel)]="called" (change)="calledEarlier(called)">
+          <md-radio-button color="primary" value="Yes">{{currentLanguageSet?.yes}}</md-radio-button>
+          <md-radio-button class="m-l-10" color="primary" value="No">{{currentLanguageSet?.no}}</md-radio-button>
+        </md-radio-group>
+      </form>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-7 col-lg-7">
+      <md-input-container class="m-t--10 pull-left" searchPattern>
+        <input mdInput appMobileNumber placeholder="{{currentLanguageSet?.searchBenOrABHAID}}" name="search" maxlength="32" [(ngModel)]="registrationNo">
+      </md-input-container>
+      <button md-mini-fab color="primary" class="m-l-10" (click)="retriveById(registrationNo)">
+        <md-icon mdSuffix class="mat-icon material-icons" mdTooltip="{{currentLanguageSet?.search}}" role="img" aria-hidden="true" style="cursor: pointer">search</md-icon>
+      </button>
+      <button md-raised-button color="accent" [disabled]="viewALL" type="button" class="pull-right" id="retrieve" (click)="revertFullTable()">{{currentLanguageSet?.viewAll}}</button>
+    </div>
+  </div>
+  <div *ngIf="showForm && !updateBeneficiry" [hidden]="!registrationPage1">
+    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+      <div class="">
+        <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{currentLanguageSet?.beneficiaryIs}}</label>
+        <md-radio-group name="generalPublic" [(ngModel)]="is_a_healthcare_worker" (change)="checkHealthCareWorker(is_a_healthcare_worker)">
+          <md-radio-button color="primary" value="Yes">{{currentLanguageSet?.healthcareWorker}}</md-radio-button>
+          <md-radio-button class="m-l-10" color="primary" value="No" >{{currentLanguageSet?.generalPublic}}</md-radio-button>
+        </md-radio-group>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3" *ngIf="showForm && !updateBeneficiry" [hidden]="!registrationPage1">
+    <md-checkbox color="primary" name="isEmergency" [(ngModel)]="isEmergency" (change)="Emergency(isEmergency)">
+      {{currentLanguageSet?.emergency}}
+    </md-checkbox>
+  </div>
+  <!-- RegistrationForm-->
+  <form  *ngIf="showForm" #registrationForm="ngForm" id="registerForm" autocomplete="off">
+    <div>
+      <!-- emergencyFieldsDiv-->
+      <div *ngIf="registrationPage1">
+        <!-- healthcareWorkerField-->
+        <div *ngIf="healthcareWorkerField">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+              <md-select [style.width]="'100%'"  placeholder="{{currentLanguageSet?.healthcareWorkerType}}"
+                [(ngModel)]="healthCareWorkerID" name="healthcareWorkerID" #healthWorker="ngModel">
+                <md-option *ngFor="let healthCareWorkerType of healthCareWorkerTypes | OrderBy: 'healthCareWorkerType'" [value]="healthCareWorkerType.healthCareWorkerID">
+                  {{healthCareWorkerType.healthCareWorkerType}}
+
+                </md-option>
+              </md-select>
+
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+            <md-select placeholder="{{currentLanguageSet?.title}}" [style.width]="'100%'" [(ngModel)]="titleId" name="titleId" (change)="titleSelected(titleId)">
+              <md-option *ngFor="let title of current_titles | OrderBy: 'titleName'" [value]="title.titleID">
+                {{title.titleName}}
+              </md-option>
+            </md-select>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+
+          <md-input-container appName [style.width]="'100%'">
+            <input mdInput placeholder="{{currentLanguageSet?.firstName}}" required minlength="3"
+              maxlength="25" name="firstName" [(ngModel)]="firstName" #first="ngModel">
+            <md-hint [hidden]=first.valid>
+              <span class="error_text" *ngIf="!first.required  && ( first.dirty || first.touched)">{{currentLanguageSet?.atLeastThreeCharactersLong}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div *ngIf="!healthcareWorkerField" class="clearfix visible-sm"></div>
+        <div *ngIf="healthcareWorkerField" class="clearfix visible-md"></div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+
+          <md-input-container appName [style.width]="'100%'">
+            <input mdInput placeholder="{{currentLanguageSet?.lastName}}" maxlength="25"
+              name="lastName" [(ngModel)]="lastName">
+          </md-input-container>
+        </div>
+        <div *ngIf="!healthcareWorkerField" class="clearfix visible-md"></div>
+        <div *ngIf="healthcareWorkerField" class="clearfix visible-lg"></div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+            <md-select [style.width]="'100%'" required placeholder="{{currentLanguageSet?.gender}}"
+              [(ngModel)]="gender" name="gender" #genderSelected="ngModel" (change)="genderchange(genderSelected.value)" (blur)="genderchange(genderSelected.value)">
+              <md-option *ngFor="let gen of commonData.m_genders" [value]="gen.genderID">
+                {{gen.genderName}}
+              </md-option>
+            </md-select>
+
+        </div>
+        <div *ngIf="!healthcareWorkerField" class="clearfix visible-lg visible-sm"></div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+          <md2-datepicker [min]="minDate" [max]="maxDate" [style.width]="'100%'" placeholder="{{currentLanguageSet?.dob}}"
+            name="dateOfBirth" (change)="calculateAge($event.value)" (keydown)="blockey($event)" [(ngModel)]="DOB" #DateOB="ngModel"></md2-datepicker>
+          <span class="error_text f-s-10"> </span>
+        </div>
+        <div *ngIf="healthcareWorkerField" class="clearfix visible-md visible-sm"></div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+
+          <md-input-container [style.width]="'100%'">
+            <input mdInput appMobileNumber placeholder="{{currentLanguageSet?.age}}" required #ageRef name="age" maxlength="3"
+              [(ngModel)]="age" (change)="ageInput(age); calculateDOB(ageRef.value)" #ageEvent="ngModel">
+            <md-hint *ngIf=" ageFlag && ( ageEvent.dirty || ageEvent.touched)">
+              <span *ngIf="is_a_healthcare_worker == 'No'" class="error_text">{{currentLanguageSet?.entervalidAgeMax120}}</span>
+              <span *ngIf="is_a_healthcare_worker == 'Yes'" class="error_text">{{currentLanguageSet?.enterValidAgeMin}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div [ngClass]="(healthcareWorkerField && !personIsSelf) ? 'col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5' : 'col-xs-12 col-sm-6 col-md-4 col-lg-3'" >
+            <md-select [style.width]="'100%'" required (change)="onAgeUnitEntered()" placeholder="{{currentLanguageSet?.ageUnit}}" [(ngModel)]="ageUnit" name="ageUnit" #unit="ngModel">
+              <md-option value='days'>Day(s)</md-option>
+              <md-option value='months'>Month(s)</md-option>
+              <md-option value='years'>Year(s)</md-option>
+            </md-select>
+        </div>
+        <!--   hiding the relationship for the first time caller -->
+        <div *ngIf="!parentBenRegName" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 collapse">
+          <md-input-container [style.width]="'100%'">
+            <input mdInput placeholder="{{currentLanguageSet?.relationshipTypeID}}" name="relationshipTypeID"
+              [(ngModel)]="relationshipTypeID">
+          </md-input-container>
+        </div>
+        <div *ngIf="parentBenRegName">
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" hidden>
+            <md-input-container [style.width]="'100%'">
+              <input mdInput placeholder="{{currentLanguageSet?.parentRegistrationID}}" name="parentBenRegID"
+                [(ngModel)]="parentBenRegID">
+            </md-input-container>
+          </div>
+        <div *ngIf="healthcareWorkerField" class="clearfix visible-lg visible-sm"></div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5" *ngIf="!personIsSelf">
+              <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.relationWith}} {{parentBenRegName}}"
+                [(ngModel)]="relationshipTypeID" name="relationshipTypeID">
+                <md-option *ngFor="let beneficiaryType of relationShips" [value]="beneficiaryType.benRelationshipID">
+                  {{beneficiaryType?.benRelationshipType}}
+                </md-option>
+              </md-select>
+
+          </div>
+        </div>
+<div *ngIf="healthcareWorkerField && personIsSelf" class="clearfix visible-lg"></div>
+        <div [hidden]="!nonEmergency">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+              <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.caste}}"
+                [(ngModel)]="communityID" name="communityID">
+                <md-option *ngFor="let communities of commonData.m_communities" [value]="communities.communityID">
+                  {{communities.communityType}}
+                </md-option>
+              </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+              <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.maritalStatus}}"
+                [(ngModel)]="maritalStatusID" name="marital">
+                <md-option *ngFor="let status of commonData.m_maritalStatuses" [value]="status.maritalStatusID">
+                  {{status.status}}
+                </md-option>
+              </md-select>
+          </div>
+          <div [ngClass]="!healthcareWorkerField ? 'col-xs-12 col-sm-6 col-md-4 col-lg-3' : ((parentBenRegName && !updateBeneficiry) ? 'col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5' : 'col-xs-12 col-sm-6 col-md-4 col-lg-3')">
+            <md-input-container [style.width]="'100%'" appNameSpace>
+              <input mdInput placeholder="{{currentLanguageSet?.fatherNameSpouseName}}" maxlength="25"
+                name="fatherNameSpouseName" [(ngModel)]="fatherNameSpouseName">
+            </md-input-container>
+          </div>
+          
+          <div *ngIf="!healthcareWorkerField" class="clearfix visible-sm"></div>
+          <div *ngIf="healthcareWorkerField && updateBeneficiry && !personIsSelf" class="clearfix visible-lg"></div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+              <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.educationQualification}}"
+              [(ngModel)]="educationQualification" name="educationQualification">
+              <md-option *ngFor="let edu of qualifications" [value]="edu.educationID">
+                {{edu.educationType}}
+              </md-option>
+            </md-select>
+
+        </div>
+      
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+              <md-select placeholder="{{currentLanguageSet?.idType}}" [style.width]="'100%'" #idtype="ngModel"
+                [(ngModel)]="identityType" name="identityType" (change)="validateID(identityType)">
+                <md-option *ngFor="let identityType of govtID" [value]="identityType.govtIdentityTypeID">
+                  {{identityType.identityType}}
+                </md-option>
+              </md-select>
+
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <md-input-container [style.width]="'100%'" appAlphanumeric>
+              <input mdInput [disabled]="idtype.value == undefined" placeholder="{{currentLanguageSet?.idNumber}}" name="aadharNo"
+                [maxlength]="idMaxValue" [minlength]="idMinValue" [pattern]="patternID" [(ngModel)]="aadharNo" #idNumber="ngModel">
+              <md-hint [hidden]="idNumber.valid || idNumber.pristine">
+                <span class="f-s-10 error_text" [hidden]="!idNumber.hasError('pattern')">{{idErrorText}}</span>
+              </md-hint>
+            </md-input-container>
+          </div>
+        </div>
+        <div *ngIf="!updateBeneficiry && !nonEmergency" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-lg-20">
+          <button md-raised-button color="accent" [disabled]=" !first.valid || !genderSelected.valid || ageFlag " type="button" class="pull-right p-l-r-38 font-regular f-s-18 "
+            (click)="registerBeneficiary()">{{currentLanguageSet?.generateID}}</button>
+        </div>
+        <div *ngIf="nonEmergency" class=" m-t-lg-20">
+          <button  md-raised-button color="primary" [disabled]="idNumber.hasError('pattern') || !first.valid || !genderSelected.valid || ageFlag" class="pull-right m-r-15 p-l-r-38 font-regular f-s-18 "
+          (click)="captureOtherInfo('registrationPage1',updateBeneficiry)">{{currentLanguageSet?.next}}</button>
+      </div>
+      </div>
+      <div [hidden]="!nonEmergency">
+        <div [hidden]="!registrationPage2">
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+              <md-select [style.width]="'100%'" required placeholder="{{currentLanguageSet?.state}}"
+                [(ngModel)]="stateID" name="stateID" #stateSelected="ngModel" (change)="stateSelect(stateSelected.value)">
+                <md-option *ngFor="let state of states" [value]="state.stateID">
+                  {{state.stateName}}
+                </md-option>
+              </md-select>
+
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+              <md-select [style.width]="'100%'" required placeholder="{{currentLanguageSet?.district}}"
+                [(ngModel)]="cityID" name="cityID" #citySelected="ngModel" (change)="getSubDistrict(citySelected.value)">
+                <md-option *ngFor="let district of districts" [value]="district.districtID">
+                  {{district.districtName}}
+                </md-option>
+              </md-select>
+
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+
+              <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.subDistrict}}" required
+                [(ngModel)]="subDistrict" name="subDistrict" (change)="getVillage(subDistrict)">
+                <md-option *ngFor="let item of subDistricts" [value]="item.blockID">{{item.blockName}}
+                </md-option>
+              </md-select>
+
+          </div>
+         
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+
+
+              <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.village}}" required
+                [(ngModel)]="village" name="village">
+                <md-option *ngFor="let item of villages" [value]="item.districtBranchID">{{item.villageName}}
+                </md-option>
+              </md-select>
+
+          </div>
+          <div  class="clearfix visible-lg"></div>
+
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+
+            <md-input-container [style.width]="'100%'">
+              <input  mdInput myAddress maxlength="25" placeholder="{{currentLanguageSet?.houseDoorFlatNumber}}" name="houseNumber" [(ngModel)]="houseNumber" #house="ngModel">
+            </md-input-container>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+
+            <md-input-container [style.width]="'100%'">
+              <input mdInput appMobileNumber placeholder="{{currentLanguageSet?.pincode}}" maxlength="6" name="pincode"
+                [(ngModel)]="pincode">
+            </md-input-container>
+          </div>
+          <div class="clearfix visible-md"></div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+            <md-input-container [style.width]="'100%'">
+              <input mdInput appMobileNumber placeholder="{{currentLanguageSet?.alternateNumber}}1" maxlength="10"
+                minlength="10" name="alterNateNumber1" #alt1 #alterNate1="ngModel" [(ngModel)]="alternateNumber1">
+                <md-hint class="error_text" *ngIf="alterNate1.invalid">
+                  {{currentLanguageSet?.pleaseEnterTenDigitsNumber}}
+                </md-hint>
+            </md-input-container>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+            <md-input-container [style.width]="'100%'">
+              <input mdInput appMobileNumber [disabled]="alt1.value=='' || alterNate1.invalid" placeholder="{{currentLanguageSet?.alternateNumber}}2"
+                maxlength="10" minlength="10" name="alterNateNumber2" #alt2  #alterNate2="ngModel" [(ngModel)]="alternateNumber2">
+              <md-hint class="error_text" *ngIf="alterNate2.invalid">
+                {{currentLanguageSet?.pleaseEnterTenDigitsNumber}}
+              </md-hint>
+            </md-input-container>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+            <md-input-container [style.width]="'100%'">
+              <input mdInput appMobileNumber [disabled]="alt2.value=='' || alterNate2.invalid || alt1.value=='' || alterNate1.invalid" placeholder="{{currentLanguageSet?.alternateNumber}}3"
+                maxlength="10" minlength="10" name="alterNateNumbe3" #alt3 #alterNate3="ngModel"  [(ngModel)]="alternateNumber3">
+                <md-hint class="error_text" *ngIf="alterNate3.invalid">
+                  {{currentLanguageSet?.pleaseEnterTenDigitsNumber}}
+                </md-hint>
+            </md-input-container>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+            <md-input-container [style.width]="'100%'">
+              <input mdInput appMobileNumber [disabled]="alt3.value=='' || alterNate3.invalid || alt2.value=='' || alterNate2.invalid || alt1.value=='' || alterNate1.invalid" placeholder="{{currentLanguageSet?.alternateNumber}}4" maxlength="10" minlength="10" name="alterNateNumber4" #alt4 #alterNate4="ngModel"  [(ngModel)]="alternateNumber4">
+                <md-hint class="error_text" *ngIf="alterNate4.invalid">
+                  {{currentLanguageSet?.pleaseEnterTenDigitsNumber}}
+                </md-hint>
+            </md-input-container>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+            <md-input-container [style.width]="'100%'">
+              <input mdInput appMobileNumber [disabled]="alt4.value=='' || alterNate4.invalid || alt3.value=='' || alterNate3.invalid || alt2.value=='' || alterNate2.invalid || alt1.value=='' || alterNate1.invalid" [(ngModel)]="alternateNumber5" #alterNate5="ngModel"  placeholder=" {{currentLanguageSet?.alternateNumber}}5" maxlength="10"  minlength="10" name="alterNateNumber5" >
+                <md-hint class="error_text" *ngIf="alterNate5.invalid">
+                  {{currentLanguageSet?.pleaseEnterTenDigitsNumber}}
+                </md-hint>
+            </md-input-container>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="!updateBeneficiry">
+            <button md-raised-button color="primary" class="p-l-r-38  pull-left font-regular f-s-18 " (click)="capturePrimaryInfo('registrationPage2') ">{{currentLanguageSet?.back}}</button>
+            <button md-raised-button color="accent" [disabled]="!registrationForm.valid" type="button"
+              #generateVar class="pull-right p-l-r-38 font-regular f-s-18 " (click)="registerBeneficiary()">{{currentLanguageSet?.generateID}}</button>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="updateBeneficiry">
+            <button md-raised-button color="primary" class="pull-left p-l-r-38 font-regular f-s-18 " (click)="capturePrimaryInfo('registrationPage2') ">{{currentLanguageSet?.back}}</button>
+            <button [disabled]="!registrationForm.valid " md-raised-button color="accent" class="pull-right p-l-r-38 font-regular f-s-18 "
+              (click)="updateBeneficiary()">{{currentLanguageSet?.modify}}</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- searchDiv-->
+  <div class="" *ngIf="showSearchForm">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    </div>
+    <form #searchForm="ngForm" autocomplete="off">
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md-input-container appName [style.width]="'100%'">
+          <input mdInput placeholder="{{currentLanguageSet?.firstName}}" required minlength="3"
+            maxlength="25" name="firstName" [(ngModel)]="fname" #firstN="ngModel" >
+          <md-hint [hidden]=firstN.valid>
+            <span class="error_text" *ngIf="!firstN.required  && ( firstN.dirty || firstN.touched)">{{currentLanguageSet?.atLeastThreeCharactersLong}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md-input-container appName [style.width]="'100%'">
+          <input mdInput placeholder="{{currentLanguageSet?.lastName}}" maxlength="25" name="lastName"
+            [(ngModel)]="lname">
+        </md-input-container>
+      </div>     
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+          <md-select required [style.width]="'100%'" placeholder="{{currentLanguageSet?.gender}}"
+            [(ngModel)]="gender" name="gender" #genderSelected="ngModel" (change)="genderchange(genderSelected.value)" >
+            <md-option *ngFor="let gen of commonData.m_genders" [value]="gen.genderID">
+              {{gen.genderName}}
+            </md-option>
+          </md-select>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md-input-container [style.width]="'100%'" >
+          <input mdInput appMobileNumber placeholder="{{currentLanguageSet?.beneficiaryId}}" maxlength="12" name="beneficiaryID"
+            [(ngModel)]="beneficiaryID">
+        </md-input-container>
+      </div>
+      <div class="clearfix visible-sm visible-md visible-lg"></div> <!-- as father name is commented,to make alignment, remove incase that is uncommented -->
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+              <md-select [style.width]="'100%'"  required placeholder="{{currentLanguageSet?.state}}"
+                [(ngModel)]="stateID" name="stateID">
+                <md-option *ngFor="let state of states" [value]="state.stateID">
+                  {{state.stateName}}
+                </md-option>
+              </md-select>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+          <md-select [style.width]="'100%'" required [(ngModel)]="cityID" placeholder="{{currentLanguageSet?.district}}"
+            name="districtSearch">
+            <md-option *ngFor="let district of districts" [value]="district.districtID">
+              {{district.districtName}}
+            </md-option>
+          </md-select>
+
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-lg-20">
+        <button md-raised-button color="primary" type="button" class="font-regular f-s-18 m-r-5" (click)="searchFormReset()">{{currentLanguageSet?.clear}}</button>
+        <button md-raised-button color="accent" [disabled]="searchForm.invalid" type="button" class="font-regular f-s-18 m-r-5"
+          value="search" (click)="searchBeneficiary(searchForm.value)">{{currentLanguageSet?.search}}</button>
+      </div>
+    </form>
+  </div>
+  <!-- searchTable-->
+  <div class="col-xs-12 col-sm-12" *ngIf="showTableFlag">
+    <h4 class="f-s-b m-t-10 m-b-10">{{currentLanguageSet?.registrationHistory}}</h4>
+    <div class="table-responsive">
+      <table class="table table-striped" [md2Data]="beneficiaryResults" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="registeredBeneficiaryDetails">
+        <thead>
+          <tr>
+            <th id ="beneficiaryRegId">{{currentLanguageSet?.beneficiaryRegistrationID}}</th>
+            <th id ="beneficiaryName">{{currentLanguageSet?.beneficiaryName}}</th>
+            <th id ="beneficiaryGender">{{currentLanguageSet?.gender}} </th>
+            <th id ="beneficiaryAge">{{currentLanguageSet?.age}} </th>
+            <th id ="beneficiaryRelationship">{{currentLanguageSet?.relationship}}</th>
+            <th id ="beneficiaryDistrict">{{currentLanguageSet?.district}}</th>
+            <th id ="benAbhaDetails">{{currentLanguageSet?.abhaDetails}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="md2.data.length == 0">
+            <td class="record-not-found" colspan="7">{{currentLanguageSet?.noRecordsFound}}</td>
+              
+          </tr>
+          <tr style="cursor: pointer" *ngFor="let beneficiary of md2.data">
+            <td (click)="selectBeneficiary(beneficiary)">{{beneficiary?.beneficiaryID}}</td>
+            <td (click)="selectBeneficiary(beneficiary)">{{beneficiary?.firstName}}
+              <span>{{beneficiary?.middleName}}</span>
+              <span>{{beneficiary?.lastName}}</span>
+            </td>
+            <td (click)="selectBeneficiary(beneficiary)">{{beneficiary?.m_gender?.genderName}}</td>
+            <td (click)="selectBeneficiary(beneficiary)">{{beneficiary?.actualAge}}
+              <span>{{beneficiary?.ageUnits}}</span>
+              </td>
+            <td (click)="selectBeneficiary(beneficiary)">{{beneficiary?.benPhoneMaps?.length
+              < 1 ? 'Self': beneficiary?.benPhoneMaps[0]?.benRelationshipType?.benRelationshipType}}</td>
+          <!--<td>{{beneficiary.i_bendemographics != null ? beneficiary.i_bendemographics[0].m_city.cityName : ""}}</td>-->
+          <td (click)="selectBeneficiary(beneficiary)">{{beneficiary?.i_bendemographics?.m_district?.districtName}} </td>
+          <!-- <td><md-icon mdSuffix class="mat-icon material-icons" mdTooltip="{{currentLanguageSet?.abhaDetails}}" (click)="loadAbhaDetails(beneficiary)" role="img" aria-hidden="true" style="cursor: pointer">chrome_reader_mode</md-icon> </td> -->
+          <td><button md-raised-button type="button" color="primary" class="btn text-center "
+
+            (click)="loadAbhaDetails(beneficiary)">
+
+            <span>View</span>
+
+          </button></td>
+        </tr>
+      </tbody>
+      <tfoot>
+
+        <md2-pagination></md2-pagination>
+
+      </tfoot>
+    </table>
+
+    </div>
+  </div>
+</div>
+</div>

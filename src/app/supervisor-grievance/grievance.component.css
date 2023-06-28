@@ -1,0 +1,15 @@
+.md-small {
+    width: 20px;
+    height: 25px;
+    padding: 0px;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.help-block {
+    color: red;
+}
+
+.file-upload {
+    color: grey;
+}

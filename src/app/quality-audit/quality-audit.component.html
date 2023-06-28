@@ -1,0 +1,1921 @@
+<div class="row" [hidden]="showCaseSheet">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <label class="pull-left"
+      ><h4 class="f-s-b m-b-10 m-t-20">
+        {{ assignSelectedLanguageValue?.callAuditing }}
+      </h4>
+    </label>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <form #qaForm="ngForm" autocomplete="off">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <md2-datepicker
+          name="startDate"
+          (keydown)="blockey($event)"
+          [(ngModel)]="validFrom"
+          placeholder="{{ assignSelectedLanguageValue?.validFrom }}"
+          #startDate="ngModel"
+          ngModel
+          required
+          [max]="today"
+          [style.width]="'100%'"
+          (change)="setEndDate()"
+        ></md2-datepicker>
+        <span
+          class="error_text f-s-10 p-l-10"
+          *ngIf="startDate.touched && startDate.errors?.required"
+          >{{ assignSelectedLanguageValue?.startDateisRequired }}</span
+        >
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <md2-datepicker
+          name="endDate"
+          (keydown)="blockey($event)"
+          [(ngModel)]="validTill"
+          [min]="startDate.value"
+          [max]="maxEndDate"
+          placeholder="{{ assignSelectedLanguageValue?.validTill }}"
+          #endDate="ngModel"
+          ngModel
+          required
+          [style.width]="'100%'"
+          (change)="resetValuesOnchange()"
+        ></md2-datepicker>
+        <span
+          class="error_text f-s-10 p-l-10"
+          *ngIf="endDate.touched && endDate.errors?.required"
+          >{{ assignSelectedLanguageValue?.endDateIsRequired }}</span
+        >
+        <span
+          class="error_text f-s-10 p-l-10"
+          *ngIf="endDate.value < startDate.value && endDate.dirty"
+          >{{
+            assignSelectedLanguageValue?.endDatecannotbebeforeStartDate
+          }}</span
+        >
+        <span
+          class="error_text f-s-10 p-l-10"
+          *ngIf="max < endDate.value && endDate.dirty"
+          >{{
+            assignSelectedLanguageValue?.startDateEndDatecanhavemax30daysgap
+          }}</span
+        >
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+        <md-select
+          placeholder="{{ assignSelectedLanguageValue?.serviceLine }}"
+          [style.width]="'100%'"
+          [(ngModel)]="serviceID"
+          name="ServiceLine"
+          required
+        >
+          <md-option *ngFor="let item of servicelines" [value]="item.serviceID">
+            {{ item.serviceName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+        <md-select
+          placeholder="{{ assignSelectedLanguageValue?.role }}"
+          [style.width]="'100%'"
+          [(ngModel)]="role"
+          name="Role"
+          (change)="getRoleSpecificAgents(role, roles)"
+        >
+          <md-option *ngFor="let item of roles" [value]="item.roleName">
+            {{ item.roleName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="clearfix visible-lg"></div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+        <md-select
+          placeholder="{{ assignSelectedLanguageValue?.inboundOutboundCall }}"
+          [style.width]="'100%'"
+          [(ngModel)]="ioc"
+          name="InboundOutbound"
+          (change)="resetWorklistData()"
+        >
+          <md-option value="inbound"> Inbound </md-option>
+          <md-option value="outbound"> Outbound </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+        <md-select
+          placeholder="{{ assignSelectedLanguageValue?.agent }}"
+          [style.width]="'100%'"
+          [(ngModel)]="agent"
+          name="Agent"
+          (change)="resetWorklistData()"
+        >
+          <md-option *ngFor="let item of agentIDs" [value]="item.agentID">
+            {{ item.agentID }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" appMobileNumberWithCopyPaste>
+        <md-input-container [style.width]="'100%'">
+          <input
+            mdInput
+            placeholder="{{
+              assignSelectedLanguageValue?.beneficiaryPhoneNumber
+            }}"
+            [(ngModel)]="phno"
+            minlength="10"
+            maxlength="12"
+            name="benPhoneNo"
+          />
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+        <md-select
+          placeholder="{{ assignSelectedLanguageValue?.callType }}"
+          [style.width]="'100%'"
+          name="CallType"
+          [(ngModel)]="callGroupType"
+          (change)="populateCallSubTypes(callGroupType)"
+          required
+        >
+          <md-option
+            *ngFor="let item of callTypes"
+            [value]="item.callGroupType"
+          >
+            {{ item.callGroupType }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="clearfix visible-lg"></div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+        <md-select
+          placeholder="{{ assignSelectedLanguageValue?.callSubtype }}"
+          [style.width]="'100%'"
+          [(ngModel)]="callsubtype"
+          [disabled]="callGroupType === 'All'"
+          name="CallSubType"
+          (change)="resetWorklistData()"
+          required
+        >
+          <md-option
+            *ngFor="let item of callSubTypes"
+            [value]="item.callTypeID"
+          >
+            {{ item.callType }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+        <button
+          md-raised-button
+          color="accent"
+          class="m-t-10"
+          (click)="callRecordingRequestFordate(1, qaForm.value); resetFlag()"
+          [disabled]="qaForm.invalid || endDate.value < startDate.value"
+        >
+          {{ assignSelectedLanguageValue?.search }}
+        </button>
+        <button
+          md-raised-button
+          color="primary"
+          class="m-t-10"
+          (click)="reset(); resetFlag()"
+        >
+          {{ assignSelectedLanguageValue?.reset }}
+        </button>
+      </div>
+    </form>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 table-responsive">
+    <table
+      class="table table-hover table-striped"
+      [md2Data]="callRecordingsList"
+      #md2="md2DataTable"
+      [rowsPerPage]="5"
+      aria-describedby="callAuditingDetails"
+    >
+      <thead>
+        <tr>
+          <th id="callAuditSNo">{{ assignSelectedLanguageValue?.sNo }}</th>
+          <th id="callAuditID">{{ assignSelectedLanguageValue?.callId }}</th>
+          <th id="callDateTime">
+            {{ assignSelectedLanguageValue?.callDateTime }}
+          </th>
+          <th id="callAuditBeneficiaryID">
+            {{ assignSelectedLanguageValue?.beneficiaryId }}
+          </th>
+          <th id="callAuditBeneficiaryName">
+            {{ assignSelectedLanguageValue?.beneficiaryName }}
+          </th>
+          <th id="callAuditBeneficiaryPhoneNo">
+            {{ assignSelectedLanguageValue?.beneficiaryPhoneNo }}
+          </th>
+          <th id="callAuditCallRemarks">
+            {{ assignSelectedLanguageValue?.callRemarks }}
+          </th>
+          <th id="callAuditCallType">
+            {{ assignSelectedLanguageValue?.callType }}
+          </th>
+          <th id="callAuditCaseSheet">
+            {{ assignSelectedLanguageValue?.caseSheet }}
+          </th>
+          <th id="callAuditVoiceRecord">
+            {{ assignSelectedLanguageValue?.voiceRecord }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="md2.data?.length === 0">
+          <td class="record-not-found" colspan="10">
+            {{ assignSelectedLanguageValue?.noRecordAvailable }}
+          </td>
+        </tr>
+        <tr *ngFor="let record of md2.data; let i = index">
+          <td>{{ callRecordingsList.indexOf(record) + 1 }}</td>
+          <td>{{ record.benCallID ? record.benCallID : "-" }}</td>
+          <td>{{ record.callTime | utcDate | date: "dd/MM/yyyy HH:mm a" }}</td>
+          <td>{{ record.beneficiaryID ? record.beneficiaryID : "-" }}</td>
+          <td>{{ record.name ? record.name : "-" }}</td>
+          <td>{{ record.phoneNo ? record.phoneNo : "-" }}</td>
+          <td>{{ record.remarks ? record.remarks : "-" }}</td>
+          <td>{{ record.callType ? record.callType : "-" }}</td>
+
+          <td>
+            <em
+              class="
+                fa fa-file-text-o
+                f-s-20
+                m-t--6
+                pull-left
+                f-c-g
+                cursorPointer
+              "
+              aria-hidden="true"
+              (click)="invokeCaseSheetDialog(record?.benCallID, record)"
+            ></em>
+          </td>
+          <td>
+            <img
+              *ngIf="
+                !(dispFlag == (md2.activePage - 1) * md2.rowsPerPage + i + 1)
+              "
+              style="width: 30px; height: 30px"
+              (click)="
+                check(
+                  record.agentID,
+                  record.callID,
+                  (md2.activePage - 1) * md2.rowsPerPage + i + 1
+                )
+              "
+              src="assets/images/playicon.jpg"
+              alt="Play"
+              title="{{ assignSelectedLanguageValue?.play }}"
+            />
+
+            <audio
+              *ngIf="dispFlag == (md2.activePage - 1) * md2.rowsPerPage + i + 1"
+              controls
+              autoplay
+              preload="none"
+            >
+              <source src="{{ audioResponse }}" type="audio/ogg" />
+              <source src="{{ audioResponse }}" type="audio/mpeg" />
+            </audio>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr *ngIf="md2.data?.length > 0">
+          <td
+            colspan="1"
+            class="m-t-5"
+            *ngIf="pager?.pages && pager?.pages.length"
+          >
+            <label>{{ assignSelectedLanguageValue.totalPages }}:</label>
+            {{ pageCount }}
+          </td>
+          <td colspan="10">
+            <ul
+              *ngIf="pager?.pages && pager?.pages.length"
+              class="pagination pull-right"
+            >
+              <li [ngClass]="{ disabled: pager.currentPage <= 1 }">
+                <a (click)="setPage(1, qaForm.value)"> << </a>
+              </li>
+              <li [ngClass]="{ disabled: pager.currentPage <= 1 }">
+                <a (click)="setPage(pager.currentPage - 1, qaForm.value)">
+                  <
+                </a>
+              </li>
+              <li
+                *ngFor="let page of pager.pages"
+                [ngClass]="{ active: pager.currentPage === page }"
+              >
+                <a (click)="setPage(page, qaForm.value)">{{ page }}</a>
+              </li>
+              <li
+                [ngClass]="{ disabled: pager.currentPage >= pager.totalPages }"
+              >
+                <a (click)="setPage(pager.currentPage + 1, qaForm.value)">></a>
+              </li>
+              <li
+                [ngClass]="{ disabled: pager.currentPage >= pager.totalPages }"
+              >
+                <a (click)="setPage(pager.totalPages, qaForm.value)">>></a>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- NEW CONTENT FOR SHOWING MODAL CONTENT IN PAGE ITSELF  -->
+
+<div class="row p-r-30" [hidden]="!showCaseSheet">
+  <div class="col-xs-12 col-sm-12">
+    <h4 class="pull-left">{{ assignSelectedLanguageValue.caseSheet }}</h4>
+    <button
+      md-raised-button
+      color="primary"
+      class="m-t-5 pull-right noprint"
+      (click)="hideCaseSheetFunction()"
+    >
+      <span class="noprint">{{ assignSelectedLanguageValue.back }}</span>
+    </button>
+  </div>
+  <div class="col-xs-12 col-sm-12">
+    <h4 class="col-xs-12 col-sm-12 m-t-10">
+      {{ assignSelectedLanguageValue.serviceType104 }}
+      <ul class="pull-right list-inline list-unstyled noprint">
+        <li class="f-s-14 noprint">
+          <a class="noprint" (click)="print()"
+            ><span
+              mdTooltip=" {{ assignSelectedLanguageValue.download }}"
+              class="fa fa-download cursorPointer noprint"
+              aria-hidden="true"
+            ></span
+          ></a>
+        </li>
+        <li class="f-s-14">
+          <strong>{{ assignSelectedLanguageValue.date }} :</strong>
+          <span> {{ currentDate | date: "dd/MM/yyyy" }}</span>
+        </li>
+      </ul>
+    </h4>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-10"></div>
+  </div>
+  <div class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15">
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">{{
+        assignSelectedLanguageValue.beneficiaryDetails
+      }}</span>
+    </h4>
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        aria-describedby="qualityAuditCaseSheet"
+      >
+        <th id="qualityAuditCaseSheet"></th>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.callId }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ benData?.benCallID }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.agentID }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ benData?.agentID }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.firstName }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ benData?.beneficiaryModel?.firstName }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.lastName }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ benData?.beneficiaryModel?.lastName }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.age }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ benData?.beneficiaryModel?.actualAge }}
+            {{ benData?.beneficiaryModel?.ageUnits }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.gender }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ benData?.beneficiaryModel?.m_gender?.genderName }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.address }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{
+              benData?.beneficiaryModel?.i_bendemographics?.districtBranchName
+                ? benData?.beneficiaryModel?.i_bendemographics
+                    ?.districtBranchName
+                : "-"
+            }},
+            {{
+              benData?.beneficiaryModel?.i_bendemographics?.blockName
+                ? benData?.beneficiaryModel?.i_bendemographics?.blockName
+                : "-"
+            }},
+            {{
+              benData?.beneficiaryModel?.i_bendemographics?.districtName
+                ? benData?.beneficiaryModel?.i_bendemographics?.districtName
+                : "-"
+            }},
+            {{
+              benData?.beneficiaryModel?.i_bendemographics?.stateName
+                ? benData?.beneficiaryModel?.i_bendemographics?.stateName
+                : "-"
+            }}
+            -
+            {{
+              benData?.beneficiaryModel?.i_bendemographics?.pinCode
+                ? benData?.beneficiaryModel?.i_bendemographics?.pinCode
+                : "-"
+            }}
+            | India
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.beneficiaryId }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ benData?.beneficiaryModel?.beneficiaryID }}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15"
+    *ngIf="HAO_data.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">HAO</span>
+    </h4>
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        *ngFor="let data of HAO_data"
+        aria-describedby="haoQualityAudit"
+      >
+        <th id="haoQualityAudit"></th>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.benCall?.receivedAgentID }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.patientName }} </strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.patientName }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+          <td class="col-xs-12 col-sm-3"></td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.patientAge }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.patientAge }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue.gender }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.m_gender?.genderName }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{
+              data.isChiefComplaint
+                ? "Present Chief Complaint :"
+                : "Disease Summary :"
+            }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{
+              data.isChiefComplaint
+                ? data.diseaseSummary
+                : data.selecteDiagnosis
+            }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{
+              data.isChiefComplaint
+                ? "Provisonal/Selected Diagnosis :"
+                : "Information Given :"
+            }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.selecteDiagnosis }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.snowmedCTID }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.diseaseSummaryID }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong
+              >{{ assignSelectedLanguageValue?.recommendedAction }} :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.addedAdvice }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.actionByHao }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.actionByHAO }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.followUpRequired }}
+              :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.outboundCallRequest?.prefferedDateTime ? "Yes" : "No" }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.followUpDate }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{
+              data?.outboundCallRequest?.prefferedDateTime
+                | utcDate
+                | date: "dd/MM/yyyy hh:mm a"
+            }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+          <td class="col-xs-12 col-sm-3"></td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.callType }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ callGroup }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.callSubtype }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.closureRemarks }} :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.benCall.remarks }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+          <td class="col-xs-12 col-sm-3"></td>
+        </tr>
+        <tr
+          *ngIf="HAO_data.indexOf(data) !== HAO_data.length - 1"
+          class="horizontalLine"
+        ></tr>
+      </table>
+    </div>
+  </div>
+
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15"
+    *ngIf="MO_data.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">MO</span>
+    </h4>
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        *ngFor="let data of MO_data"
+        aria-describedby="moQualityAudit"
+      >
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.benCall?.receivedAgentID }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.patientName }} </strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.patientName }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+          <td class="col-xs-12 col-sm-3"></td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.patientAge }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.patientAge }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue.gender }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.m_gender?.genderName }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{
+              data.isChiefComplaint
+                ? "Present Chief Complaint :"
+                : "Disease Summary :"
+            }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{
+              data.isChiefComplaint
+                ? data.diseaseSummary
+                : data.selecteDiagnosis
+            }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{
+              data.isChiefComplaint
+                ? "Provisonal/Selected Diagnosis :"
+                : "Information Given :"
+            }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.selecteDiagnosis }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.recommendedAction }} :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.addedAdvice }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.actionByMo }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.actionByMO }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.snowmedCTID }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.diseaseSummaryID }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.followUpRequired }} :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.outboundCallRequest?.prefferedDateTime ? "Yes" : "No" }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.followUpDate }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{
+              data?.outboundCallRequest?.prefferedDateTime
+                | utcDate
+                | date: "dd/MM/yyyy hh:mm a"
+            }}
+          </td>
+        </tr>
+
+        <tr *ngIf="data.prescription.length > 0">
+          <td colspan="4">
+            <table
+              class="table table-bordered"
+              aria-describedby="moQualityAuditPrescription"
+            >
+              <tr>
+                <th id="moQualityAuditPrescriptionID">
+                  {{ assignSelectedLanguageValue?.prescriptionId }}
+                </th>
+                <th id="moQualityAuditdiagnosisProvidedInformationGiven">
+                  {{
+                    assignSelectedLanguageValue?.diagnosisProvidedInformationGiven
+                  }}
+                </th>
+                <th id="moQualityAuditDrug">
+                  {{ assignSelectedLanguageValue?.drug }}
+                </th>
+                <th id="moQualityAuditStrength">
+                  {{ assignSelectedLanguageValue?.strength }}
+                </th>
+                <th id="moQualityAuditFrequency">
+                  {{ assignSelectedLanguageValue?.frequency }}
+                </th>
+                <th id="moQualityAuditNoOfDays">
+                  {{ assignSelectedLanguageValue?.noOfDays }}
+                </th>
+                <th id="moQualityAuditRemarks">
+                  {{ assignSelectedLanguageValue?.remarks }}
+                </th>
+              </tr>
+
+              <ng-container *ngFor="let prescrip of data.prescription">
+                <tr *ngFor="let p of prescrip.prescribedDrugs; let i = index">
+                  <td>
+                    {{ prescrip?.prescriptionID }}
+                  </td>
+                  <td>{{ prescrip?.diagnosisProvided }}</td>
+                  <td>{{ p.drugName }}</td>
+                  <td>{{ p.dosage }}</td>
+                  <td>{{ p.frequency }}</td>
+                  <td>{{ p.noOfDays }}</td>
+
+                  <td>{{ prescrip?.remarks }}</td>
+                </tr>
+              </ng-container>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.callType }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ callGroup }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.callSubtype }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.closureRemarks }} :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.benCall.remarks }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+          <td class="col-xs-12 col-sm-3"></td>
+        </tr>
+        <tr
+          *ngIf="MO_data.indexOf(data) !== MO_data.length - 1"
+          class="horizontalLine"
+        ></tr>
+      </table>
+    </div>
+  </div>
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15"
+    *ngIf="CO_data.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">CO</span>
+    </h4>
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        *ngFor="let data of CO_data"
+        aria-describedby="coQualityAudit"
+      >
+        <th id="coQualityAudit"></th>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.benCall?.receivedAgentID }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.patientName }} </strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.patientName }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+          <td class="col-xs-12 col-sm-3"></td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.patientAge }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.patientAge }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue.gender }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.m_gender?.genderName }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.wellbeingInformationInformation }}
+              :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{
+              data !== undefined
+                ? data.categoryDetails !== undefined
+                  ? data.categoryDetails.isWellBeing === true
+                    ? "Well Being"
+                    : "Information"
+                  : ""
+                : ""
+            }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.category }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.categoryDetails?.categoryName }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.subCategory }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.subCategoryDetails?.subCategoryName }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.actionByCo }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.actionByCO }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.followUpRequired }} :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.outboundCallRequest?.prefferedDateTime ? "Yes" : "No" }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.followUpDate }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{
+              data?.outboundCallRequest?.prefferedDateTime
+                | utcDate
+                | date: "dd/MM/yyyy hh:mm a"
+            }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.callType }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ callGroup }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.callSubtype }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.closureRemarks }} :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.benCall.remarks }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+          <td class="col-xs-12 col-sm-3"></td>
+        </tr>
+        <tr
+          *ngIf="CO_data.indexOf(data) !== CO_data.length - 1"
+          class="horizontalLine"
+        ></tr>
+      </table>
+    </div>
+  </div>
+
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15"
+    *ngIf="PD_data.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">PD</span>
+    </h4>
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        *ngFor="let data of PD_data"
+        aria-describedby="pdQualityAudit"
+      >
+<!--This th is for Sonarlint-->
+      <th id="pdAudit"></th>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.benCall?.receivedAgentID }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.patientName }} </strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.patientName }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+          <td class="col-xs-12 col-sm-3"></td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.patientAge }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.patientAge }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue.gender }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.m_gender?.genderName }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.wellbeingInformationInformation }}
+              :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{
+              data !== undefined
+                ? data.categoryDetails !== undefined
+                  ? data.categoryDetails.isWellBeing === true
+                    ? "Well Being"
+                    : "Information"
+                  : ""
+                : ""
+            }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.category }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.categoryDetails?.categoryName }}
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.subCategory }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.subCategoryDetails?.subCategoryName }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.actionByPd }}:</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.actionByPD }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.followUpRequired }} :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{ data?.outboundCallRequest?.prefferedDateTime ? "Yes" : "No" }}
+          </td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.followUpDate }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">
+            {{
+              data?.outboundCallRequest?.prefferedDateTime
+                | utcDate
+                | date: "dd/MM/yyyy hh:mm a"
+            }}
+          </td>
+        </tr>
+        <tr *ngIf="data.prescription.length > 0">
+          <td colspan="4">
+            <table
+              class="table table-bordered"
+              aria-describedby="pdQualityAuditPrescription"
+            >
+              <tr>
+                <th id="pdQualityAuditPrescriptionID">
+                  {{ assignSelectedLanguageValue?.prescriptionId }}
+                </th>
+                <th id="pdQualityAuditdiagnosisProvidedInformationGiven">
+                  {{
+                    assignSelectedLanguageValue?.diagnosisProvidedInformationGiven
+                  }}
+                </th>
+                <th id="pdQualityAuditDrug">
+                  {{ assignSelectedLanguageValue?.drug }}
+                </th>
+                <th id="pdQualityAuditStrength">
+                  {{ assignSelectedLanguageValue?.strength }}
+                </th>
+                <th id="pdQualityAuditFrequency">
+                  {{ assignSelectedLanguageValue?.frequency }}
+                </th>
+                <th id="pdQualityAuditNoOfDays">
+                  {{ assignSelectedLanguageValue?.noOfDays }}
+                </th>
+                <th id="pdQualityAuditRemarks">
+                  {{ assignSelectedLanguageValue?.remarks }}
+                </th>
+              </tr>
+
+              <ng-container *ngFor="let prescrip of data.prescription">
+                <tr *ngFor="let p of prescrip.prescribedDrugs; let i = index">
+                  <td>
+                    {{ prescrip?.prescriptionID }}
+                  </td>
+                  <td>{{ prescrip?.diagnosisProvided }}</td>
+                  <td>{{ p.drugName }}</td>
+                  <td>{{ p.dosage }}</td>
+                  <td>{{ p.frequency }}</td>
+                  <td>{{ p.noOfDays }}</td>
+
+                  <td>{{ prescrip?.remarks }}</td>
+                </tr>
+              </ng-container>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong> {{ assignSelectedLanguageValue?.callType }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ callGroup }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.callSubtype }} :</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>
+              {{ assignSelectedLanguageValue?.closureRemarks }} :</strong
+            >
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.benCall.remarks }}</td>
+          <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+          <td class="col-xs-12 col-sm-3"></td>
+        </tr>
+        <tr
+          *ngIf="PD_data.indexOf(data) !== PD_data.length - 1"
+          class="horizontalLine"
+        ></tr>
+      </table>
+    </div>
+  </div>
+
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15 m-b-40 p-l-12 p-r-46"
+    *ngIf="grievance_array.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">{{
+        assignSelectedLanguageValue?.grievance
+      }}</span>
+    </h4>
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        *ngFor="let data of grievance_array"
+        aria-describedby="qualityAuditgrievience"
+      >
+        <th id="resolvingSonarQubeIssueQualityAuditgrievience"></th>
+        <tbody>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data?.mUser?.agentID }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong
+                >{{ assignSelectedLanguageValue?.natureOfComplaint }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.feedbackNatureDetail?.feedbackNature }}
+            </td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue?.severity }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.severity?.severityTypeName }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue?.state }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data?.state?.stateName }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue?.district }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.district?.districtName }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.subDistrict }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.districtBlock?.blockName }}
+            </td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.village }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.districtBranchMapping?.villageName }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.complaintAgainstInsitute }}
+                :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.instituteType?.institutionType }}
+            </td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.designation }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.designation?.designationName }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.grievanceAgainst }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data?.feedbackAgainst }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong
+                >{{ assignSelectedLanguageValue?.grievanceType }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.feedbackType.feedbackTypeName }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.complaintId }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data?.requestID }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.remarks }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data?.feedback }}</td>
+          </tr>
+          <tr
+            *ngIf="grievance_array.indexOf(data) !== grievance_array.length - 1"
+            class="horizontalLine"
+          ></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15 m-b-40 p-l-12 p-r-46"
+    *ngIf="blood_array.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">{{
+        assignSelectedLanguageValue?.bloodOnCall
+      }}</span>
+    </h4>
+    <div class="col-xs-12 col-sm-12 border-a-1 m-b-10">
+      <h4 class="">
+        <span class="">{{
+          assignSelectedLanguageValue?.bloodOnCallInboundCall
+        }}</span>
+      </h4>
+      <div class="table-responsive">
+        <table
+          class="table printTable m-b-0"
+          *ngFor="let data of blood_array"
+          aria-describedby="qualityAuditBloodOnCallInbound"
+        >
+          <th id="resolvingSonarQubeIssueQualityAuditBloodOnCallInbound"></th>
+          <tbody>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+              </td>
+              <td class="col-xs-12 col-sm-3">
+                {{ data?.benCall?.receivedAgentID }}
+              </td>
+            </tr>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong>{{ assignSelectedLanguageValue?.patientName }} </strong>
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.recipientName }}</td>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong>{{ assignSelectedLanguageValue?.patientAge }}</strong>
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.recipientAge }}</td>
+            </tr>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong> {{ assignSelectedLanguageValue.gender }} :</strong>
+              </td>
+              <td class="col-xs-12 col-sm-3">
+                {{ data?.m_gender.genderName }}
+              </td>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong
+                  >{{ assignSelectedLanguageValue?.componentType }} :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">
+                {{ data.m_componentType.componentType }}
+              </td>
+            </tr>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong>
+                  {{ assignSelectedLanguageValue?.bloodGroupComponent }}
+                  :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">
+                {{ data.m_bloodGroup.bloodGroup }}
+              </td>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong>
+                  {{ assignSelectedLanguageValue?.hospitalAdmited }} :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.hospitalAdmitted }}</td>
+            </tr>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong> {{ assignSelectedLanguageValue?.district }} :</strong>
+              </td>
+              <td class="col-xs-12 col-sm-3">
+                {{ data.m_district.districtName }}
+              </td>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong>
+                  {{ assignSelectedLanguageValue?.bloodRequestID }}:</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.requestID }}</td>
+            </tr>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong> {{ assignSelectedLanguageValue?.callType }} :</strong>
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ callGroup }}</td>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong
+                  >{{ assignSelectedLanguageValue?.callSubtype }} :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+            </tr>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong>
+                  {{ assignSelectedLanguageValue?.closureRemarks }} :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.benCall.remarks }}</td>
+              <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+              <td class="col-xs-12 col-sm-3"></td>
+            </tr>
+            <tr
+              *ngIf="blood_array.indexOf(data) !== blood_array.length - 1"
+              class="horizontalLine"
+            ></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 border-a-1 m-b-10">
+      <h4 class="">
+        <span class="">{{
+          assignSelectedLanguageValue?.followUpRequired
+        }}</span>
+      </h4>
+      <div class="table-responsive">
+        <table
+          class="table printTable m-b-0"
+          *ngFor="let data of blood_array"
+          aria-describedby="qualityAuditFollowUpRequried"
+        >
+          <th id="resolvingSonarQubeIssueQualityAuditFollowUpRequried"></th>
+          <tbody>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong> {{ assignSelectedLanguageValue?.date }} :</strong>
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.outboundDate }}</td>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong
+                  >{{ assignSelectedLanguageValue?.bloodBankName }} :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.bloodBankAddress }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 border-a-1 m-b-10">
+      <h4 class="">
+        <span class="">{{
+          assignSelectedLanguageValue?.bloodOnCallOutboundCallToBloodBank
+        }}</span>
+      </h4>
+      <div class="table-responsive">
+        <table
+          class="table printTable m-b-0"
+          *ngFor="let data of blood_array"
+          aria-describedby="qualityAuditBloodOnCallOutnbound"
+        >
+          <th id="resolvingSonarQubeIssueQualityAuditBloodOnCallOutnbound"></th>
+          <tbody>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong>
+                  {{ assignSelectedLanguageValue?.bloodBankPersonName }}
+                  :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.bbPersonName }}</td>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong
+                  >{{
+                    assignSelectedLanguageValue?.bloodBankPersonDesignation
+                  }}
+                  :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.bbPersonDesignation }}</td>
+            </tr>
+            <tr>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong>
+                  {{ assignSelectedLanguageValue?.contactNumber }} :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">{{ data.bbMobileNo }}</td>
+              <td class="col-xs-12 col-sm-3 p-l-0">
+                <strong
+                  >{{
+                    assignSelectedLanguageValue?.bloodBankInformation
+                  }}
+                  :</strong
+                >
+              </td>
+              <td class="col-xs-12 col-sm-3">
+                {{ data.hospitalAdmitted }},{{ data.bloodBankAddress }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15 m-b-40 p-l-12 p-r-46"
+    *ngIf="foodsafety_array.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">
+        {{ assignSelectedLanguageValue?.foodSafetyComplaint }}</span
+      >
+    </h4>
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        *ngFor="let data of foodsafety_array"
+        aria-describedby="qualityAuditFoodSafetyComplaint"
+      >
+        <th id="resolvingSonarQubeIssueQualityAuditFoodSafetyComplaint"></th>
+        <tbody>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.benCall?.receivedAgentID }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.complaintId }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.requestID }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.remarks }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.remarks }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.symptoms }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.associatedSymptoms }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.diarrhea }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.isDiarrhea == "1" ? "Yes" : "No" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.vomiting }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.isVomiting == "1" ? "Yes" : "No" }}
+            </td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.abdominalPain }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.isAbdominalPain == "1" ? "Yes" : "No" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.chillsRigors }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.isChillsOrRigors == "1" ? "Yes" : "No" }}
+            </td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.giddiness }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.isGiddiness == "1" ? "Yes" : "No" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.dehydration }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.isDehydration == "1" ? "Yes" : "No" }}
+            </td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.rashes }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.isRashes == "1" ? "Yes" : "No" }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.whatTypeOfFood }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.historyOfDiet }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.foodConsumedFrom }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.foodConsumedFrom }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.complaintType }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.m_feedbackType.feedbackTypeName }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.callType }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ callGroup }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue?.callSubtype }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.closureRemarks }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.benCall.remarks }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+            <td class="col-xs-12 col-sm-3"></td>
+          </tr>
+          <tr
+            *ngIf="
+              foodsafety_array.indexOf(data) !== foodsafety_array.length - 1
+            "
+            class="horizontalLine"
+          ></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15 m-b-40 p-l-12 p-r-46"
+    *ngIf="epidemic_array.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">{{
+        assignSelectedLanguageValue?.epidemicOutbreak
+      }}</span>
+    </h4>
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        *ngFor="let data of epidemic_array"
+        aria-describedby="qualityAuditEpidemicOutbreak"
+      >
+        <th id="resolvingSonarQubeIssueQualityAuditEpidemicOutbreak"></th>
+        <tbody>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.benCall?.receivedAgentID }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue.callerType }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">**</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong
+                >{{ assignSelectedLanguageValue?.natureOfComplaint }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.natureOfComplaint }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.noofPersonsAffected }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.totalPeopleAffected }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.affectedDistrict }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.m_district.districtName }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue.affectedTaluk }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.m_districtblock.blockName }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.remarks }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.remarks }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.complaintId }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.requestID }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.callType }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ callGroup }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue?.callSubtype }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.closureRemarks }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.benCall.remarks }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+            <td class="col-xs-12 col-sm-3"></td>
+          </tr>
+          <tr
+            *ngIf="epidemic_array.indexOf(data) !== epidemic_array.length - 1"
+            class="horizontalLine"
+          ></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15 m-b-40 p-l-12 p-r-46"
+    *ngIf="organ_array.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">{{
+        assignSelectedLanguageValue?.organDonarDetails
+      }}</span>
+    </h4>
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        *ngFor="let data of organ_array"
+        aria-describedby="qualityAuditOrganDonarDetails"
+      >
+        <th id="resolvingSonarQubeIssueQualityAuditOrganDonarDetails"></th>
+        <tbody>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.benCall?.receivedAgentID }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue.callerType }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">**</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue.name }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.donarName }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue.age }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.donarAge }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue.gender }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.m_gender.genderName }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.donationType }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.m_donationType.donationType }}
+            </td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.organ }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data.m_donatableOrgan.donatableOrgan }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.cityVillage }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">**</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.organdonationID }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.requestID }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.callType }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ callGroup }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue?.callSubtype }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.closureRemarks }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.benCall.remarks }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+            <td class="col-xs-12 col-sm-3"></td>
+          </tr>
+          <tr
+            *ngIf="organ_array.indexOf(data) !== organ_array.length - 1"
+            class="horizontalLine"
+          ></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+    class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15 m-b-40 p-l-12 p-r-46"
+    *ngIf="directory_array.length > 0"
+  >
+    <h4 class="m-t--15">
+      <span class="caseSheetHeader">{{
+        assignSelectedLanguageValue?.directoryServicesDetails
+      }}</span>
+    </h4>
+
+    <div class="table-responsive">
+      <table
+        class="table printTable m-b-0"
+        *ngFor="let data of directory_array"
+        aria-describedby="qualityAuditDirectoryServicesDetails"
+      >
+        <th
+          id="resolvingSonarQubeIssueQualityAuditDirectoryServicesDetails"
+        ></th>
+        <tbody>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.callId }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ benCallID }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue.agentID }} </strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.benCall?.receivedAgentID }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong
+                >{{ assignSelectedLanguageValue?.institutionName }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.institute.instituteName }}
+            </td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong
+                >{{ assignSelectedLanguageValue?.institutionAddress }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data?.institute.address }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong
+                >{{
+                  assignSelectedLanguageValue?.instituteDirectoryName
+                }}
+                :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.instituteDirectory.instituteDirectoryName }}
+            </td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.instituteSubDirectoryName }}
+                :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">
+              {{ data?.instituteSubDirectory.instituteSubDirectoryName }}
+            </td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong> {{ assignSelectedLanguageValue?.callType }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ callGroup }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>{{ assignSelectedLanguageValue?.callSubtype }} :</strong>
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+          </tr>
+          <tr>
+            <td class="col-xs-12 col-sm-3 p-l-0">
+              <strong>
+                {{ assignSelectedLanguageValue?.closureRemarks }} :</strong
+              >
+            </td>
+            <td class="col-xs-12 col-sm-3">{{ data.benCall.remarks }}</td>
+            <td class="col-xs-12 col-sm-3 p-l-0"><strong></strong></td>
+            <td class="col-xs-12 col-sm-3"></td>
+          </tr>
+          <tr
+            *ngIf="directory_array.indexOf(data) !== directory_array.length - 1"
+            class="horizontalLine"
+          ></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div
+  class="col-xs-12 col-sm-12 border-a-1 m-b-20 m-l-15"
+  *ngIf="covidVaccineStatusUpdate != undefined && covidVaccineStatusUpdate !=null"
+>
+  <h4 class="m-t--15">
+    <span class="caseSheetHeader">Covid Vaccination Status</span>
+  </h4>
+  <div class="table-responsive">
+    <table
+      class="table printTable m-b-0"
+      
+      aria-describedby="covid vaccine status"
+    >
+      <tr>
+        <td class="col-xs-12 col-sm-3 p-l-0">
+          <strong> {{ assignSelectedLanguageValue?.ageGroup }} :</strong>
+        </td>
+        <td class="col-xs-12 col-sm-3">{{ (covidVaccineStatusUpdate.vaccineStatus === 'NO' || covidVaccineStatusUpdate.vaccineStatus === 'YES') ? '>=12 years' : ageValidationForVaccination }}</td>
+        <td class="col-xs-12 col-sm-3 p-l-0">
+          <strong>{{ assignSelectedLanguageValue.isApplicableForVaccine }} :</strong>
+        </td>
+        <td> {{ (covidVaccineStatusUpdate.vaccineStatus === 'NO' || covidVaccineStatusUpdate.vaccineStatus === 'YES') ? 'Applicable for Vaccination' : 'Not Applicable for Vaccination'}} </td>
+      </tr>
+      <tr>
+        <td class="col-xs-12 col-sm-3 p-l-0">
+          <strong>{{ assignSelectedLanguageValue?.vaccineStatus }} :</strong>
+        </td>
+        <td class="col-xs-12 col-sm-3">{{ covidVaccineStatusUpdate.vaccineStatus }}</td>
+        <td class="col-xs-12 col-sm-3 p-l-0">
+          <strong>{{ assignSelectedLanguageValue?.vaccineTypes }} :</strong>
+        </td>
+        <td class="col-xs-12 col-sm-3">{{ vaccineTypeSelected }}</td>
+      </tr>
+      <tr>
+        <td class="col-xs-12 col-sm-3 p-l-0">
+          <strong> {{ assignSelectedLanguageValue.doseTaken }} :</strong>
+        </td>
+        <td class="col-xs-12 col-sm-3">{{ doseType }}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- Below line commented on 21 may,2018 for screen revamp, Diamond Khanna  -->

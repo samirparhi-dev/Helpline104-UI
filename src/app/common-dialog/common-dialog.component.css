@@ -1,0 +1,20 @@
+.borderClass {
+    border: 1px solid #b1a7a7 !important;
+}
+.fontClass {
+    color: #333;
+    font-family: SF-UI-Display-Regular !important;
+}
+.fontClass2 {
+    font-family: SF-UI-Display-Regular !important;
+
+}
+.infoDivBorder {
+    border: 1px solid #0277bd;
+}
+.errorDivBorder {
+    border: 1px solid #F74038;
+}
+.successDivBorder {
+    border: 1px solid #43A047;
+}

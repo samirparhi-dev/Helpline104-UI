@@ -1,0 +1,55 @@
+<div class="successHeaderDiv">
+  <h4 class="popupHeader">{{data.Title}}</h4>
+</div>
+<div class="col-xs-12 col-sm-12" id="foo">
+    <!-- <md-card >
+        <md-card-content > -->
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h4>{{data.generatedId}}</h4>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <md-checkbox color="accent" name="altNum" [(ngModel)]="altNum">
+                {{currentLanguageSet?.alternateNumber}}
+            </md-checkbox>
+            <div *ngIf="altNum">
+                <md-input-container appMobileNumber>
+                    <input mdInput autocomplete="off" minlength="10" maxlength="10" (keyup)="mobileNum(mobileNumber)" placeholder="{{currentLanguageSet?.mobileNumber}}"
+                        required name="mobileNumber" [(ngModel)]="mobileNumber" #phnNum="ngModel">
+                    <md-hint *ngIf=" phnNum.errors && (  phnNum.touched)" class="errorText">
+                        <span>
+                            {{currentLanguageSet?.enter10DigitsMobileNumber}}
+                        </span>
+                    </md-hint>
+                </md-input-container>
+
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="current_campaign == 'INBOUND'">
+            <md-checkbox class="m-t-10" [(ngModel)]="bbi"  color="accent" name="bloodbank" *ngIf="data?.bloodOnCall == 'yes'">{{currentLanguageSet?.patientDetailsToBloodBank}}
+            </md-checkbox>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="current_campaign == 'OUTBOUND'">
+            <md-checkbox class="m-t-10" [(ngModel)]="bbo"  color="accent" name="bloodbank" *ngIf="data?.bloodOnCall == 'yes'">{{currentLanguageSet?.patientDetailsToBloodBank}}
+            </md-checkbox>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="current_campaign == 'OUTBOUND' && bbo==true">
+            <md-select placeholder="{{currentLanguageSet?.hospitals}}" name="hospitals" [(ngModel)]="requestedHospital" (change)="chooseService(transferCall)" [style.width]="'100%'">
+                <md-option *ngFor="let hospital of requestedHospitals" [value]="hospital">{{hospital.bbMobileNo}}</md-option>
+              </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-12">
+            <button md-raised-button class="pull-right font-regular f-s-18  m-t-8" (click)="dialogReff.close('close')">{{currentLanguageSet?.close}}</button>
+            <button *ngIf="data?.bloodOnCall != 'yes'" md-raised-button color="accent" [disabled]="altNum && !validNumber" class="pull-right font-regular f-s-18  m-t-8 m-r-5"
+                (click)="dialogReff.close(mobileNumber)">{{currentLanguageSet?.sendSms}}
+            </button>
+            <button *ngIf="data?.bloodOnCall == 'yes' && current_campaign == 'INBOUND'" md-raised-button color="accent" [disabled]="altNum && !validNumber" class="pull-right font-regular f-s-18  m-t-8 m-r-5"
+            (click)="dialogReff.close([mobileNumber,bbi])">{{currentLanguageSet?.sendSms}}
+        </button>
+        <button *ngIf="data?.bloodOnCall == 'yes' && current_campaign == 'OUTBOUND'" md-raised-button color="accent" [disabled]="altNum && !validNumber" class="pull-right font-regular f-s-18  m-t-8 m-r-5"
+        (click)="dialogReff.close([mobileNumber,bbo,requestedHospital])">{{currentLanguageSet?.sendSms}}
+    </button>
+        </div>
+    </div>
+</div>

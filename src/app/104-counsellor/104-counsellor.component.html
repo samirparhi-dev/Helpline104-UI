@@ -1,0 +1,941 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="overflow-x: hidden;">
+  <div>
+    <h3 class="pull-left f-s-b m-t-20 m-b-20">
+      <strong>{{ assignSelectedLanguageValue?.chiefComplaints }}</strong>
+    </h3>
+  </div>
+  <div class="">
+    <div class="div-center">
+      <button
+        *ngIf="!displayHistory"
+        type="button"
+        md-raised-button
+        color="accent"
+        class="pull-right m-t-5"
+        (click)="showHistory()"
+      >
+        {{ assignSelectedLanguageValue?.history }}
+      </button>
+    </div>
+  </div>
+  <div class="row m-t-20" [formGroup]="counsellorForm">
+    <div
+      class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10"
+      style="margin: 10px; padding: 15px;"
+      formArrayName="complaints"
+    >
+      <div
+        class="row multi-row-select"
+        *ngFor="
+          let complaint of counsellorForm.controls.complaints['controls'];
+          let i = index;
+          let isLast = last;
+          let isOdd = odd
+        "
+        [ngClass]="{ odd: !isOdd }"
+      >
+        <div [formGroupName]="i">
+          <div class="row">
+            <div class="col-xs-12 col-sm-5 col-md-3">
+              <md-select
+                class="input-full-width"
+                placeholder="{{ assignSelectedLanguageValue?.chiefComplaints }}"
+                name="chiefComplaint"
+                formControlName="chiefComplaint"
+              >
+                <md-option
+                  *ngFor="let item of cheifComplaintData"
+                  [value]="item"
+                >
+                  {{ item.psychiatricChiefComplaintName }}
+                </md-option>
+              </md-select>
+            </div>
+            <div
+              class="col-xs-12 col-sm-4 col-md-3"
+              style="margin-top: -3px"
+              *ngIf="
+                counsellorForm.controls.complaints.controls[i].value
+                  .chiefComplaint?.psychiatricChiefComplaintName === 'Other'
+              "
+            >
+              <md-input-container class="input-full-width">
+                <input
+                  autocomplete="off"
+                  textAreaValidator
+                  mdInput
+                  defaultNull
+                  placeholder="Other Cheif Compaint"
+                  formControlName="otherCheifComplaint"
+                  name="otherCheifComplaint"
+                  maxlength="50"
+                  (change)="removeSnomedCode(complaint, i)"
+                  (keyup.enter)="
+                    searchComponents(
+                      complaint.value.otherCheifComplaint,
+                      i,
+                      complaint
+                    )
+                  "
+                />
+                <md-icon
+                  class="search-btn cursorPointer"
+                  mdSuffix
+                  (click)="
+                    searchComponents(
+                      complaint.value.otherCheifComplaint,
+                      i,
+                      complaint
+                    )
+                  "
+                  [class.toolbar-icon-disabled]="componentFlag"
+                  >search</md-icon
+                >
+              </md-input-container>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-3">
+              <md-form-field class="input-full-width">
+                <input
+                  autocomplete="off"
+                  mdInput
+                  defaultNull
+                  maxlength="2"
+                  name="duration"
+                  MyMobileNumberDirective
+                  formControlName="duration"
+                  type="number" 
+                  allowMax="100"
+                  minlength="1"
+                  placeholder="{{ assignSelectedLanguageValue?.duration }}"
+                  [disabled]="!complaint.value.chiefComplaint"
+                />
+              </md-form-field>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-3">
+              <md-select
+                class="input-full-width"
+                name="unitOfDuration"
+                formControlName="unitOfDuration"
+                placeholder="{{ assignSelectedLanguageValue?.unitOfDuration }}"
+              >
+                <md-option value="Days">Day(s)</md-option>
+                <md-option value="Weeks">Week(s)</md-option>
+                <md-option value="Months">Month(s)</md-option>
+                <md-option value="Years">Year(s)</md-option>
+              </md-select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-3">
+              <md-form-field class="textarea-full-width">
+                <textarea
+                  mdInput
+                  allowText="textAreaValidator"
+                  defaultNull
+                  mdTextareaAutosize
+                  maxRows="3"
+                  minRows="6"
+                  name="description"
+                  formControlName="description"
+                  placeholder="{{ assignSelectedLanguageValue?.description }}"
+                  maxlength="300"
+                ></textarea>
+              </md-form-field>
+            </div>
+
+            <div style="padding: 7px">
+              <button
+                type="button"
+                md-mini-fab
+                [id]="'removeBtn' + i"
+                *ngIf="i != 0 || (i == 0 && complaint.touched)"
+                (click)="removeCheifComplaint(i, complaint)"
+                color="warn"
+                style="margin-left: 15px; margin-right: 15px"
+              >
+                <span class="material-icons">close</span>
+              </button>
+              <button
+                type="button"
+                md-mini-fab
+                [id]="'addBtn' + i"
+                *ngIf="isLast"
+                [disabled]="checkComplaintFormValidity(complaint)"
+                (click)="addCheifComplaint()"
+                color="primary"
+              >
+                <span class="material-icons">add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <h3 style="margin-top: 10px; margin-bottom: 10px">
+        <strong>{{ assignSelectedLanguageValue?.impactOnPatient }}</strong>
+      </h3>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <h4 style="margin-top: 10px; margin-bottom: 10px">
+        <strong>{{
+          assignSelectedLanguageValue?.biologicalFunctioning
+        }}</strong>
+      </h4>
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-3">
+      <md-select
+        class="input-full-width"
+        name="appetite"
+        formControlName="appetite"
+        placeholder="{{ assignSelectedLanguageValue?.appetite }}"
+      >
+        <md-option
+          *ngFor="let item of appetiteRole"
+          [value]="item.appetiteName"
+        >
+          {{ item.appetiteName }}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-3">
+      <md-select
+        class="input-full-width"
+        name="sleep"
+        formControlName="sleep"
+        [multiple]="true"
+        placeholder="{{ assignSelectedLanguageValue?.sleep }}"
+        (change)="resetOtherSleepValues()"
+      >
+        <md-option
+          [disabled]="
+            disableSleepValue !== null &&
+            ((item?.slipName == 'Normal' && disableSleepValue === false) ||
+              (item?.slipName != 'Normal' && disableSleepValue === true))
+          "
+          *ngFor="let item of sleepValue"
+          [value]="item.slipName"
+        >
+          {{ item.slipName }}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-3">
+      <md-select
+        class="input-full-width"
+        name="bowelValue"
+        formControlName="bowelValue"
+        placeholder="{{ assignSelectedLanguageValue?.bowel }}"
+      >
+        <md-option *ngFor="let item of bowelValues" [value]="item.bowelName">
+          {{ item.bowelName }}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-3">
+      <md-select
+        class="input-full-width"
+        name="libido"
+        formControlName="libidoValue"
+        placeholder="{{ assignSelectedLanguageValue?.libido }}"
+      >
+        <md-option *ngFor="let item of libidoValue" [value]="item.libidoName">
+          {{ item.libidoName }}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3" style="margin-top: 15px">
+      <label class="control-label">{{
+        assignSelectedLanguageValue?.hygieneAndTakingCare
+      }}</label>
+      <div class="clearfix"></div>
+      <md-radio-group
+        id="hygieneStatus"
+        name="hygieneStatus"
+        formControlName="selectedValue"
+      >
+        <md-radio-button
+          class="radio-button"
+          color="primary"
+          [value]="value.hygieneseSelfCareName"
+          *ngFor="let value of hygieneValues"
+        >
+          {{ value.hygieneseSelfCareName }}
+        </md-radio-button>
+      </md-radio-group>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3" style="margin-top: 15px">
+      <label class="control-label">{{
+        assignSelectedLanguageValue?.bladder
+      }}</label>
+      <div class="clearfix"></div>
+      <md-radio-group
+        id="bladder"
+        name="bladder"
+        formControlName="bladderStatus"
+      >
+        <md-radio-button
+          class="radio-button"
+          color="primary"
+          [value]="value.bladderName"
+          *ngFor="let value of bladderValue"
+        >
+          {{ value.bladderName }}
+        </md-radio-button>
+      </md-radio-group>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <h4 style="margin-bottom: 10px; margin-top: 15px">
+        <strong>
+          {{ assignSelectedLanguageValue?.occupationalFunctioning }}</strong
+        >
+      </h4>
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-4">
+      <md-select
+        class="input-full-width"
+        name="goingToWork"
+        formControlName="goingToWork"
+        placeholder="{{ assignSelectedLanguageValue?.goingToWork }}"
+      >
+        <md-option *ngFor="let item of workStatus" [value]="item.regularWorkName">
+          {{ item.regularWorkName }}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+      <md-select
+        class="input-full-width"
+        name="IssueAtWork"
+        formControlName="issueAtWork"
+        placeholder="{{ assignSelectedLanguageValue?.issuesAtWorkplace }}"
+      >
+        <md-option
+          *ngFor="let item of issueWorkStatus"
+          [value]="item.issueAtWorkPlaceName"
+        >
+          {{ item.issueAtWorkPlaceName }}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <h4 style="margin-bottom: 10px; margin-top: 25px">
+        <strong> {{ assignSelectedLanguageValue?.socialFunctioning }}</strong>
+      </h4>
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-3">
+      <md-select
+        class="input-full-width"
+        name="householdWork"
+        formControlName="householdWork"
+        placeholder="{{ assignSelectedLanguageValue?.doingOfHouseholdWork }}"
+      >
+        <md-option
+          *ngFor="let item of householdWorkType"
+          [value]="item.houseHoldWorkName"
+        >
+          {{ item.houseHoldWorkName }}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-5 col-md-5">
+      <md-select
+        class="input-full-width"
+        name="familyUnity"
+        formControlName="familyUnity"
+        placeholder="{{ assignSelectedLanguageValue?.gettingAlongWithFamily }}"
+      >
+        <md-option
+          *ngFor="let item of familyGatherStatus"
+          [value]="item.gettingWithFamilyName"
+        >
+          {{ item.gettingWithFamilyName }}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-3">
+      <md-select
+        class="input-full-width"
+        name="precipitatingFactor"
+        [multiple]="true"
+        formControlName="precipitatingFactor"
+        placeholder="{{
+          assignSelectedLanguageValue?.possiblePrecipitatingFactor
+        }}"
+        (change)="resetOtherFactorValues();enableOtherFactor(counsellorForm.controls.precipitatingFactor.value)"
+
+      >
+        <md-option
+          [disabled]="
+            disableFactorValue !== null &&
+            ((item?.precipitatingFactorName == 'None' &&
+              disableFactorValue === false) ||
+              (item?.precipitatingFactorName != 'None' &&
+                disableFactorValue === true))
+          "
+          *ngFor="let item of precipitateFactor"
+          [value]="item.precipitatingFactorName"
+        >
+          {{ item.precipitatingFactorName }}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-4 col-md-3" style="margin-top: 15px;" *ngIf="enableOtherPrepFactor">
+      <md-input-container [style.width]="'100%'">
+        <textarea
+          mdInput
+          textAreaValidator
+          placeholder="Other Precipitating Factor"
+          formControlName="otherPossibleFactor"
+          name="otherPossibleFactor"
+        >
+        </textarea>
+      </md-input-container>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4" style="margin-top: 15px">
+      <md-input-container [style.width]="'100%'">
+        <textarea
+          mdInput
+          textAreaValidator maxlength="300"
+          placeholder="{{ assignSelectedLanguageValue?.treatmentDetails }}"
+          formControlName="treatmentDetails"
+          name="treatmentDetails"
+        >
+        </textarea>
+      </md-input-container>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-5" style="margin-top: 15px">
+      <md-input-container [style.width]="'100%'">
+        <textarea
+          mdInput
+          textAreaValidator
+          maxlength="300"
+          placeholder="{{
+            assignSelectedLanguageValue?.relationshipOfCurrentIllness
+          }}"
+          formControlName="relationOfCurrentIllness"
+          name="relationOfCurrentIllness"
+        >
+        </textarea>
+      </md-input-container>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <h3 style="margin-top: 15px">
+        <strong> {{ assignSelectedLanguageValue?.pastHistory }} </strong>
+      </h3>
+    </div>
+
+    <div
+      class="col-xs-12"
+      style="padding: 25px; padding-top: 0px;"
+      formArrayName="pastPsychiatricCondition"
+    >
+      <div
+        class="row multi-row-select m-t-15"
+        *ngFor="
+          let conditon of counsellorForm.controls.pastPsychiatricCondition[
+            'controls'
+          ];
+          let i = index;
+          let isLast = last;
+          let isOdd = odd
+        "
+        [ngClass]="{ odd: !isOdd }"
+      >
+        <div [formGroupName]="i">
+          <div class="row">
+          <div class="col-xs-12 col-sm-4 col-md-3" style="margin-top: 10px;">
+            <md-select
+              class="input-full-width"
+              name="pastPsychiatricCondition"
+              formControlName="pastPsychiatricCondition"
+              placeholder="{{
+                assignSelectedLanguageValue?.pastPsychiatricCondition
+              }}"
+              (change)="pastPyschiarticCondition(counsellorForm.controls.pastPsychiatricCondition.controls[i].value.pastPsychiatricCondition?.pastPsychiatricConditionName)"
+            >
+              <md-option
+                *ngFor="let item of psychiatricConditions"
+                [value]="item"
+              >
+                  {{ item.pastPsychiatricConditionName }}
+                </md-option>
+              </md-select>
+            </div>
+
+            <div
+            class="col-xs-12 col-sm-4 col-md-3"
+            style="margin-top: -10px;"
+            *ngIf="
+              counsellorForm.controls.pastPsychiatricCondition.controls[i]
+                .value.pastPsychiatricCondition
+                ?.pastPsychiatricConditionName === 'Other'
+            "
+          >
+            <md-input-container [style.width]="'100%'">
+              <textarea
+                mdInput
+                textAreaValidator
+                placeholder="Other Pscychiartic Conditions"
+                formControlName="otherPastPsychariticCondition"
+                name="otherPastPsychariticCondition"
+              >
+              </textarea>
+            </md-input-container>
+          </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-3" style="margin-top: 10px;">
+              <md-form-field class="input-full-width">
+                <input
+                  autocomplete="off"
+                  mdInput
+                  defaultNull
+                  maxlength="2"
+                  name="duration"
+                  MyMobileNumberDirective
+                  type="number"
+                  formControlName="duration"
+                  minlength="1"
+                  allowMax="100"
+                  placeholder="{{ assignSelectedLanguageValue?.duration }}"
+                />
+              </md-form-field>
+            </div>
+
+            <div class="col-xs-12 col-sm-4 col-md-3" style="margin-top: 10px;">
+              <md-select
+                class="input-full-width"
+                name="unitsOfDuration"
+                formControlName="unitsOfDuration"
+                placeholder="{{ assignSelectedLanguageValue?.unitsOfDuration }}"
+              >
+                <md-option value="Days">Day(s)</md-option>
+                <md-option value="Weeks">Week(s)</md-option>
+                <md-option value="Months">Month(s)</md-option>
+                <md-option value="Years">Year(s)</md-option>
+              </md-select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 col-md-3" style="margin-top: 15px">
+              <md-select
+                class="input-full-width"
+                name="typeOfTreatment"
+                formControlName="typeOfTreatment"
+                placeholder="{{ assignSelectedLanguageValue?.typeOfTreatment }}"
+                (change)="
+                  enableOtherTreatment(
+                    counsellorForm.controls['pastPsychiatricCondition'].value
+                  )
+                "
+              >
+                <md-option
+                  *ngFor="let item of treatmentTypes"
+                  [value]="item.treatmentTypeName"
+                >
+                  {{ item.treatmentTypeName }}
+                </md-option>
+              </md-select>
+            </div>
+
+            <div class="col-xs-12 col-sm-5 col-md-3" style="margin-top: 10px;" *ngIf="counsellorForm.controls.pastPsychiatricCondition.controls[i].value.typeOfTreatment === 'Medication'">
+              <md-input-container [style.width]="'100%'">
+                <input
+                  mdInput
+                  textAreaValidator
+                  placeholder="{{
+                    assignSelectedLanguageValue?.psychiatricDrugsDetails
+                  }}"
+                  formControlName="psychiatricDrugsMedicationDetails"
+                  name="psychiatricDrugsMedicationDetails"
+                />
+                <md-hint>Drug Name-Strength-Dosage-Frequency-Duration</md-hint>
+              </md-input-container>
+            </div>
+
+          <div class="col-xs-12 col-sm-4 col-md-3" style="margin-top: 15px;">
+            <md-select
+              class="input-full-width"
+              name="course"
+              formControlName="course"
+              placeholder="{{ assignSelectedLanguageValue?.course }}"
+            >
+              <md-option
+                *ngFor="let item of courseStatusValue"
+                [value]="item.courseName"
+              >
+                {{ item.courseName }}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-4 col-md-3" style="margin-top: 15px">
+            <md-select
+              class="input-full-width"
+              name="progress"
+              formControlName="progress"
+              placeholder="{{ assignSelectedLanguageValue?.progress }}"
+            >
+              <md-option
+                *ngFor="let item of progressStatus"
+                [value]="item.progressName"
+              >
+                {{ item.progressName }}
+              </md-option>
+            </md-select>
+          </div>
+
+            <div style="padding: 7px; float: right;">
+              <button
+                type="button"
+                md-mini-fab
+                [id]="'removeBtn' + i"
+                *ngIf="i != 0 || (i == 0 && conditon.touched)"
+                (click)="removePastPyschiarticConditions(i, conditon)"
+                color="warn"
+              >
+                <span class="material-icons">close</span>
+              </button>
+              <button
+                type="button"
+                md-mini-fab
+                [id]="'addBtn' + i"
+                *ngIf="isLast"
+                [disabled]="checkPsychiatricFormValidity(conditon)"
+                (click)="addPastPsychiatricCondition()"
+                color="primary"
+              >
+                <span class="material-icons">add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12" formArrayName="pastMedicalCondition">
+      <div
+        class="row multi-row-select m-t-10"
+        *ngFor="
+          let medicalCondition of counsellorForm.controls.pastMedicalCondition[
+            'controls'
+          ];
+          let i = index;
+          let isLast = last;
+          let isOdd = odd
+        "
+        [ngClass]="{ odd: !isOdd }"
+      >
+        <div [formGroupName]="i">
+          <div class="col-xs-12 col-sm-4 col-md-3">
+            <md-select
+              class="input-full-width"
+              name="pastMedicalCondition"
+              formControlName="pastMedicalCondition"
+              placeholder="{{
+                assignSelectedLanguageValue?.pastMedicalCondition
+              }}"
+              (change)="pastMedicationCondition(counsellorForm.controls.pastMedicalCondition.controls[i].value.pastMedicalCondition?.pastMedicalConditionName)"
+            >
+              <md-option
+                *ngFor="let item of pastMedicalStatus"
+                [value]="item"
+                (change)="counsellorForm.controls.pastPsychiatricCondition.controls[i].value.pastPsychiatricCondition?.pastPsychiatricConditionName === 'Other'"
+              >
+                {{ item.pastMedicalConditionName }}
+              </md-option>
+            </md-select>
+          </div>
+
+          <!-- *ngIf="counsellorForm.value.pastMedical = 'Other'" -->
+          <div
+            class="col-xs-12 col-sm-4 col-md-3" style="margin-top:15px;"
+            *ngIf="
+              counsellorForm.controls.pastMedicalCondition.controls[i].value
+                .pastMedicalCondition?.pastMedicalConditionName === 'Other'
+            "
+          >
+            <md-input-container [style.width]="'100%'">
+              <input
+                mdInput
+                textAreaValidator
+                placeholder="Other Past Medical Condition"
+                formControlName="otherPastMedicalCondition"
+                name="otherPastMedicalCondition"
+              />
+            </md-input-container>
+          </div>
+
+          <div class="col-xs-12 col-sm-3 col-md-2">
+            <md-form-field class="input-full-width">
+              <input
+                autocomplete="off"
+                mdInput
+                defaultNull
+                maxlength="2"
+                name="duration"
+                MyMobileNumberDirective
+                type="number"
+                minlength="1"
+                allowMax="100"
+                formControlName="duration"
+                placeholder="{{ assignSelectedLanguageValue?.duration }}"
+                [disabled]="!medicalCondition.value.chiefComplaint"
+              />
+            </md-form-field>
+          </div>
+
+          <div class="col-xs-12 col-sm-3 col-md-2">
+            <md-select
+              class="input-full-width"
+              name="unitsOfDuration"
+              formControlName="unitsOfDuration"
+              placeholder="{{ assignSelectedLanguageValue?.unitsOfDuration }}"
+            >
+              <md-option value="Days">Day(s)</md-option>
+              <md-option value="Weeks">Week(s)</md-option>
+              <md-option value="Months">Month(s)</md-option>
+              <md-option value="Years">Year(s)</md-option>
+            </md-select>
+          </div>
+
+          <div style="padding: 7px;">
+            <button
+              type="button"
+              md-mini-fab
+              [id]="'removeBtn' + i"
+              *ngIf="i != 0 || (i == 0 && medicalCondition.touched)"
+              (click)="removePastMedicalConditions(i, medicalCondition)"
+              color="warn"
+              style="margin-left: 15px; margin-right: 15px"
+            >
+              <span class="material-icons">close</span>
+            </button>
+            <button
+              type="button"
+              md-mini-fab
+              [id]="'addBtn' + i"
+              *ngIf="isLast"
+              (click)="addPastMedicalConditions()"
+              color="primary"
+              [disabled]="checkMedicalFormValidity(medicalCondition)"
+            >
+              <span class="material-icons">add</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <h3 style="margin-bottom: 10px; margin-top: 15px">
+        <strong>
+          {{ assignSelectedLanguageValue?.currentMedicationHistory }}
+        </strong>
+      </h3>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <md-input-container [style.width]="'100%'">
+        <textarea
+          mdInput
+          textAreaValidator
+          placeholder="{{ assignSelectedLanguageValue?.currentDrugs }}"
+          formControlName="currentDrugs"
+          name="currentDrugs"
+        >
+        </textarea>
+        <md-hint>Drug Name-Strength-Dosage-Frequency-Duration</md-hint>
+      </md-input-container>
+    </div>
+
+    <div class="col-xs-12 col-sm-12">
+      <h3 style="margin-bottom: 10px; margin-top: 15px">
+        <strong> {{ assignSelectedLanguageValue?.familyHistory }} </strong>
+      </h3>
+    </div>
+
+    <div class="col-xs-12" formArrayName="familyDiseaseList">
+      <div
+        class="row multi-row-select"
+        *ngFor="
+          let familyDisease of counsellorForm.controls.familyDiseaseList[
+            'controls'
+          ];
+          let i = index;
+          let isLast = last;
+          let isOdd = odd
+        "
+        [ngClass]="{ odd: !isOdd }"
+      >
+        <ng-container [formGroupName]="i">
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <md-select
+              class="input-full-width"
+              name="familyCondition"
+              formControlName="familyCondition"
+              placeholder="Family Condition"
+            >
+              <md-option
+                *ngFor="let disease of familyConditions"
+                [value]="disease"
+              >
+                {{ disease.familyConditionName }}
+              </md-option>
+            </md-select>
+          </div>
+
+          <div class="col-xs-12 col-sm-6 col-md-4">
+            <md-select
+              class="input-full-width"
+              multiple
+              name="familyMembers"
+              formControlName="familyMembers"
+              placeholder="Family Member"
+              [disableFormControl]="
+                !familyDisease.value.familyCondition ||
+                familyDisease.value.familyCondition?.familyCondition ==
+                  'None' ||
+                familyDisease.value.familyCondition?.familyCondition == 'Nil'
+              "
+            >
+              <md-option
+                *ngFor="let member of relationshipStatus"
+                [value]="member.relationShipName"
+              >
+                {{ member.relationShipName }}
+              </md-option>
+            </md-select>
+          </div>
+
+          <div class="col-sm-6 col-md-3 box action-btn-container pull-right">
+            <button
+              md-mini-fab
+              color="warn"
+              id="removeFamilyDisease"
+              *ngIf="i != 0 || (i == 0 && familyDisease.touched)"
+              (click)="removeFamilyDisease(i, familyDisease)"
+            >
+              <md-icon class="md-18">close</md-icon>
+            </button>
+            <button
+              md-mini-fab
+              color="primary"
+              *ngIf="isLast"
+              class="button-overall-disabled"
+              [disabled]="checkValidity(familyDisease)"
+              id="addFamilyDisease"
+              (click)="addFamilyDisease()"
+            >
+              <md-icon class="md-18">add</md-icon>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-left: -15px;">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <md-input-container [style.width]="'100%'">
+          <textarea
+            mdInput
+            textAreaValidator
+            placeholder="{{
+              assignSelectedLanguageValue?.personalAndSocialHistory
+            }}"
+            formControlName="personalSocialHistory"
+            name="personalSocialHistory"
+          >
+          </textarea>
+        </md-input-container>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <md-input-container [style.width]="'100%'">
+          <textarea
+            mdInput
+            textAreaValidator
+            maxlength="300"
+            placeholder="{{
+              assignSelectedLanguageValue?.mentalStatusExamination
+            }}"
+            formControlName="mentalExamination"
+            name="mentalExamination"
+          >
+          </textarea>
+        </md-input-container>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <md-input-container [style.width]="'100%'">
+          <textarea
+            mdInput
+            textAreaValidator
+            maxlength="300"
+            placeholder="{{ assignSelectedLanguageValue?.summary }}"
+            formControlName="summary"
+            name="summary"
+          >
+          </textarea>
+        </md-input-container>
+      </div>
+      <!-- <button (click)="saveHilhFormData()" color="primary">save</button> -->
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <button
+        md-raised-button
+        color="accent"
+        type="button"
+        style="margin-bottom: 10px; margin-top: 6px"
+        class="pull-right p-l-r-25"
+        (click)="saveHilhFormData()"
+        [disabled]="checkFormVadility()"
+      >
+        {{ assignSelectedLanguageValue?.save }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="col-xs-12 col-sm-12" *ngIf="displayHistory">
+  <h4 class="pull-left f-s-b">
+    <strong
+      >{{
+        assignSelectedLanguageValue?.history
+          ? assignSelectedLanguageValue?.history
+          : "History"
+      }}
+    </strong>
+  </h4>
+  <span
+    class="mdicon material-icons pull-left m-a-6 f-s-27 cursorPointer"
+    mdTooltip="{{ assignSelectedLanguageValue?.hideHistory }}"
+    (click)="displayHistory = !displayHistory"
+  >
+    backspace
+  </span>
+  <div class="clearfix"></div>
+  <md-tab-group (selectChange)="onLinkClick($event)">
+    <md-tab label="Casesheet">
+      <app-104-counsellor-history [cocasesheet]="counsellorHistoryData">
+      </app-104-counsellor-history>
+    </md-tab>
+  </md-tab-group>
+</div>

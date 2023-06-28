@@ -1,0 +1,138 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <label>
+      <h4 class="pull-left f-s-b m-t-20 m-b-10">{{currentLanguageSet?.blacklistANumber}}</h4>
+    </label>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 m-t-17">
+    <md-checkbox color="primary" [(ngModel)]="searchByPhone" (change)="getBlackList($event)">{{currentLanguageSet?.searchByPhoneNumber}} </md-checkbox>
+  </div>
+
+  <div *ngIf="searchByPhone">
+    <form #searchWithMobileForm="ngForm" autocomplete="off" novalidate>
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+      <md-input-container  [style.width]="'100%'" appMobileNumber >
+        <input  required minlength="5" maxlength="10" name="phoneNumber"  mdInput placeholder="{{currentLanguageSet?.phoneNumber}}" [(ngModel)]="phoneNumber" #number="ngModel">
+        <md-hint *ngIf="!number.valid">
+          <span class="error_text" *ngIf=" number.dirty || number.touched ">{{currentLanguageSet?.pleaseEnterPhoneNumber}}</span>
+        </md-hint>
+      </md-input-container>
+  
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 m-t-10">
+      <button [disabled]="!number.valid" md-raised-button color="accent" (click)="addToBlockList()">{{currentLanguageSet?.search}}</button>
+    </div>
+  </form>
+  </div>
+</div>
+<div class="row" *ngIf="showTable">
+  <div class="col-xs-12 col-sm-12 p-t-20">
+    <div class="table-responsive">
+      <table class="table" [md2Data]="data" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="phoneNumberBlockedDetails">
+        <thead>
+          <tr>
+            <th id ="phoneNumber">{{currentLanguageSet?.phoneNumber}}</th>
+            <th id ="phoneNumberBlockedStatus" md2SortBy="isBlocked">{{currentLanguageSet?.status}}</th>
+            <th id ="callCount">{{currentLanguageSet?.callCount}}</th>
+            <th id ="phoneNumberCallReason">{{currentLanguageSet?.reason}}</th>
+            <th id ="phoneNumberBlockedTill">{{currentLanguageSet?.blockedTill}}</th>
+            <th id ="phoneNumberAction">{{currentLanguageSet?.action}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="md2.data.length < 1">
+            <td colspan="6" class="record-not-found">
+              {{currentLanguageSet?.noRecordFound}}
+            </td>
+          </tr>
+          <tr *ngFor="let blacklist of md2.data">
+            <td>{{blacklist.phoneNo}}</td>
+            <td>{{blacklist.isBlocked ? 'Blocked' : 'UnBlocked'}}</td>
+            <td style="cursor: pointer">
+              <a (click)="getRecording(blacklist)">{{blacklist.noOfNuisanceCall ? ((blacklist.noOfNuisanceCall>0) ? blacklist.noOfNuisanceCall : 0): 0}}</a>
+            </td>
+            <td>Nuisence Call</td>
+            <td>{{blacklist.isBlocked ? (millisToUTCDate(blacklist.blockEndDate)|date: 'dd/MM/yyyy HH:mm'): ''}}</td>
+            <td>
+              <a style="cursor:pointer" *ngIf="blacklist.isBlocked" (click)="unblock(blacklist.phoneBlockID)">{{currentLanguageSet?.unblock}}</a>
+              <a style="cursor:pointer" *ngIf="!blacklist.isBlocked" (click)="block(blacklist.phoneBlockID)">{{currentLanguageSet?.block}}</a>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6">
+              <md2-pagination></md2-pagination>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+      <hr class="m-t-10" *ngIf="showRecordings">
+      <h4 class="pull-left" *ngIf="showRecordings">{{currentLanguageSet?.callRecordingsFor}}
+        <strong>{{ph_no}}</strong>
+      </h4>
+      <table *ngIf="showRecordings" class="table table-responsive table-striped m-t-10" [md2Data]="recording_data" #md2="md2DataTable"
+      [rowsPerPage]="5" aria-describedby="phoneNumberAudioRecordings">
+        <thead>
+          <tr>
+            <th id ="phoneNumberForAudioRecording">{{currentLanguageSet?.phoneNumber}}</th>
+            <th id ="phoneNumberCallID">{{currentLanguageSet?.callId}}</th>
+            <th id ="agentID">{{currentLanguageSet?.agentId}}</th>
+            <th id ="audioRecording">{{currentLanguageSet?.audioRecording}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="md2.data.length < 1">
+            <td colspan="4" class="record-not-found">
+              {{currentLanguageSet?.noRecordFound}}
+            </td>
+          </tr>
+          <tr *ngFor="let item of md2.data; let i = index">
+            <td>{{item.phoneNo}}</td>
+            <td>{{item?.benCallID}}</td>
+            <td>{{item?.agentID}}</td>
+           
+
+            <td>
+              <img
+                *ngIf="
+                  !(dispFlag == (md2.activePage - 1) * md2.rowsPerPage + i + 1)
+                "
+                style="width: 30px; height: 30px"
+                (click)="
+                  check(
+                    item.agentID,
+                    item.callID,
+                    (md2.activePage - 1) * md2.rowsPerPage + i + 1
+                  )
+                "
+                src="assets/images/playicon.jpg"
+                alt="Play"
+                title="{{currentLanguageSet?.play}}"
+              />
+  
+              <audio
+                *ngIf="dispFlag == (md2.activePage - 1) * md2.rowsPerPage + i + 1"
+                controls
+                autoplay
+                preload="none"
+              >
+                <source src="{{ audioResponse }}" type="audio/ogg" />
+                <source src="{{ audioResponse }}" type="audio/mpeg" />
+              </audio>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <md2-pagination></md2-pagination>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

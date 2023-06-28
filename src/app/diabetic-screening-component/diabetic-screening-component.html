@@ -1,0 +1,153 @@
+<div class="col-xs-12 col-sm-12">
+  <form autocomplete="off" [formGroup]="questionTypeConfigForm" *ngIf="!showRiskFactors" class="m-t-10">
+
+    <h4 class="pull-left f-s-b m-t-10">
+      <strong>{{assignSelectedLanguageValue?.diabeticCriteria}}</strong>
+    </h4>
+
+    <div class="clearfix"></div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let Question of Questions">
+          <md-select [style.width]="'100%'"  placeholder="{{Question.question}}" formControlName="Q-{{Question.questionID}}"
+            required>
+            <md-option *ngFor="let answer of Question.m_104QuestionScore" [value]="answer.score">
+              {{answer.answer}}
+            </md-option>
+          </md-select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <button type="button" [disabled]="disableFlag" md-raised-button color="accent" class="f-s-18 mar-top-10 pull-right m-b-10 m-l-5 m-r-5" (click)="checkStatus(questionTypeConfigForm.value) ">{{assignSelectedLanguageValue?.check}}</button>
+    <button type="button" md-raised-button color="primary" class="f-s-18 mar-top-10 pull-right m-b-10 m-l-5 m-r-5" (click)="showRiskFactors=!showRiskFactors">{{assignSelectedLanguageValue?.riskFactors}}</button>
+
+  </form>
+
+  <div class="row" *ngIf="showRiskFactors">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"  >
+        <h4 class="pull-left f-s-b m-t-10 m-b-20">
+          <strong>{{assignSelectedLanguageValue?.riskFactors}}</strong>
+        </h4>
+      </div>
+      <div *ngFor="let riskFactor of riskFactors" class="col-xs-12 col-sm-12 col-md-4 col-lg-4" >
+        <div class="row">
+          <span class="col-xs-6 col-sm-4 col-md-4 col-lg-4" *ngIf="riskFactor.question == 'Obesity,BMI>25'">
+            <md-input-container [style.width]=" '100%'" appMobileNumber>
+              <input mdInput type="weight" min="0" placeholder="{{assignSelectedLanguageValue?.weight}}" [(ngModel)]="weight" name="weight">
+            </md-input-container>
+          </span>
+          <span class="col-xs-6 col-sm-4 col-md-4 col-lg-4" *ngIf="riskFactor.question == 'Obesity,BMI>25'">
+            <md-input-container [style.width]=" '100%'" appMobileNumber>
+              <input mdInput type="height" min="0" placeholder="{{assignSelectedLanguageValue?.height}}" [(ngModel)]="height" name="height">
+            </md-input-container>
+          </span>
+          <span class="col-xs-6 col-sm-4 col-md-4 col-lg-4" *ngIf="riskFactor.question == 'Obesity,BMI>25'">
+            <button class="mar-top-10 pull-right" [disabled]="weight.length==0 && height.length==0" md-raised-button color="primary" (click)="claculateBMI(weight,height)">{{assignSelectedLanguageValue?.calculateBmi}}</button>
+          </span>
+        </div>
+        <div *ngIf="riskFactor.question == 'Obesity,BMI>25'" class="p-b-1-5">
+          <md-select disabled name="obesity" [style.width]="'100%'" (change)="checkValid(obesity)" [(ngModel)]="obesity" placeholder="{{riskFactor.question}}">
+
+            <md-option value="Yes">Yes</md-option>
+            <md-option value="No">No</md-option>
+            <md-option value="NA">NA</md-option>
+
+          </md-select>
+        </div>
+        <form autocomplete="off" [formGroup]="diabeticQuestions">
+
+        <div *ngIf="riskFactor.question != 'Obesity,BMI>25'" class="p-b-1-5">
+          <md-select [style.width]="'100%'" (change)="checkValid(riskFactor.questionID);valueSelected(riskFactor,$event)" formControlName="{{riskFactor.questionID}}" placeholder="{{riskFactor.question}}" >
+            <md-option *ngFor="let answer of riskFactor.m_104QuestionScore" [value]="answer.answer">
+              {{answer.answer}}
+            </md-option>
+          </md-select>
+        </div>
+        </form>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-t-15">
+        <h4 class="f-s-b m-t-5 m-b-10">
+          <strong>{{assignSelectedLanguageValue?.guidelinesAndInformation}}</strong>
+        </h4>
+      </div>
+
+      <div class="clearfix"></div>
+
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-t-10">
+        <div class="table-responsive">
+          <table class="table table-striped" aria-describedby="guidelinesInformation">
+            <thead>
+              <th id="guidelinesInformationParameterMeasured">{{assignSelectedLanguageValue?.parameterMeasured}}</th>
+              <th id="guidelinesInformationNormal">{{assignSelectedLanguageValue?.normal}}</th>
+              <th id="guidelinesInformationPrediabetic">{{assignSelectedLanguageValue?.prediabetic}}</th>
+              <th id="guidelinesInformationDiabetic">{{assignSelectedLanguageValue?.diabetic}}</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{assignSelectedLanguageValue?.hemoglobinA1cHbA1c}} </td>
+                <td>
+                  <5.7%</td>
+                    <td> 5.7-6.4%</td>
+                    <td> >=6.5%</td>
+              </tr>
+              <tr>
+                <td>{{assignSelectedLanguageValue?.fastingPlasmaGlucose}}</td>
+                <td>
+                  <100 mg/dl</td>
+                    <td> 100-125 mg/dl</td>
+                    <td> >=126 mg/dl</td>
+              </tr>
+              <tr>
+                <td>{{assignSelectedLanguageValue?.oralGlucoseToleranceAsPerWhoSingleDoseOf75mgOfOralGlucose}} </td>
+                <td>
+                  <140 mg/dl</td>
+                    <td> 140-199mg/dl</td>
+                    <td> >=200mg/dl</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-t-10">
+        <div class="table-responsive">
+          <table class="table table-striped" aria-describedby="guidelinesInfo">
+            <thead>
+              <th id="guidelinesInfoCondition">{{assignSelectedLanguageValue?.condition}}</th>
+              <th id="guidelinesInfoAction">{{assignSelectedLanguageValue?.action}}</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{assignSelectedLanguageValue?.noRiskFactorBloodGlucoseNormal}} </td>
+                <td> {{assignSelectedLanguageValue?.retestAfter1To2YearsAndFollowHealthyLifestyle}}</td>
+              </tr>
+              <tr>
+                <td>{{assignSelectedLanguageValue?.riskFactorPresentBloodGlucoseNormalUnknown}} </td>
+                <td> {{assignSelectedLanguageValue?.giveAdviceOnLifestyleModificationsIfBloodGlucoseUnknownGetTested}}</td>
+              </tr>
+              <tr>
+                <td>{{assignSelectedLanguageValue?.riskFactorPresentAndBloodGlucoseHighReferToTable}} </td>
+                <td> {{assignSelectedLanguageValue?.transferToMo}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <md-input-container [style.width]="'100%'">
+          <textarea mdInput textAreaValidator   placeholder="{{assignSelectedLanguageValue?.remarksByHao}}" rows="" id="" [(ngModel)]="actionByHao"
+            required #remarksHao="ngModel" name="actionByHao">
+              </textarea>
+          <md-hint *ngIf="!remarksHao.valid">
+            <span class="error_text" *ngIf=" remarksHao.dirty || remarksHao.touched ">{{assignSelectedLanguageValue?.enterRemarks}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 m-t-lg-35">
+        <button type="button" md-raised-button color="accent" class="pull-right m-l-5 m-r-5" (click)="saveCaseSheetData(actionByHao)"
+          [disabled]="!remarksHao.valid">{{assignSelectedLanguageValue?.save}}</button>
+        <button type="button" md-raised-button color="primary" class="pull-right m-l-5 m-r-5" (click)="showRiskFactors=!showRiskFactors">{{assignSelectedLanguageValue?.back}}</button>
+      </div>
+  </div>
+</div>

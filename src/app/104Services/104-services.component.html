@@ -1,0 +1,20 @@
+<div class='col-xs-12 col-sm-12'>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <label>
+        <h4 class="f-s-b m-t-10 m-b-20">{{assignSelectedLanguageValue?.servicesAvailable}}</h4></label>
+    </div>
+    <form #transferForm="ngForm" autocomplete="off">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <div class="form-group">
+          <md-select placeholder="{{assignSelectedLanguageValue?.service}}" name="service" [(ngModel)]="service" #ser="ngModel" (change)="chooseService(ser.value)" required [style.width]="'100%'">
+            <md-option *ngFor="let availableService of services" [value]="availableService.subServiceName">{{availableService.subServiceName}}</md-option>
+          </md-select>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <button [disabled]="!(transferForm.valid)" type="button" md-raised-button color="primary" class="pull-left" (click)="TransferCall(service)">{{assignSelectedLanguageValue?.continue}}</button>
+      </div>
+    </form>
+  </div>
+</div>

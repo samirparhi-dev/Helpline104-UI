@@ -1,0 +1,33 @@
+<div class="leftMenu pull-left width-5">
+  <ul class="nav sidebar-nav cu-nav" style="position:fixed">
+    <li *ngIf="current_role=='Supervisor' || current_role=='Surveyor'" routerLink="/MultiRoleScreenComponent/InnerpageComponent"
+      title="Activities">
+      <a>
+        <div class="iconDiv m-r-10">
+          <em class="fa fa-tachometer f-s-25 m-r-10" aria-hidden="true"></em>
+        </div>
+      </a>
+    </li>
+    <li *ngIf="current_role=='Supervisor'" title="Configurations">
+      <a>
+        <div class="iconDiv m-r-10">
+          <em class="fa fa-wrench f-s-25  m-r-10" aria-hidden="true"></em>
+        </div>
+      </a>
+    </li>
+    <li title="Reports">
+      <a>
+        <div class="iconDiv m-r-10">
+          <em class="fa fa-book f-s-25 m-r-10" aria-hidden="true"></em>
+        </div>
+      </a>
+    </li>
+    <li routerLink="/MultiRoleScreenComponent">
+      <a>
+        <div class="iconDiv m-r-10">
+          <em class="fa fa-cogs f-s-25 m-r-10" aria-hidden="true"></em>
+        </div>
+      </a>
+    </li>
+  </ul>
+</div>

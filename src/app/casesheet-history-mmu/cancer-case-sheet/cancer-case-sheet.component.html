@@ -1,0 +1,32 @@
+<div class="headerDiv">
+    <md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="Close" role="img" aria-hidden="true"
+      (click)="dialogReff.close()">
+      clear
+    </md-icon>
+    <h4 class="popupHeader">{{currentLanguageSet?.history}}</h4>
+  
+  </div>
+  <md-dialog-content>
+
+<cancer-doctor-diagnosis-case-sheet [data]="caseSheetData"></cancer-doctor-diagnosis-case-sheet>
+<div class="page-break"></div>
+<ng-container *ngIf="printPagePreviewSelect.caseSheetHistory">
+  <cancer-history-case-sheet [data]="caseSheetData"></cancer-history-case-sheet>
+  <div class="page-break"></div>
+</ng-container>
+<ng-container *ngIf="printPagePreviewSelect.caseSheetExamination">
+  <cancer-examination-case-sheet [data]="caseSheetData"></cancer-examination-case-sheet>
+</ng-container>
+
+<button md-mini-fab mdTooltip="Go to top" mdTooltipPosition="left" class="example-fab upward non-printable" color="primary" (click)="goToTop()">
+  <md-icon>arrow_upward</md-icon>
+</button>
+
+<button md-mini-fab mdTooltip="Print the casesheet" mdTooltipPosition="left" class="example-fab print non-printable" color="primary" (click)="printPage()">
+  <md-icon>print</md-icon>
+</button>
+
+<button md-mini-fab mdTooltip="Go to worklist" mdTooltipPosition="left" class="example-fab back non-printable" color="primary" (click)="goBack()">
+  <md-icon>chevron_left</md-icon>
+</button>
+</md-dialog-content>

@@ -1,0 +1,43 @@
+  <div class="title">
+    <h4>{{currentLanguageSet?.log}}</h4>
+    <button md-icon-button mdDialogClose tooltip="{{currentLanguageSet?.close}}" class="pull-right exit width-20px">
+      <md-icon>close</md-icon>
+    </button>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-striped" [md2Data]="feedbackLogs" #md2="md2DataTable" [rowsPerPage]="3" aria-describedby="feedbackLogsList">
+      <thead>
+        <tr>
+          <th id="feedbackLogSNo">{{currentLanguageSet?.sno}}</th>
+          <th id="feedbackLogGrievance">{{currentLanguageSet?.grievanceLogs}}</th>
+          <th id="feedbackLogModifiedBy">{{currentLanguageSet?.modifiedBy}}</th>
+          <th id="feedbackLogModifiedDate">{{currentLanguageSet?.modifiedDate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="feedbackLogs.length == 0">
+          <td colspan="4" class="text-center">{{currentLanguageSet?.noRecordFound}}</td>
+        </tr>
+        <tr *ngFor="let log of md2.data">
+          <td>{{feedbackLogs.indexOf(log)+1}}</td>
+          <td>{{ log?.feedbackLogs }} </td>
+          <td>{{ log?.createdBy }} </td>
+          <td>{{ log?.createdDate | utcDate | date:'dd/MM/yyyy hh:mm a'}}</td>
+         <td></td>
+         <td></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">
+              <md2-pagination></md2-pagination>
+          </td>
+          <td colspan="2">
+              <button md-raised-button color="primary" class="pull-right" mdDialogClose>{{currentLanguageSet?.close}}</button>
+          </td>
+      </tr>
+      </tfoot>
+    </table>
+  </div>
+
+

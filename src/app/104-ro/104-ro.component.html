@@ -1,0 +1,133 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 p-t-10 p-b-10">
+    <div class="bs-wizard animate-box" style="position: relative; z-index: 1">
+      <div
+        id="one"
+        class="col-xs-2 bs-wizard-step disabled"
+        style="padding: 0px; margin: 0px"
+      >
+        <div class="text-center hidden-xs hidden-sm hidden-md font-Light">
+          {{ assignSelectedLanguageValue?.registerBeneficiary }}
+        </div>
+        <div
+          class="
+            text-center
+            visible-md
+            hidden-lg
+            visible-xs visible-sm
+            font-Light
+          "
+        >
+          S/R B
+        </div>
+        <div class="progress progress-bar-disabled progress-margin">
+          <div class="progress-bar"></div>
+        </div>
+        <a class="bs-wizard-dot cursorPointer active-tab"></a>
+      </div>
+      <div id="three" class="col-xs-2 bs-wizard-step disabled">
+        <div class="text-center hidden-xs hidden-sm font-Light">
+          {{ assignSelectedLanguageValue?.closure }}
+        </div>
+        <div
+          class="
+            text-center
+            hidden-md hidden-lg
+            visible-xs visible-sm
+            font-Light
+          "
+        >
+          R M M
+        </div>
+        <div class="progress progress-bar-disabled progress-margin">
+          <div class="progress-bar"></div>
+        </div>
+        <a class="bs-wizard-dot cursorPointer"></a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="">
+  <div class="panel-body card p-a-0 bg-white m-b-25">
+    <div class="container-fluid p-a-0 height-425 overflow-y">
+      <div class="">
+        <div
+          id="myCarousel"
+          class="carousel slide"
+          data-ride="carousel"
+          data-interval="false"
+          data-wrap="false"
+        >
+          <div class="carousel-inner">
+            <div class="item active">
+              <app-beneficiary-registration-104
+                [resetting]="reset"
+                (nexButtonEvent)="hideShoNextEvent($event)"
+                (onBenRegDataSelect)="getSelectedBenDetails($event)"
+                (roleChanged)="changeCurrentRole($event)"
+                (closurePage)="nextClosure()"
+              ></app-beneficiary-registration-104>
+            </div>
+            <div class="item">
+              <app-closure
+                (callClosed)="closeCall()"
+                (callContinue)="continueCall()"
+                (roleChanged)="changeCurrentRole($event)"
+                #closure
+                [beneficiarySelected]="beneficiarySelected"
+              ></app-closure>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 m-b-8 m-t-8">
+      <span *ngIf="hasHAOpriveledge" [hidden]="isNextHide">
+        <button
+          md-raised-button
+          color="primary"
+          id="next"
+          type="button"
+          class="pull-right font-regular f-s-18"
+          href="#myCarousel"
+          (click)="changeCurrentRole('HAO')"
+          [disabled]="!isEmergency"
+        >
+        {{ assignSelectedLanguageValue?.proceedToHao}}
+        </button>
+      </span>
+      <div class="div-center">
+        <button
+          [disabled]="disableCancel"
+          class="f-s-18 m-r-5"
+          [disabled]="disableCancel"
+          id="cancelLink"
+          type="button"
+          md-raised-button
+          color="primary"
+          data-slide-to="1"
+          (click)="openDialog()"
+        >
+          {{ assignSelectedLanguageValue?.cancel }}
+        </button>
+        <button
+          [disabled]="disableClosure"
+          id="closureLink"
+          type="button"
+          md-raised-button
+          color="primary"
+          class="f-s-18"
+          data-slide-to="3"
+          (click)="openDialogClosure()"
+        >
+          {{
+            assignSelectedLanguageValue?.closure
+              ? assignSelectedLanguageValue?.closure
+              : "Close Call"
+          }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

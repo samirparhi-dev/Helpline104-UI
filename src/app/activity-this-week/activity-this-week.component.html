@@ -1,0 +1,29 @@
+<div class="panel panel-default m-b-10">
+	<div class="panel-heading p-t-b-3 f-s-16 bg-white">{{currentLanguageSet?.activityForThisWeek}}
+		<span class="pull-right">
+			<img src="assets/images/activityIcon.png" alt="{{currentLanguageSet?.activity}}">
+		</span>
+	</div>
+	<div class="panel-body">
+		<div class="row">         
+			<div class="col-xs-3 col-sm-3 m-t-10">
+			  <ul class="dots p-a-0">
+			  <li>{{currentLanguageSet?.trainingResources}}</li>
+			  </ul>
+			</div>
+			<div class="col-xs-9 col-sm-9">
+			  <ul class="p-t-10 p-l-15 list-unstyled">
+			  <li data-toggle="modal" data-target="#alert" class="pull-left cursorPointer" (click)="openTrainingDialog()"><em class="fa fa-book f-s-20 m-t--8 pull-left f-c-g" aria-hidden="true"></em><div *ngIf="training_resource_count" class="w-h-20x20 border-radius-50 pull-left m-t--8 m-l--18 text-center f-c-w f-s-12 p-t-2" >{{training_resource_count}}</div></li>
+			  </ul>
+			</div>         
+		  </div>
+		<ul class="p-a-0 dots" *ngIf="(role==='MO'|| role==='CO' || role==='SIO' || role==='HAO' || role=='PD' || screens.includes('Health_Advice')) && (this.getCommonData.current_campaign == 'OUTBOUND' )">
+			<li>
+				<a routerLink="/MultiRoleScreenComponent/OutboundWorkList"  routerLinkActive="active">{{currentLanguageSet?.outboundCallWorklist}}</a>
+			</li>
+		</ul>
+		<label class="f-s-12 pull-right m-b-0">
+			<a>{{currentLanguageSet?.moreMore}}</a>
+		</label>
+	</div>
+</div>

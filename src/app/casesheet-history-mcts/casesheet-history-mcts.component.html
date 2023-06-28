@@ -1,0 +1,40 @@
+<div class="table-responsive">
+    <table class="table table-striped" [md2Data]="callHistory" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="mctsCasesheetHistory">
+      <thead>
+        <tr>
+          <th id ="mctsCasesheetCallType">{{currentLanguageSet?.callType}}</th>
+          <th id ="mctsCasesheetCallDate">{{currentLanguageSet?.callDate}}</th>
+          <th id ="mctsCasesheetDateUpdate">{{currentLanguageSet?.dataUpdate}}</th>
+          <th id ="mctsCasesheetCallStatus">{{currentLanguageSet?.callStatus}}</th>
+          <th id ="mctsCasesheetCallType">{{currentLanguageSet?.callType}}</th>
+          <th id ="mctsCasesheetSMSAdvice">{{currentLanguageSet?.smsAdvice}}</th>
+          <th id ="mctsCasesheetRemarks">{{currentLanguageSet?.remarks}}</th>
+          <th id ="mctsCasesheetAction">{{currentLanguageSet?.actions}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="callHistory?.length==0">
+          <td colspan="8" class="record-not-found">
+            {{currentLanguageSet?.noRecordFound}}
+          </td>
+        </tr>
+        <tr *ngFor="let row of md2.data;let i = index ">
+          <td>{{row?.mctsOutboundCall?.displayOBCallType}}</td>
+          <td>{{row.createdDate | utcDate | date: 'dd/MM/yyyy hh:mm a'}}</td>
+          <td>{{row?.changeLog?.split('|').join(',')}}</td>
+          <td>{{row?.callType?.callGroupType}}</td>
+          <td>{{row?.callType?.callType}}</td>
+          <td>{{row?.smsAdvice}}</td>
+          <td>{{row.remark}}</td>
+          <td ><button md-raised-button color="accent" class="md-small" (click)="openDialog(row.callDetailID)">{{currentLanguageSet?.viewQAnda}}</button></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="8">
+            <md2-pagination></md2-pagination>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>

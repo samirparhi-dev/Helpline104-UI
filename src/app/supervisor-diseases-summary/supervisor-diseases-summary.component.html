@@ -1,0 +1,350 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="!enableCreationField">
+    <h4>{{currentLanguageSet?.diseasesSummary}}</h4>
+  </div>
+</div>
+<div class="row" *ngIf="!enableCreationField">
+  <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12 table-responsive">
+    <table class="table table-striped" [md2Data]="filteredDiseaseSummaryList" #md2="md2DataTable" aria-describedby="supervisorDiseasesSummary">
+      <thead>
+        <tr>
+          <th id="supervisorDiseasesSummarySNo">{{currentLanguageSet?.sno}}</th>
+          <th id="supervisorDiseasesSummaryName">{{currentLanguageSet?.diseaseName}}</th>
+          <th id="supervisorDiseasesSummary">{{currentLanguageSet?.diseaseSummary}}</th>
+          <th id="supervisorDiseasesSummaryMedicalAdvice">{{currentLanguageSet?.medicalAdvice}}</th>
+          <th id="supervisorDiseasesSummaryEdit">{{currentLanguageSet?.editCaps}}</th>
+          <th id="supervisorDiseasesSummaryAction">{{currentLanguageSet?.action}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="filteredDiseaseSummaryList?.length == 0">
+          <td class="record-not-found" colspan="6">
+            {{currentLanguageSet?.noRecordFound}}
+          </td>
+        </tr>
+        <tr *ngFor="let item of md2.data">
+          <td>{{filteredDiseaseSummaryList.indexOf(item)+1}}</td>
+          <td>{{item.diseaseName}}</td>
+          <td style="white-space: pre-line">{{item.summary}}
+          </td>
+          <td style="white-space: pre-line">{{item.medicaladvice}}</td>
+          <td>
+            <md-icon mdTooltip="{{currentLanguageSet?.editCaps}}" class="mat-icon material-icons" role="img" aria-hidden="true"
+              style="cursor:pointer" *ngIf="!item.deleted" (click)="editSummaryData(item)">edit</md-icon>
+          </td>
+          <td><button md-raised-button color="primary" *ngIf="!item.deleted"
+              (click)="deleteSummary(item, true)">{{currentLanguageSet?.deactivate}}</button>
+            <button md-raised-button color="accent" *ngIf="item.deleted"
+              (click)="deleteSummary(item, false)">{{currentLanguageSet?.activate}}</button>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr *ngIf="filteredDiseaseSummaryList?.length > 0">
+          <td colspan="1" *ngIf="filteredDiseaseSummaryList?.length > 0 || this.pageCount != 0">
+            <label class="pageName">{{currentLanguageSet?.pageSize}}</label>
+          </td>
+          <td colspan="1" *ngIf="filteredDiseaseSummaryList?.length > 0 || this.pageCount != 0">
+            <md-select [(ngModel)]="rowsPerPage" (change)="getDiseaseSummaryList(pager.currentPage, rowsPerPage)"
+              style="margin-left: -30px">
+              <md-option value="5">5</md-option>
+              <md-option value="10">10</md-option>
+              <md-option value="15">15</md-option>
+              <md-option value="20">20</md-option>
+            </md-select>
+          </td>
+          <td colspan="4">
+            <ul *ngIf="pager.pages && pager.pages.length" class="pagination pull-right">
+              <li [ngClass]="{disabled:pager.currentPage <= 1}">
+                <a (click)="checkPager(pager, 1, rowsPerPage)">
+                  << </a>
+              </li>
+              <li [ngClass]="{disabled:pager.currentPage <= 1}">
+                <a (click)="setPage(pager.currentPage - 1, rowsPerPage)">
+                  < </a>
+              </li>
+              <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                <a (click)="setPage(page, rowsPerPage)">{{page}}</a>
+              </li>
+              <li [ngClass]="{disabled:pager.currentPage >= pager.totalPages }">
+                <a (click)="setPage(pager.currentPage + 1, rowsPerPage)">></a>
+              </li>
+              <li [ngClass]="{disabled:pager.currentPage >= pager.totalPages }">
+                <a (click)="checkPager(pager, pager.totalPages, rowsPerPage)">>></a>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-10">
+    <button md-raised-button color="primary" class="pull-right" (click)="createSummary(diseasesSummaryForm.value)">{{currentLanguageSet?.createDiseaseSummary}}</button>
+  </div>
+</div>
+<div class="row m-t-10" *ngIf="enableCreationField">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4 *ngIf = "!updateDiseases">{{currentLanguageSet?.createDiseaseSummary}}</h4>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4 *ngIf = "updateDiseases">{{currentLanguageSet?.editDiseaseSummary}}</h4>
+  </div>
+  <form [formGroup]="diseasesSummaryForm">
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-t-15">
+      <md-input-container class="width100">
+        <input mdInput appNameWithCopyPaste placeholder="{{currentLanguageSet?.diseaseName}}*" formControlName="diseaseName" name="diseaseName" maxlength="50"
+          (keyup)="checkExistance(diseasesSummaryForm.value.diseaseName)">
+      <md-hint>
+        <span class="error_text" *ngIf="diseaseNameExist">{{currentLanguageSet?.diseaseAlreadyExists}}</span>
+      </md-hint>
+    </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea mdInput  diseaseSummaryEnableCopyPaste  placeholder="{{currentLanguageSet?.diseaseSummary}}" formControlName="diseaseSummary" name="diseaseSummary"
+          maxlength="600">
+        </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.diseaseSummary"
+        (click)="addSummaryContents(diseasesSummaryForm.value.diseaseSummary)">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formContentArray.length == 0" (click)="viewSummaryContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea mdInput diseaseSummaryEnableCopyPaste  placeholder="{{currentLanguageSet?.couldBeDangerousIfTheAnswerIsYesForAnyOneOfTheFollowingQuestions}}"
+          formControlName="questions" name="questions" maxlength="600">
+      </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.questions"
+        (click)="addQuestionsContents(diseasesSummaryForm.value.questions)">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formQuestionContentArray.length == 0"
+        (click)="viewQuestionsContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea mdInput diseaseSummaryEnableCopyPaste  placeholder="{{currentLanguageSet?.causes}}" formControlName="causes" name="causes" maxlength="600">
+      </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.causes">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+          (click)="addCauseContents(diseasesSummaryForm.value.causes)">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formCauseContentArray.length == 0" (click)="viewCauseContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea mdInput diseaseSummaryEnableCopyPaste  placeholder="{{currentLanguageSet?.dosAndDonts}}" formControlName="doAndDonts" name="doAndDonts" maxlength="600">
+      </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.doAndDonts">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+          (click)="addDoAndDontsContents(diseasesSummaryForm.value.doAndDonts)">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formdosContentArray.length == 0"
+        (click)="viewDoAndDontsContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea mdInput diseaseSummaryEnableCopyPaste  placeholder="{{currentLanguageSet?.signsAndSymptoms}}" formControlName="signsAndSymptoms" name="signsAndSymptoms"
+          maxlength="600">
+      </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.signsAndSymptoms">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+          (click)="addSignsAndSymptomsContents(diseasesSummaryForm.value.signsAndSymptoms)">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formSignContentArray.length == 0"
+        (click)="viewSignsAndSymptomsContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea diseaseSummaryEnableCopyPaste  mdInput placeholder="{{currentLanguageSet?.whenToSeekMedicalAdvice}}" formControlName="medicalAdvice" name="medicalAdvice"
+          maxlength="600">
+      </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.medicalAdvice">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+          (click)="addMedicalAdviceContents(diseasesSummaryForm.value.medicalAdvice)">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formMedicalContentArray.length == 0"
+        (click)="viewMedicalAdviceContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea mdInput  diseaseSummaryEnableCopyPaste  placeholder="{{currentLanguageSet?.riskFactors}}" formControlName="riskFactors" name="riskFactors" maxlength="600">
+      </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.riskFactors">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+          (click)="addRiskFactorsContents(diseasesSummaryForm.value.riskFactors)">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formRiskFactorContentArray.length == 0"
+        (click)="viewRiskFactorsContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea mdInput diseaseSummaryEnableCopyPaste  placeholder="{{currentLanguageSet?.treatment}}" formControlName="treatment" name="treatment" maxlength="600">
+      </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.treatment">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+          (click)="addTreatmentContents(diseasesSummaryForm.value.treatment)">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formTreatmentContentArray.length == 0"
+        (click)="viewTreatmentContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea mdInput diseaseSummaryEnableCopyPaste  placeholder="{{currentLanguageSet?.selfCare}}" formControlName="selfCare" name="selfCare" maxlength="600">
+      </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.selfCare">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+          (click)="addSelfCareContents(diseasesSummaryForm.value.selfCare)">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formSelfCareArray.length == 0" (click)="viewSelfCareContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+      <md-input-container class="width100">
+        <textarea mdInput diseaseSummaryEnableCopyPaste  placeholder="{{currentLanguageSet?.investigations}}" formControlName="investigations" name="investigations"
+          maxlength="600">
+      </textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="!diseasesSummaryForm.value.investigations">
+        <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+          (click)="addInvestigationsContents(diseasesSummaryForm.value.investigations)">add
+        </md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-1 col-lg-1 m-t-20">
+      <button md-mini-fab color="primary" [disabled]="formInvestigationArray.length == 0"
+        (click)="viewInvestigationsContents()">
+        <md-icon mdSuffix class="mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="{{currentLanguageSet?.view}}">
+          visibility</md-icon>
+      </button>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+      <button md-raised-button color="primary" class="pull-right"
+        *ngIf="diseasesSummaryForm.value.diseaseName && !updateDiseases" (click)="addObj(diseasesSummaryForm.value)"
+      style="cursor: pointer">{{currentLanguageSet?.add}}
+      </button>
+    </div>
+  </form>
+  <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12 table-responsive" *ngIf="bufferArray.length > 0">
+    <table class="table table-striped" [md2Data]="bufferArray" #md2="md2DataTable" aria-describedby="bufferSupervisorDiseasesSummary">
+      <thead>
+        <tr>
+          <th id="bufferSupervisorDiseasesSummarySNo">{{currentLanguageSet?.sno}}</th>
+          <th id="bufferSupervisorDiseasesSummaryName">{{currentLanguageSet?.diseaseName}}</th>
+          <th id="bufferSupervisorDiseasesSummary">{{currentLanguageSet?.diseaseSummary}}</th>
+          <th id="bufferSupervisorDiseasesSummaryMedicalAdvice">{{currentLanguageSet?.medicalAdvice}}</th>
+          <th id="bufferSupervisorDiseasesSummaryAction">{{currentLanguageSet?.action}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of md2.data ; let i=index">
+          <td>{{bufferArray.indexOf(item)+1}}</td>
+          <td>{{item.diseaseName}}</td>
+          <td style="white-space: pre;">{{item.summary}}</td>
+          <td style="white-space: pre;">{{item.medicaladvice}}</td>
+          <td>
+            <md-icon class="cursorPointer" mdTooltip="{{currentLanguageSet?.delete}}" (click)="remove_obj(bufferArray.indexOf(item))">delete
+            </md-icon>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5">
+            <md2-pagination></md2-pagination>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <button md-raised-button color="primary" class="pull-left m-b-10" (click)="back()">{{currentLanguageSet?.back}}</button>
+    <button md-raised-button color="primary" class="pull-left m-l-10 m-b-10" [disabled]="!diseasesSummaryForm.value" (click)="reset()">{{currentLanguageSet?.reset}}</button>
+    <button md-raised-button color="primary" class="pull-right m-b-10" *ngIf="!updateDiseases && bufferArray.length > 0"
+      (click)="save(rowsPerPage)">{{currentLanguageSet?.save}}</button>
+    <button md-raised-button color="primary" class="pull-right m-b-10" *ngIf="updateDiseases && diseasesSummaryForm.value.diseaseName" (click)="updateDisease(diseasesSummaryForm.value, rowsPerPage)">{{currentLanguageSet?.update}}</button>
+  </div>
+</div>

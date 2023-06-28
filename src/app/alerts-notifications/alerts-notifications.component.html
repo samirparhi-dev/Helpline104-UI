@@ -1,0 +1,48 @@
+<div class="panel panel-default m-b-10">
+	<div class="panel-heading p-t-b-3 f-s-16 bg-white">
+		{{currentLanguageSet?.alertsAndNotifications}} <span class="pull-right"><img src="assets/images/alertsIcon.png" alt="{{currentLanguageSet?.alerts}}"></span>
+	</div>
+	<div class="panel-body p-l-0">
+		<div class="row">         
+			<div class="col-xs-6 col-sm-6">
+				<ul class="p-t-10 p-l-15 dots">
+					<li>{{currentLanguageSet?.alerts}}</li>
+				</ul>
+			</div>
+				 
+			<div class="col-xs-6 col-sm-6">
+				<ul class="p-t-10 p-l-15 list-unstyled">
+					<li data-toggle="modal" data-target="#alert" class="pull-left cursorPointer" (click)="openNotificationsDialog('Alert')"><em class="fa fa-bell f-s-20 m-t--8 pull-left f-c-g" aria-hidden="true"></em><div *ngIf="alertCount" class="w-h-20x20 border-radius-50 pull-left m-t--8 m-l--18 text-center f-c-w f-s-12 p-t-2" >{{alertCount}}</div></li>
+				</ul>
+			</div>         
+		</div>
+				 
+				 <div class="row">         
+				 <div class="col-xs-6 col-sm-6">
+					 <ul class="p-t-10 p-l-15 dots">
+						 <li >{{currentLanguageSet?.officeBulletin}}</li>
+				 </ul>
+				 </div>
+				 
+				 <div class="col-xs-6 col-sm-6">
+				 <ul class="p-t-10 p-l-15 list-unstyled">
+						 <li class="pull-left cursorPointer" (click)="openNotificationsDialog('Office')"><em class="fa fa-bell f-s-20 m-t--8 pull-left f-c-g" aria-hidden="true"></em><div *ngIf="othersCount" class="w-h-20x20 border-radius-50 pull-left m-t--8 m-l--18 text-center f-c-w f-s-12 p-t-2">{{othersCount}}</div></li>
+				 </ul>
+				 </div>         
+				 </div>
+				 
+				 <div class="row">         
+				 <div class="col-xs-6 col-sm-6">
+					 <ul class="p-t-10 p-l-15 dots">
+						 <li>{{currentLanguageSet?.notifications}}</li>
+				 </ul>
+				 </div>
+				 
+				 <div class="col-xs-6 col-sm-6">
+				 <ul class="p-t-10 p-l-15 list-unstyled">
+						 <li class="pull-left cursorPointer" (click)="openNotificationsDialog('Notification')"><em class="fa fa-bell f-s-20 m-t--8 pull-left f-c-g" aria-hidden="true"></em><div *ngIf="notificationCount" class="w-h-20x20 border-radius-50 pull-left m-t--8 m-l--18 text-center f-c-w f-s-12 p-t-2">{{notificationCount}}</div></li>
+				 </ul>
+				 </div>         
+				 </div>
+			</div>
+</div>

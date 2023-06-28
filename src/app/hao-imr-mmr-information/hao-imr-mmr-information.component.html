@@ -1,0 +1,441 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="showFormCondition">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+    <h4 class="pull-left"><strong>{{currentLanguageSet?.deathRegistration}}</strong></h4>
+    <button md-raised-button color="accent" *ngIf="showFormCondition" type="button"
+      class="pull-right m-t-5 p-l-r-38 font-regular f-s-18" (click)="showTable()">
+      {{ currentLanguageSet?.history }}
+    </button>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{currentLanguageSet?.typeOfRegistration}} *</label>
+    <md-radio-group name="ImrMMr" [(ngModel)]="is_Imr_Mmr" id="typeOfReg" (change)="checkImrMmr(is_Imr_Mmr)" required
+      [disabled]="showUpdateCondition">
+      <md-radio-button color="primary" value="CDR">{{currentLanguageSet?.cdr}}</md-radio-button>
+      <md-radio-button class="m-l-10" color="primary" value="MDSR">{{currentLanguageSet?.mdsr}}</md-radio-button>
+    </md-radio-group>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+    <h4 class="pull-left">{{currentLanguageSet?.informerDetails}}</h4>
+  </div>
+  <div class="col-xs-12 col-sm-12 p-a-0">
+    <form #imrmmrForm="ngForm" id="imrmmrForm" autocomplete="off">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <label class="f-s-n-b m-r-15 f-s-16" >{{currentLanguageSet?.informerCategory}}*</label>
+      <md-radio-group id="informercategory" name="informerCategory" [(ngModel)]="informerCategory" (change)="checkHealth(informerCategory)" required
+      [disabled]="showUpdateCondition" >
+        <md-radio-button color="primary" value="Asha/Sahiya">{{currentLanguageSet?.asha_sahiya}}</md-radio-button>
+        <md-radio-button class="m-l-10" color="primary" value="Health Worker">{{currentLanguageSet?.healthWorker}}</md-radio-button>
+        <md-radio-button class="m-l-10" color="primary" value="Public">{{currentLanguageSet?.public}}</md-radio-button>
+      </md-radio-group>
+
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 m-t--9" *ngIf="enableHealthFlag">
+      <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.selectedCategory}}" [(ngModel)]="selectedCategory"
+        name="selectedCategory" [disabled]="showUpdateCondition">
+        <md-option *ngFor="let selectedCategory of healthList" [value]="selectedCategory.healthWorkerType">
+          {{selectedCategory.healthWorkerType}}
+        </md-option>
+      </md-select>
+    </div>
+   
+  
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 align">
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+      <md-input-container appNameSpace [style.width]="'100%'">
+        <input mdInput autofocus="autofocus" placeholder="{{currentLanguageSet?.informerName}}" minlength="3" maxlength="25"
+          name="informerName" [(ngModel)]="informerName" #informername="ngModel" required  [disabled]="showUpdateCondition">
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+      <md-input-container appMobileNumber [style.width]="'100%'">
+        <input mdInput placeholder="{{currentLanguageSet?.informerMobileNumber}}" name="informerMobileNumber"
+          [(ngModel)]="informerMobileNumber" #mobileNum="ngModel" minlength={{phonenMaxlength}} maxlength={{phonenMaxlength}}  (keyup)="checkMobNumberLength(informerMobileNumber)" required  [disabled]="showUpdateCondition">
+        <md-hint *ngIf="!mobileNum.valid">
+          <span class="error_text" *ngIf="!mobileNum.required  && ( mobileNum.dirty || mobileNum.touched)">{{currentLanguageSet?.pleaseEnterTenDigitsNumber}}  {{phonenMaxlength}} {{currentLanguageSet?.digits}}</span>
+        </md-hint>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+      <md-select placeholder="{{currentLanguageSet?.informerDistrict}}" [style.width]="'100%'" [(ngModel)]="informerDistrictid"
+        name="informerDistrictid" (change)="GetInformerTaluks(informerDistrictid)" required  [disabled]="showUpdateCondition">
+        <md-option *ngFor="let informerDistrictid of informerDistricts" [value]="informerDistrictid.districtID">
+          {{informerDistrictid.districtName}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+      <md-select placeholder="{{currentLanguageSet?.informerBlock}}" [style.width]="'100%'" [(ngModel)]="informerTalukid"
+        name="informerTalukid" (change)="GetInformerBlocks(informerTalukid)" required  [disabled]="showUpdateCondition">
+        <md-option *ngFor="let informerTalukid of informerTaluks" [value]="informerTalukid.blockID">
+          {{informerTalukid.blockName}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+      <md-select placeholder="{{currentLanguageSet?.informerVillage}}" [style.width]="'100%'" [(ngModel)]="informerVillageid"
+        name="informerVillageid"  [disabled]="showUpdateCondition">
+        <md-option *ngFor="let informerVillageid of informerBlocks" [value]="informerVillageid.districtBranchID">
+          {{informerVillageid.villageName}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+      <md-input-container [style.width]="'100%'">
+        <textarea mdInput addressValidator  placeholder="{{currentLanguageSet?.informerAddress}}" rows="1" name="informerAddress" required maxlength="100"
+          [(ngModel)]="informerAddress" #address="ngModel"  [disabled]="showUpdateCondition"></textarea>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+      <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.informerIdProof}}" [(ngModel)]="identityType"
+        name="identityType" #idtype="ngModel" (change)="validateID(identityType)"  [disabled]="showUpdateCondition">
+        <md-option *ngFor="let identity of govtID" [value]="identity.identityType">
+          {{identity.identityType}}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+      <md-input-container [style.width]="'100%'" appAlphanumeric>
+        <input mdInput [disabled]="idtype.value == undefined || showUpdateCondition" placeholder="{{currentLanguageSet?.informerIDNumber}}" name="informerIdNo"
+          [maxlength]="idMaxValue" [minlength]="idMinValue" [pattern]="patternID" [(ngModel)]="informerIdNo" #idNumber="ngModel">
+        <md-hint [hidden]="idNumber.valid || idNumber.pristine">
+          <span class="f-s-10 error_text" [hidden]="!idNumber.hasError('pattern')">{{idErrorText}}</span>
+        </md-hint>
+      </md-input-container>
+    </div>
+    
+      </div>
+   
+
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <h4 class="pull-left">{{currentLanguageSet?.victimDetails}}</h4>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 align">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-input-container appNameSpace [style.width]="'100%'">
+          <input mdInput autofocus="autofocus" placeholder="{{currentLanguageSet?.victimName}}" required minlength="3" maxlength="25"
+            name="victimName" [(ngModel)]="victimName" #firstname="ngModel" [disabled]="showUpdateCondition" />
+          <md-hint *ngIf="!firstname.valid">
+            <span class="error_text" *ngIf="
+                !firstname.required && (firstname.dirty || firstname.touched)
+              ">{{currentLanguageSet?.enterAtLeastThreeCharacters}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5" *ngIf="isMRFlag!=='CDR'">
+        <md-input-container appNameSpace [style.width]="'100%'">
+          <input mdInput autofocus="autofocus" placeholder="{{currentLanguageSet?.victimHusband_fathersName}}" required minlength="3" maxlength="25"
+            name="victimFatherName" [(ngModel)]="victimFatherName" #fathername="ngModel" [disabled]="showUpdateCondition"  />
+          <md-hint *ngIf="!fathername.valid">
+            <span class="error_text" *ngIf="
+                !fathername.required && (fathername.dirty || fathername.touched)
+              ">{{currentLanguageSet?.enteratLeast3Characters}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5" *ngIf="isMRFlag==='CDR'">
+        <md-input-container appNameSpace [style.width]="'100%'">
+          <input mdInput autofocus="autofocus" placeholder="{{currentLanguageSet?.victimMothersName}}" required minlength="3" maxlength="25"
+            name="victimMotherName" [(ngModel)]="victimMotherName" #mothername="ngModel" [disabled]="showUpdateCondition" />
+          <md-hint *ngIf="!mothername.valid">
+            <span class="error_text" *ngIf="
+                !mothername.required && (mothername.dirty || mothername.touched)
+              ">{{currentLanguageSet?.enteratLeast3Characters}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-input-container appMobileNumber [style.width]="'100%'">
+          <input mdInput placeholder="{{currentLanguageSet?.victimAge}}"  max="120" name="age" [(ngModel)]="age"
+            (keyup)="ageInput(age)" #ageEvent="ngModel" minlength="1" maxlength="3"  [disabled]="showUpdateCondition">
+          <md-hint *ngIf="ageFlag">
+            <span class="error_text" *ngIf="ageFlag  && ( ageEvent.dirty || ageEvent.touched)">{{currentLanguageSet?.entervalidAgeMax120}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select placeholder="{{currentLanguageSet?.victimDistrict}}" required [style.width]="'100%'" [(ngModel)]="district"
+          name="district" (change)="GetTaluks(district)" #districtSelected="ngModel" [disabled]="showUpdateCondition">
+          <md-option *ngFor="let district of districts" [value]="district.districtID">{{ district.districtName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select placeholder="{{currentLanguageSet?.victimBlock}}" [style.width]="'100%'" [(ngModel)]="taluk" required name="taluk"
+          (change)="GetBlocks(taluk)" [disabled]="showUpdateCondition">
+          <md-option *ngFor="let taluk of taluks" [value]="taluk.blockID">{{ taluk.blockName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select placeholder="{{currentLanguageSet?.victimVillage}}" [style.width]="'100%'" [(ngModel)]="victimVillage" name="village"
+          [disabled]="showUpdateCondition">
+          <md-option *ngFor="let block of blocks" [value]="block.districtBranchID">{{ block.villageName }}
+          </md-option>
+        </md-select>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-input-container [style.width]="'100%'">
+          <textarea mdInput addressValidator  placeholder="{{currentLanguageSet?.victimAddress}}" rows="1" name="victimAddress" 
+          minlength="3" maxlength="500" [(ngModel)]="victimAddress" #victimaddress="ngModel"  [disabled]="showUpdateCondition"></textarea>
+            <md-hint *ngIf="!victimaddress.valid">
+              <span class="error_text" *ngIf="!victimaddress.required  && ( victimaddress.dirty || victimaddress.touched)">{{currentLanguageSet?.enteratLeast3Characters}}</span>
+            </md-hint>
+        </md-input-container>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-input-container appMobileNumber [style.width]="'100%'">
+          <input mdInput placeholder="{{currentLanguageSet?.victimRelativeContactNumber}}" name="mobileNumber" [(ngModel)]="mobileNumber"
+            #mobileNo="ngModel" minlength={{relativephonenMaxlength}} maxlength={{relativephonenMaxlength}} [disabled]="showUpdateCondition" (keyup)="checkRelativeMobNumberLength(mobileNumber)" />
+          <md-hint *ngIf="!mobileNo.valid">
+            <span class="error_text" *ngIf="!mobileNo.required && (mobileNo.dirty || mobileNo.touched)">{{currentLanguageSet?.pleaseEnter}} {{relativephonenMaxlength}} {{currentLanguageSet?.digits}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md2-datepicker name="refDate" [style.width]="'100%'" [max]="maxDate" [min]="maxDate"
+          placeholder="{{currentLanguageSet?.referenceDate}}" disabled [(ngModel)]="refDate" #minDateControl="ngModel" style="width: 100%"
+          (keydown)="preventTyping($event)"></md2-datepicker>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <h4 class="pull-left">{{currentLanguageSet?.summaryOfDeath}}</h4>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-input-container [style.width]="'100%'">
+          <textarea mdInput textAreaValidator  placeholder="{{currentLanguageSet?.reasonOfDeath}}" rows="2" name="reasonofDeath" maxlength="100"
+            [(ngModel)]="reasonofDeath" #feedback="ngModel" [disabled]="showUpdateCondition" required></textarea>
+        </md-input-container>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <h4 class="pull-left">{{currentLanguageSet?.stageOfDeath}} *</h4>
+      </div>
+      <br />
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{currentLanguageSet?.duringPregnancy}}</label>
+        <md-radio-group name="duringPreg" [(ngModel)]="duringPreg" (change)="checkduringPreg(duringPreg)"
+          [disabled]="disablePregnancyFlag || showUpdateCondition">
+          <md-radio-button color="primary" value="Yes">{{currentLanguageSet?.yes}}</md-radio-button>
+          <md-radio-button class="m-l-10" color="primary" value="No">{{currentLanguageSet?.no}}</md-radio-button>
+        </md-radio-group>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{currentLanguageSet?.duringDelivery}}</label>
+        <md-radio-group name="duringDelivery" [(ngModel)]="duringDelivery" (change)="checkduringDeliv(duringDelivery)"
+          [disabled]="disabledeliveryFlag || showUpdateCondition">
+          <md-radio-button color="primary" value="Yes">{{currentLanguageSet?.yes}}</md-radio-button>
+          <md-radio-button class="m-l-10" color="primary" value="No">{{currentLanguageSet?.no}}</md-radio-button>
+        </md-radio-group>
+      </div>
+      
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-4 p-b-1-5" *ngIf="enabledeliveryDaysFlag">
+        <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{currentLanguageSet?.within42DaysOfDelivery}}</label>
+        <md-radio-group name="daysOfDelivery" [(ngModel)]="daysOfDelivery" [disabled]="showUpdateCondition" (change)="checkWithin42DaysOfDelivery(daysOfDelivery)">
+          <md-radio-button color="primary" value="Yes">{{currentLanguageSet?.yes}}</md-radio-button>
+          <md-radio-button class="m-l-10" color="primary" value="No">{{currentLanguageSet?.no}}</md-radio-button>
+        </md-radio-group>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-4 p-b-1-5" *ngIf="enabledeliveryDaysFlag">
+        <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{currentLanguageSet?.above42DaysOfDelivery}}</label>
+        <md-radio-group name="abovedaysOfDelivery" [(ngModel)]="abovedaysOfDelivery" [disabled]="showUpdateCondition" (change)="checkAbove42DaysOfDelivery(abovedaysOfDelivery)">
+          <md-radio-button color="primary" value="Yes">{{currentLanguageSet?.yes}}</md-radio-button>
+          <md-radio-button class="m-l-10" color="primary" value="No">{{currentLanguageSet?.no}}</md-radio-button>
+        </md-radio-group>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select placeholder="{{currentLanguageSet?.typeOfDelivery}}" [style.width]="'100%'" [(ngModel)]="TypeOfDelivery"
+          name="TypeOfDelivery" [disabled]="showUpdateCondition" required>
+          <md-option *ngFor="let deliverytype of deliveryTypes" [value]="deliverytype">{{ deliverytype }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-input-container appMobileNumber [style.width]="'100%'">
+          <input mdInput placeholder="{{currentLanguageSet?.noOfDelivery}}" name="noofDelivery"
+            [disabled]="showUpdateCondition" [(ngModel)]="noofDelivery" #noofDeliv="ngModel" (keyup)="validateNoOfDelivery(noofDelivery)"
+            minlength="1" maxlength="2" required>
+        </md-input-container>
+        <md-hint *ngIf="deliveryFlag">
+          <span class="error_text" *ngIf="deliveryFlag && ( noofDeliv.dirty || noofDeliv.touched)">{{deliveryMessage}}</span>
+        </md-hint>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <h4 class="pull-left">{{currentLanguageSet?.supportServices}}</h4>
+      </div>
+      <br />
+      <div  *ngIf = "!addInformerDetails">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5" *ngFor="let supportserviceEdit of supportServiceArray;let i=index">
+        <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{
+          supportserviceEdit.supportServiceName
+          }}</label>
+          
+        <md-radio-group id="supportradio2" name=" {{supportserviceEdit.supportServiceName}}" *ngFor="let op of supportserviceEdit.options"
+           disabled>       
+          <ng-container *ngIf="op.checked && op.name==='Yes'"> <md-radio-button  [checked]="true" [value]="op.name">{{op.name}}</md-radio-button></ng-container> 
+          <ng-container *ngIf="op.checked && op.name==='No'"><md-radio-button  [checked]="true" [value]="op.name">{{op.name}}</md-radio-button></ng-container>
+            <ng-container *ngIf="!op.checked"><md-radio-button [checked]="false" [value]="op.name" >{{op.name}}</md-radio-button></ng-container>
+        </md-radio-group>
+      </div>
+      </div>    
+       <div  *ngIf = "addInformerDetails">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5" *ngFor="let supportservice of supportServiceArray">
+        <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{
+          supportservice.supportServiceName
+          }}</label>
+          
+     
+      <md-radio-group id="supportradio" ngModel name="{{ supportservice.supportServiceName }}"
+         (change)="onChangeSupport(supportservice, $event)"  [disabled]="showUpdateCondition">        
+          <md-radio-button *ngFor="let op of supportservice.options"  [value]="op.name"  class="m-l-10" color="primary" >{{ op.name}}</md-radio-button>
+      </md-radio-group>
+    </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-12">
+        <h4 class="pull-left">{{currentLanguageSet?.placeOfDeath}}</h4>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select placeholder="{{currentLanguageSet?.facility}}" [style.width]="'100%'" [(ngModel)]="facility" name="facility"
+          [disabled]="showUpdateCondition" required>
+          <md-option *ngFor="let facilit of facilites" [value]="facilit">{{ facilit.facilityName }} 
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select placeholder="{{currentLanguageSet?.duringTheTransit}}" [style.width]="'100%'" [(ngModel)]="transitType" name="transitType"
+          [disabled]="showUpdateCondition">
+          <md-option *ngFor="let transit of transitTypeArray" [value]="transit">
+            {{ transit.transitType }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select placeholder="{{currentLanguageSet?.communityBased}}" [style.width]="'100%'" [(ngModel)]="baseCommunity" name="baseCommunity"
+          [disabled]="showUpdateCondition">
+          <md-option *ngFor="let baseCommune of baseCommunityArray" [value]="baseCommune">
+            {{ baseCommune.communityType }}
+          </md-option>
+        </md-select>
+      </div>
+
+   
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-12" *ngIf="showUpdateCondition">
+        <h4 class="pull-left">{{currentLanguageSet?.deathRecord}}</h4>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-b-1-5" *ngIf="showUpdateCondition">
+        <label class="f-s-n-b m-r-15 f-s-16" for="deathrecord">{{currentLanguageSet?.confirmed}}</label>
+        <md-radio-group id="deathrecord" name="deathrecord" [(ngModel)]="deathrecord" [disabled]="disableUpdate">
+          <md-radio-button color="primary" value="Yes">{{currentLanguageSet?.yes}}</md-radio-button>
+          <md-radio-button class="m-l-10" color="primary" value="No">{{currentLanguageSet?.no}}</md-radio-button>
+        </md-radio-group>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-sm-12 text-right">
+        <button md-raised-button color="accent" [disabled]="imrmmrForm.invalid || ageFlag || deliveryFlag" type="button"
+          *ngIf="!showUpdateCondition" class="pull-right p-l-r-25" (click)="submitIMRForm(imrmmrForm.value)">
+          {{currentLanguageSet?.submit}}
+        </button>
+
+        <button md-raised-button color="accent" [disabled]="deathrecord == undefined || disableUpdate" *ngIf="showUpdateCondition"
+          type="button" class="pull-right p-l-r-25" (click)="updateIMRMMRForm(imrmmrForm.value)">
+          {{currentLanguageSet?.update}}
+        </button>
+
+        <button md-raised-button color="primary" type="button" class="pull-right p-l-r-25 m-r-10"
+          *ngIf="!showUpdateCondition" (click)="successhandler()">
+          {{currentLanguageSet?.reset}}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="col-xs-12 col-sm-12" *ngIf="showTableCondition">
+  <div class="row">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-30 m-l-10">
+      <md-radio-group class="" [(ngModel)]="searchType" (change)="filterTerm = ''; onSearchChange(searchType)">
+        <md-radio-button color="primary" value="Death ID" checked="checked" name="Death ID"><strong>{{currentLanguageSet?.deathId}}</strong>
+        </md-radio-button>
+        <md-radio-button class="m-l-10" color="primary" value="Mobile Number" name="Mobile Number"><strong>{{currentLanguageSet?.mobileNumber}}</strong>
+        </md-radio-button>
+      </md-radio-group>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4">
+      <form #IMRMMRSearch="ngForm">
+        <md-input-container class="m-t-10" style="width: 60%" *ngIf="searchType === 'Death ID'">
+          <input mdInput placeholder="{{currentLanguageSet?.deathId}}" name="search" [(ngModel)]="filterTerm" [minlength]="minLength"
+            [maxlength]="maxLength" #search="ngModel" autocomplete="off" />
+        </md-input-container>
+        <md-input-container appMobileNumber class="m-t-10" style="width: 60%" *ngIf="searchType === 'Mobile Number'">
+          <input mdInput pattern="^[0-9]*$" placeholder="{{currentLanguageSet?.mobileNumber}}" name="search" [(ngModel)]="filterTerm"
+            [minlength]="minLength" [maxlength]="maxLength" #search="ngModel" autocomplete="off" />
+        </md-input-container>
+        <button md-mini-fab color="primary" class="m-r-5 m-l-5" (click)="filterIMRMMRList(filterTerm)"
+          [disabled]="IMRMMRSearch.invalid">
+          <md-icon mdSuffix class="mat-icon material-icons" mdTooltip="{{currentLanguageSet?.search}}" role="img" aria-hidden="true"
+            style="cursor: pointer">search</md-icon>
+        </button>
+        <button md-raised-button color="accent" [disabled]="viewALL" type="button" class="m-l-10"
+          (click)="revertFullTable()">
+          {{currentLanguageSet?.clear}}
+        </button>
+      </form>
+    </div>
+  </div>
+  <h4>
+    <strong>{{currentLanguageSet?.mdsr_cdrInformationHistory}}</strong>
+  </h4>
+  <div class="table-responsive">
+    <table class="table table-striped" [md2Data]="filteredIMRMMRList" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="mdsrCdrInformationHistory">
+      <thead>
+        <tr>
+          <th id="mdsrCdrID" md2SortBy="requestID">{{currentLanguageSet?.deathId}}</th>
+          <th id="mdsrCdrVictimName">{{currentLanguageSet?.victimsName}}</th>
+          <th id="mdsrCdrVictimAge">{{currentLanguageSet?.victimsAge}}</th>
+          <th id="mdsrCdrVictimDistrict">{{currentLanguageSet?.victimsDistrict}}</th>
+          <th id="mdsrCdrInformerName">{{currentLanguageSet?.informerName}}</th>
+          <th id="mdsrCdrInformerMobileNumber">{{currentLanguageSet?.informerMobileNumber}}</th> 
+          <th id="mdsrCdrReferenceDate">{{currentLanguageSet?.referenceDate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="md2.data == 0">
+          <td class="record-not-found" colspan="7">{{currentLanguageSet?.noRecordFound}}</td>
+        </tr>
+        <tr class="cursorPointer" *ngFor="let ias of md2.data" (click)="selectBeneficiary(ias)">
+          <td>{{ ias?.requestID }}</td>
+          <td>{{ ias?.victimName }}</td>
+          <td>{{ ias?.victimAge }}</td>
+          <td>{{ ias?.victimDistrictName?.districtName }}</td>
+          <td>{{ ias?.informerName }}</td>
+          <td>{{ ias?.informerMobileNumber }}</td>   
+          <td>{{ ias?.referenceDate }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            <md2-pagination></md2-pagination>
+          </td>
+          <td colspan="4" class="p-r-0">
+            <button md-raised-button color="primary" class="pull-right" (click)="showForm()">
+              {{currentLanguageSet?.addMDSRCDRInformation}} 
+            </button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

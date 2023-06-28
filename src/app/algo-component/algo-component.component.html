@@ -1,0 +1,114 @@
+<h1>
+  {{title}}
+</h1>
+<md-input-container>
+  <input mdInput type="number" min="0" placeholder="{{currentLanguageSet?.age}}" [(ngModel)]="data.age">
+</md-input-container>
+<br><br>
+<md-radio-group [(ngModel)]="data.gender">
+  <md-radio-button class="md-gender" value="M">{{currentLanguageSet?.male}}</md-radio-button>
+  <md-radio-button class="md-gender" value="F">{{currentLanguageSet?.female}}</md-radio-button>
+  <md-radio-button class="md-gender" value="T">{{currentLanguageSet?.transgender}}</md-radio-button>
+</md-radio-group>
+<br><br>
+<a><button class="btn btn-primary" (click)="getQuestions()" > {{currentLanguageSet?.getquestions}}</button></a>
+<div id='Questions'>
+  <div *ngIf="questions!=null">
+
+    <md-radio-group class="emg-radio-group" [(ngModel)]="emergencyQuest">
+      <md-radio-button class="emg-radio-button" *ngFor="let c of questions.Questions; let i = index; trackBy: trackByFn1" (change)="getNextSet(c.isEmergency,i)"
+        value="{{i}}" name="symptoms">
+        <div style="overflow:auto;">{{c.question}}
+         <sup *ngIf="c.isEmergency" style="color:red">[Emergency]</sup>
+        </div>
+      </md-radio-button>
+    </md-radio-group>
+  </div>
+</div>
+
+
+
+<div id='result'>
+  <div *ngIf="result!=null">
+   
+
+    <md-tab-group>
+
+
+      <md-tab *ngFor="let c of result; let i = index; trackBy: trackByFn1" label="{{c.Disease}}">
+
+
+
+        <ul class="questionSet">
+          <li *ngFor="let symp of c.Symptoms ; let j = index trackBy: trackByFn   ">
+            <md-button-toggle (click)="toggle(c,j+1)" value="{{i+1+'.'+(j+1)}}" name="symptoms">
+              {{symp}}
+            </md-button-toggle>
+
+          </li>
+        </ul>
+
+      </md-tab>
+
+
+    </md-tab-group>
+    <button (click)='getresult()'>{{currentLanguageSet?.result}}</button>
+  </div>
+</div>
+<div *ngIf='formattedResult!=null'>
+  
+  <div id="outcome">
+    <ng2-smart-table class="table" [source]="formattedResult" [settings]="settings"></ng2-smart-table>
+
+  </div>
+
+
+  <table [md2Data]="formattedResult1" #md2="md2DataTable" style="border:1px" aria-describedby="diseaseInfo">
+    <thead>
+      <tr class="rowAlignment">
+        <th id ="disease" class="headerAlignment">{{currentLanguageSet?.disease}}</th>
+        <th id ="userInput" class="headerAlignment">{{currentLanguageSet?.userinput}}</th>
+        <th id ="percentage" class="headerAlignment">{{currentLanguageSet?.percentage}}</th>
+        <th id ="information" class="headerAlignment">{{currentLanguageSet?.information}}</th>
+        <th id ="doDonts" class="headerAlignment">{{currentLanguageSet?.doAndDonts}}</th>
+        <th id ="selfCare" class="headerAlignment">{{currentLanguageSet?.selfcare}}</th>
+        <th id ="diseaseAction" class="headerAlignment">{{currentLanguageSet?.action}}</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of md2.data" class="rowAlignment">
+        <td class="dataAlignment">{{i.Disease}}</td>
+        <td class="dataAlignment">{{i.selected}}</td>
+        <td class="dataAlignment">{{i.percentage}}</td>
+        <td>
+          <ul>
+            <li *ngFor="let do of i.Information ">{{do}}</li>
+
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li *ngFor="let do of i.DoDonts ">{{do}}</li>
+
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li *ngFor="let do of i.SelfCare ">{{do}}</li>
+
+          </ul>
+        </td>
+        <td>
+          <ul>
+            <li *ngFor="let do of i.Action ">{{do}}</li>
+
+          </ul>
+        </td>
+
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>

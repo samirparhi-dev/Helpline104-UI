@@ -1,0 +1,82 @@
+<div class="" (click)="minimizeBar()">
+  <div class="container-fluid p-a-0" *ngIf="hideHeader">
+    <div class="header navbar-fixed-top ">
+      <div class="col-xs-12 col-sm-12">
+        <div class="pull-left">
+          <img src="assets/images/smLogo.png" alt="Logo" title="{{currentLanguageSet?.logo}}">
+        </div>
+        <label id="db_label" class="f-c-w f-s-15 p-t-5 m-l-150">{{label}}</label>
+        <div class="pull-right p-t-1">
+          <ul class="list-inline list-unstyled topIcon pull-right m-l-20  m-b-0">
+
+            <!--Multilingual dropdown-->
+            <li>
+
+             
+            <span style="color: white;">{{currentLanguageSet?.selectLanguage}}: </span> &nbsp;
+              <select  class="form-control drop-arrow border-radius-20 height-30 width120px pull-right" name="app_language"
+                [(ngModel)]="app_language" (change)="changeLanguage(app_language)">
+                <option *ngFor="let language of languageArray" [value]="language.languageName">{{language.languageName}}
+                </option>
+                
+    
+    
+              </select>
+          </li>  
+             <!--END-Multilingual dropdown-->
+
+           
+            <li style="color: white"> {{currentLanguageSet?.welcome}} {{data.userName}}</li>
+<li *ngIf="showContacts" class="">
+  <img src="assets/images/callerIcon.png" (click)="showEmergencyContacts()" class="cursorPointer w85" alt="Contacts" mdTooltip="{{currentLanguageSet?.emergencyContacts}}">
+</li>
+
+<li class="">
+  <img src="assets/images/icon-user-active.png" class="cursorPointer" alt="Profile" mdTooltip="{{currentLanguageSet?.profile}}" [mdMenuTriggerFor]="menuNotification">
+</li>
+<md-menu #menuNotification x-position="before"  class="m-t-40"  >
+  <md-list class="p-t-0">
+    <md-list-item>
+      <md-icon class="mat-icon material-icons" role="img" aria-hidden="true">account_circle</md-icon>
+      {{data.userName}}</md-list-item>
+    <md-list-item class="b-t-1-w">ID: {{id}}-{{current_role ? current_role : ''}}{{current_role ? '-' : ''}}{{current_service}}</md-list-item>
+  </md-list>
+  </md-menu>
+  <li class="">
+    <div class="fa fa-question-circle helpAlign cursorPointer" alt="Help" mdTooltip="{{currentLanguageSet?.help}}" [mdMenuTriggerFor]="knowAboutUs"></div>
+  </li>
+  <md-menu #knowAboutUs x-position="before" class="m-t-40">
+    <md-list class="p-t-0">
+      <md-list-item class="cursorPointer" (click)="viewVersionDetails()">{{currentLanguageSet?.version}}</md-list-item>
+      <md-list-item><a target="_blank" href={{licenseURL}}>{{currentLanguageSet?.licenseInfo}}.</a></md-list-item>
+    </md-list>
+  </md-menu>
+  <li class="logout" (click)="logOut()">
+    <a class="" mdTooltip="{{currentLanguageSet?.logout}}" data-placement="bottom" data-toggle="tooltip">&nbsp;</a>
+  </li>
+  </ul>
+  </div>
+  </div>
+  </div>
+  </div>
+  <router-outlet (currentServiceOnload)="getServiceRole($event)"></router-outlet>
+  </div>
+  <div (click)="minimizeBar()" *ngIf="hideBar">
+    <iframe [src]="ctiHandlerURL" width="230px" height="380px" class="czenrix-bar" [hidden]="barMinimized" (click)="toggleBar()" title="ctiHandler"></iframe>
+  </div>
+  <footer class="footer noprint">
+    <div class="row">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <span class="footer-text">{{currentLanguageSet?.poweredByWipro}}</span>
+      </div>
+      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+        <p class="footer-text t-a-c">2018
+          <md-icon color="" class="copyright_icon">copyright</md-icon>{{currentLanguageSet?.psmri}} </p>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <span *ngIf="hideBar"><button md-raised-button type="button" color="primary" class="m-l-5 footer-heigh pull-right" (click)="toggleBar()">CZentrix</button></span>
+        <span class="pull-right"><p class="footer-text">{{currentLanguageSet?.version}} 1.01</p></span>
+
+      </div>
+    </div>
+  </footer>

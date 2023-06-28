@@ -1,0 +1,668 @@
+<div class="container-fluid">
+    <div class="row col-xs-12">
+        <h2 class="text-center">{{currentLanguageSet?.examination}}</h2>
+        <hr/>
+    </div>
+    <!-- General Examination -->
+    <div class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.generalExamination}}</h4>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-no-border casesheet-table" aria-describedby="generalExamination">
+                <tbody>
+                    <tr>
+                        <th id="consciousness"> {{currentLanguageSet?.consciousness}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.consciousness }}
+                        </td>
+                        <th id="coherence"> {{currentLanguageSet?.coherence}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.coherence }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="cooperation"> {{currentLanguageSet?.cooperation}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.cooperation }}
+                        </td>
+                        <th id="builtAndAppearance"> {{currentLanguageSet?.builtAndAppearance}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.builtAndAppearance }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="comfortness"> {{currentLanguageSet?.comfortness}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.comfortness }}
+                        </td>
+                        <th id="gait"> {{currentLanguageSet?.gait}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.gait }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="dangerSigns"> {{currentLanguageSet?.dangerSigns}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.dangerSigns }}
+                        </td>
+                        <th id="typeOfDangerSigns"> {{currentLanguageSet?.typeOfDangerSigns}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.typeOfDangerSigns }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="pallor"> {{currentLanguageSet?.pallor}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.pallor }}
+                        </td>
+                        <th id="jaundice"> {{currentLanguageSet?.jaundice}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.jaundice }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="cyanosis"> {{currentLanguageSet?.cyanosis}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.cyanosis }}
+                        </td>
+                        <th id="clubbing"> {{currentLanguageSet?.clubbing}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.clubbing }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="lymphadenopathy"> {{currentLanguageSet?.lymphadenopathy}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.lymphadenopathy }}
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+
+                    <tr>
+                        <th id="lymphnodesInvolved"> {{currentLanguageSet?.lymphNdesInvolved}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.lymphnodesInvolved }}
+                        </td>
+                        <th id="typeOfLymphadenopathy"> Type of Lymphadenopathy:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.typeOfLymphadenopathy }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="edema"> {{currentLanguageSet?.edema}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.edema }}
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+
+                    <tr>
+                        <th id="extentOfEdema"> {{currentLanguageSet?.extentOfEdema}}:</th>
+                        <td>
+                            {{ generalExamination && generalExamination.extentOfEdema }}
+                        </td>
+                        <th id="edemaType"> {{currentLanguageSet?.typeOfEdema}}</th>
+                        <td>
+                            {{ generalExamination && generalExamination.edemaType }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Head to Toe Examination -->
+    <div class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.headToToeExamination}}</h4>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-no-border casesheet-table" aria-describedby="headToToeExamination">
+                <tbody>
+                    <tr>
+                        <th id="headtoToeExam"> {{currentLanguageSet?.headToToeExamination}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.headtoToeExam }}
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+
+                    <tr>
+                        <th id="head"> {{currentLanguageSet?.head}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.head }}
+                        </td>
+                        <th id="eyes"> {{currentLanguageSet?.eyes}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.eyes }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="ears"> {{currentLanguageSet?.ears}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.ears }}
+                        </td>
+                        <th id="nose"> {{currentLanguageSet?.nose}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.nose }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="oralCavity"> {{currentLanguageSet?.oralCavity}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.oralCavity }}
+                        </td>
+                        <th id="throat"> {{currentLanguageSet?.throat}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.throat }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="breastAndNipples"> {{currentLanguageSet?.breast}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.breastAndNipples }}
+                        </td>
+                        <th id="trunk"> {{currentLanguageSet?.trunk}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.trunk }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="upperLimbs"> {{currentLanguageSet?.upperLimbs}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.upperLimbs }}
+                        </td>
+                        <th id="lowerLimbs"> {{currentLanguageSet?.lowerLimbs}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.lowerLimbs }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="skin"> {{currentLanguageSet?.skin}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.skin }}
+                        </td>
+                        <th id="hair"> {{currentLanguageSet?.hairs}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.hair }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="nails"> {{currentLanguageSet?.nails}}:</th>
+                        <td>
+                            {{ headToToeExamination && headToToeExamination.nails }}
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Systemic Examination -->
+    <div class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.systemicExamination}}</h4>
+        </div>
+    </div>
+
+    <!-- Gastro Intestinal System -->
+    <div *ngIf="visitCategory != 'ANC'" class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.gastroIntestinalSystem}}</h4>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-no-border casesheet-table" aria-describedby="gastroIntestinalSystem">
+                <tbody>
+                    <tr>
+                        <th id="inspection"> {{currentLanguageSet?.inspection}}:</th>
+                        <td colspan="3">
+                            {{ gastroIntestinalExamination && gastroIntestinalExamination.inspection }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="palpationAbdomenTexture"> {{currentLanguageSet?.abdomenTexture}}:</th>
+                        <td>
+                            {{ gastroIntestinalExamination && gastroIntestinalExamination.palpation_AbdomenTexture }}
+                        </td>
+                        <th id="palpationLiver"> {{currentLanguageSet?.liver}}:</th>
+                        <td>
+                            {{ gastroIntestinalExamination && gastroIntestinalExamination.palpation_Liver }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="palpationSpleen"> {{currentLanguageSet?.spleen}}:</th>
+                        <td>
+                            {{ gastroIntestinalExamination && gastroIntestinalExamination.palpation_Spleen }}
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+
+                    <tr>
+                        <th id="palpationTenderness"> {{currentLanguageSet?.tenderness}}:</th>
+                        <td>
+                            {{ gastroIntestinalExamination && gastroIntestinalExamination.palpation_Tenderness }}
+                        </td>
+                        <th id="palpationLocationOfTenderness"> {{currentLanguageSet?.locationOfTenderness}}:</th>
+                        <td>
+                            {{ gastroIntestinalExamination && gastroIntestinalExamination.palpation_LocationOfTenderness }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="percussion"> {{currentLanguageSet?.percussion}}:</th>
+                        <td>
+                            {{ gastroIntestinalExamination && gastroIntestinalExamination.percussion }}
+                        </td>
+                        <th id="auscultation"> {{currentLanguageSet?.auscultation}}:</th>
+                        <td>
+                            {{ gastroIntestinalExamination && gastroIntestinalExamination.auscultation }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="analRegion"> {{currentLanguageSet?.analRegion}}:</th>
+                        <td>
+                            {{ gastroIntestinalExamination && gastroIntestinalExamination.analRegion }}
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Cardio Vascular System -->
+    <div class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.cardioVascularSystem}}</h4>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-no-border casesheet-table" aria-describedby="cardioVascularSystem">
+                <tbody>
+                    <tr>
+                        <th id="jugularVenousPulseJVP"> {{currentLanguageSet?.jugularVeusPressure}}:</th>
+                        <td>
+                            {{ cardioVascularExamination && cardioVascularExamination.jugularVenousPulse_JVP }}
+                        </td>
+                        <th id="apexbeatLocation"> {{currentLanguageSet?.apexBeatLocation}}:</th>
+                        <td>
+                            {{ cardioVascularExamination && cardioVascularExamination.apexbeatLocation }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="apexbeatType"> {{currentLanguageSet?.apexBeatType}}:</th>
+                        <td>
+                            {{ cardioVascularExamination && cardioVascularExamination.apexbeatType }}
+                        </td>
+
+                        <th id="firstHeartSound"> {{currentLanguageSet?.firstHeartSoundSOne}}:</th>
+                        <td>
+                            {{ cardioVascularExamination && cardioVascularExamination.firstHeartSound_S1 }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="secondHeartSound"> {{currentLanguageSet?.secondHeartSoundSTwo}}:</th>
+                        <td>
+                            {{ cardioVascularExamination && cardioVascularExamination.secondHeartSound_S2 }}
+                        </td>
+
+                        <th id="additionalHeartSounds"> {{currentLanguageSet?.otherHeartSoundSThreeSFour}}:</th>
+                        <td>
+                            {{ cardioVascularExamination && cardioVascularExamination.additionalHeartSounds }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="murmurs"> {{currentLanguageSet?.murmurs}}:</th>
+                        <td>
+                            {{ cardioVascularExamination && cardioVascularExamination.murmurs }}
+                        </td>
+
+                        <th id="pericardialRub"> {{currentLanguageSet?.pericardialrub}}:</th>
+                        <td>
+                            {{ cardioVascularExamination && cardioVascularExamination.pericardialRub }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Respiratory System -->
+    <div class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.respiratorySystem}}</h4>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-no-border casesheet-table" aria-describedby="respiratorySystem">
+                <tbody>
+                    <tr>
+                        <th id="trachea"> {{currentLanguageSet?.trachea}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.trachea }}
+                        </td>
+                        <th id="inspection"> {{currentLanguageSet?.inspection}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.inspection }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="signsOfRespiratoryDistress"> {{currentLanguageSet?.signsOfRespiratoryDistress}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.signsOfRespiratoryDistress }}
+                        </td>
+
+                        <th id="palpation"> {{currentLanguageSet?.palpation}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.palpation }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="auscultationStridor"> {{currentLanguageSet?.stridor}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.auscultation_Stridor }}
+                        </td>
+
+                        <th id="auscultationBreathSounds"> {{currentLanguageSet?.breathSounds}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.auscultation_BreathSounds }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="auscultationCrepitations"> {{currentLanguageSet?.crepitations}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.auscultation_Crepitations }}
+                        </td>
+
+                        <th id="auscultationWheezing"> {{currentLanguageSet?.wheezing}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.auscultation_Wheezing }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="auscultationPleuralRub"> {{currentLanguageSet?.pleuralrub}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.auscultation_PleuralRub }}
+                        </td>
+
+                        <th id="auscultationConductedSounds"> {{currentLanguageSet?.conductedSounds}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.auscultation_ConductedSounds }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="percussion"> {{currentLanguageSet?.percussion}}:</th>
+                        <td>
+                            {{ respiratorySystemExamination && respiratorySystemExamination.percussion }}
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Central Nervous System -->
+    <div class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.centralNervousSystem}}</h4>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-no-border casesheet-table" aria-describedby="centralNervousSystem">
+                <tbody>
+                    <tr>
+                        <th id="handedness"> {{currentLanguageSet?.handedness}}:</th>
+                        <td>
+                            {{ centralNervousSystemExamination && centralNervousSystemExamination.handedness }}
+                        </td>
+                        <th id="cranialNervesExamination"> {{currentLanguageSet?.cranialNervesExamination}}:</th>
+                        <td>
+                            {{ centralNervousSystemExamination && centralNervousSystemExamination.cranialNervesExamination }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="motorSystem"> {{currentLanguageSet?.motorSystem}}:</th>
+                        <td>
+                            {{ centralNervousSystemExamination && centralNervousSystemExamination.motorSystem }}
+                        </td>
+                        <th id="sensorySystem"> {{currentLanguageSet?.sensorySystem}}:</th>
+                        <td>
+                            {{ centralNervousSystemExamination && centralNervousSystemExamination.sensorySystem }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="autonomicSystem"> {{currentLanguageSet?.automicSystem}}:</th>
+                        <td>
+                            {{ centralNervousSystemExamination && centralNervousSystemExamination.autonomicSystem }}
+                        </td>
+                        <th id="cerebellarSigns"> {{currentLanguageSet?.cerebellarSigns}}:</th>
+                        <td>
+                            {{ centralNervousSystemExamination && centralNervousSystemExamination.cerebellarSigns }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="signsOfMeningealIrritation"> {{currentLanguageSet?.signsOfMeningealIrritation}}:</th>
+                        <td>
+                            {{ centralNervousSystemExamination && centralNervousSystemExamination.signsOfMeningealIrritation }}
+                        </td>
+                        <th id="skull"> {{currentLanguageSet?.skull}}:</th>
+                        <td>
+                            {{ centralNervousSystemExamination && centralNervousSystemExamination.skull }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Musculoskeletal System -->
+    <div class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.musculoskeletalSystem}}</h4>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-no-border casesheet-table" aria-describedby="musculoskeletalSystem">
+                <tbody>
+                    <tr>
+                        <th id="joints" colspan="4">
+                            <h4>{{currentLanguageSet?.joints}}</h4>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th id="jointTypeOfJoint"> {{currentLanguageSet?.typeOfJoint}}:</th>
+                        <td>
+                            {{ musculoskeletalSystemExamination && musculoskeletalSystemExamination.joint_TypeOfJoint }}
+                        </td>
+                        <th id="jointLaterality"> {{currentLanguageSet?.laterality}}:</th>
+                        <td>
+                            {{ musculoskeletalSystemExamination && musculoskeletalSystemExamination.joint_Laterality }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="jointAbnormality"> {{currentLanguageSet?.abnormality}}:</th>
+                        <td>
+                            {{ musculoskeletalSystemExamination && musculoskeletalSystemExamination.joint_Abnormality }}
+                        </td>
+                        <td colspan="2">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="upperLimbs" colspan="4">
+                            <h4>{{currentLanguageSet?.upperLimbs}}</h4>
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th id="upperLimbLaterality"> {{currentLanguageSet?.laterality}}:</th>
+                        <td>
+                            {{ musculoskeletalSystemExamination && musculoskeletalSystemExamination.upperLimb_Laterality }}
+                        </td>
+                        <th id="upperLimbAbnormality"> {{currentLanguageSet?.abnormality}}:</th>
+                        <td>
+                            {{ musculoskeletalSystemExamination && musculoskeletalSystemExamination.upperLimb_Abnormality }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="lowerLimbs" colspan="4">
+                            <h4>{{currentLanguageSet?.lowerLimbs}}</h4>
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th id="lowerLimbLaterality"> {{currentLanguageSet?.laterality}}:</th>
+                        <td>
+                            {{ musculoskeletalSystemExamination && musculoskeletalSystemExamination.lowerLimb_Laterality }}
+                        </td>
+                        <th id="lowerLimbAbnormality"> {{currentLanguageSet?.abnormality}}:</th>
+                        <td>
+                            {{ musculoskeletalSystemExamination && musculoskeletalSystemExamination.lowerLimb_Abnormality }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="Observation" colspan="4">
+                            <h4>{{currentLanguageSet?.observation}}</h4>
+                        </th>
+                    </tr>
+
+                    <tr>
+                        <th id="chestWall"> {{currentLanguageSet?.chestWall}}:</th>
+                        <td>
+                            {{ musculoskeletalSystemExamination && musculoskeletalSystemExamination.chestWall }}
+                        </td>
+                        <th id="spine"> {{currentLanguageSet?.spine}}:</th>
+                        <td>
+                            {{ musculoskeletalSystemExamination && musculoskeletalSystemExamination.spine }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Genito Urinary System -->
+    <div class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.genitoUrinarySystem}}</h4>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-no-border casesheet-table" aria-describedby="genitoUrinarySystem">
+                <tbody>
+                    <tr>
+                        <th id="renalAngle"> {{currentLanguageSet?.renalAngle}}:</th>
+                        <td>
+                            {{ genitoUrinarySystemExamination && genitoUrinarySystemExamination.renalAngle }}
+                        </td>
+                        <th id="suprapubicRegion"> {{currentLanguageSet?.supraPubicRegion}}:</th>
+                        <td>
+                            {{ genitoUrinarySystemExamination && genitoUrinarySystemExamination.suprapubicRegion }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="externalGenitalia"> {{currentLanguageSet?.externalGenitalia}}:</th>
+                        <td>
+                            {{ genitoUrinarySystemExamination && genitoUrinarySystemExamination.externalGenitalia }}
+                        </td>
+                        <td colspan="2">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Obstetric Examination -->
+    <div *ngIf="visitCategory == 'ANC'" class="row m-t-10">
+        <div class="col-xs-12">
+            <h4>{{currentLanguageSet?.obstetricExamination}}</h4>
+        </div>
+        <div class="col-xs-12">
+            <table class="table table-no-border casesheet-table" aria-describedby="obstetricExamination">
+                <tbody>
+                    <tr>
+                        <th id="fundalHeight"> {{currentLanguageSet?.fundalHeightFH}}:</th>
+                        <td>
+                            {{ obstetricExamination && obstetricExamination.fundalHeight }}
+                        </td>
+                        <th id="fHAndPOAStatus"> {{currentLanguageSet?.fundalHeightAndPeriodOfAmerrheaPoaStatus}}:</th>
+                        <td>
+                            {{ obstetricExamination && obstetricExamination.fHAndPOA_Status }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="fHAndPOAInterpretation"> {{currentLanguageSet?.interpretationFhAndPoa}}:</th>
+                        <td>
+                            {{ obstetricExamination && obstetricExamination.fHAndPOA_Interpretation }}
+                        </td>
+                        <th id="fetalMovements"> {{currentLanguageSet?.fetalMovements}}</th>
+                        <td>
+                            {{ obstetricExamination && obstetricExamination.fetalMovements }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="fetalHeartSounds"> {{currentLanguageSet?.fetalHeartSounds}}:</th>
+                        <td>
+                            {{ obstetricExamination && obstetricExamination.fetalHeartSounds }}
+                        </td>
+                        <th id="fetalHeartRateBeatsPerMinute"> {{currentLanguageSet?.fetalHeartRatePerMin}}:</th>
+                        <td>
+                            {{ obstetricExamination && obstetricExamination.fetalHeartRate_BeatsPerMinute }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="fetalPositionOrLie"> {{currentLanguageSet?.fetalPositionORLie}}</th>
+                        <td>
+                            {{ obstetricExamination && obstetricExamination.fetalPositionOrLie }}
+                        </td>
+                        <th id="fetalPresentation"> {{currentLanguageSet?.fetalPresentation}}:</th>
+                        <td>
+                            {{ obstetricExamination && obstetricExamination.fetalPresentation }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th id="abdominalScars"> {{currentLanguageSet?.abdominalScars}}:</th>
+                        <td>
+                            {{ obstetricExamination && obstetricExamination.abdominalScars }}
+                        </td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

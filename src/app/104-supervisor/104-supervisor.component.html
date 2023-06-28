@@ -1,0 +1,237 @@
+<div class="row noprint">
+  <div class="col-xs-12 col-sm-12">
+    <nav class="navbar navbar-default m-t-5 m-b-5">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#navbar"
+            aria-expanded="false"
+            aria-controls="navbar"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >{{assignSelectedLanguageValue?.activities}}
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li style="cursor: pointer" (click)="show('2')">
+                  <a>{{assignSelectedLanguageValue?.agentStatus}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('3')">
+                  <a>{{assignSelectedLanguageValue?.blacklistANumber}}</a>
+                </li>
+
+                <li style="cursor: pointer" (click)="show('7')">
+                  <a>{{assignSelectedLanguageValue?.outboundCallAllocation}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('13')">
+                  <a>{{assignSelectedLanguageValue?.outboundCallReAllocation}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('5')">
+                  <a>{{assignSelectedLanguageValue?.qualityAudit}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('1')">
+                  <a>{{assignSelectedLanguageValue?.grievanceTracking}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('8')">
+                  <a>{{assignSelectedLanguageValue?.uploadSchemes}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('12')">
+                  <a>{{assignSelectedLanguageValue?.uploadSymptoms}}</a>
+                </li>
+                <li class="dropdown-submenu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                    >{{assignSelectedLanguageValue?.communication}} *</a
+                  >
+                  <ul class="dropdown-menu">
+                    <li style="cursor: pointer" (click)="show('15')">
+                      <a>{{assignSelectedLanguageValue?.alertsAndNotifications}}</a>
+                    </li>
+                    <li style="cursor: pointer" (click)="show('17')">
+                      <a>{{assignSelectedLanguageValue?.locationMessages}}</a>
+                    </li>
+                    <li style="cursor: pointer" (click)="show('16')">
+                      <a>{{assignSelectedLanguageValue?.trainingResource}}</a>
+                    </li>
+                    <li style="cursor: pointer" (click)="show('14')">
+                      <a>{{assignSelectedLanguageValue?.emergencyContacts}}</a>
+                    </li>
+                  </ul>
+                </li>
+                <li style="cursor: pointer" (click)="show('19')">
+                  <a>{{assignSelectedLanguageValue?.forceLogout}}</a>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >{{assignSelectedLanguageValue?.reports}}
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li style="cursor: pointer" (click)="show('9')">
+                  <a>{{assignSelectedLanguageValue?.telephonyReports}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('10')">
+                  <a>{{assignSelectedLanguageValue?.crmReports}}</a>
+                </li>
+                <li class="dropdown-submenu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                    >{{assignSelectedLanguageValue?.callReports}}</a
+                  >
+                  <ul class="dropdown-menu">
+                    <li style="cursor: pointer" (click)="show('21')">
+                      <a>{{assignSelectedLanguageValue?.callQualityReport}}</a>
+                    </li>
+                    <li style="cursor: pointer" (click)="show('22')">
+                      <a>{{assignSelectedLanguageValue?.districtWiseCallVolumeReport}}</a>
+                    </li>
+                    <li style="cursor: pointer" (click)="show('23')">
+                      <a>{{assignSelectedLanguageValue?.unblockUserReport}}</a>
+                    </li>
+                    <li style="cursor: pointer" (click)="show('28')">
+                      <a>{{assignSelectedLanguageValue?.qaReport}}</a>
+                    </li>
+                    <li style="cursor: pointer" (click)="show('29')">
+                      <a>{{assignSelectedLanguageValue?.callSummaryReport}}</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a
+                class="dropdown-toggle"
+                data-toggle="dropdown"
+                role="button"
+                aria-haspopup="true"
+                aria-expanded="false"
+                >{{assignSelectedLanguageValue?.configurations}}
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li style="cursor: pointer" (click)="show('11')">
+                  <a>{{assignSelectedLanguageValue?.contentManagement}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('20')">
+                  <a>{{assignSelectedLanguageValue?.smsTemplates}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('18')">
+                  <a>{{assignSelectedLanguageValue?.bloodUrl}}</a>
+                </li>
+                <li style="cursor: pointer" (click)="show('30')">
+                  <a>{{assignSelectedLanguageValue?.diseasesSummary}}</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <button
+            md-raised-button
+            color="primary"
+            class="pull-right m-t-6"
+            (click)="dashboard()"
+          >{{assignSelectedLanguageValue?.backToDashboard}}
+          </button>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="panel-body card p-a-0 bg-white m-b-25">
+  <div class="container-fluid p-a-0 height-450">
+    <div class="">
+      <div [ngSwitch]="Activity_Number" class="col-xs-12 col-sm-12">
+        <div>
+          <supervisor-grievance *ngSwitchCase="1"></supervisor-grievance>
+          <app-agent-status *ngSwitchCase="2"></app-agent-status>
+          <app-block-unblock-number
+            *ngSwitchCase="3"
+          ></app-block-unblock-number>
+          <app-quality-audit *ngSwitchCase="5"></app-quality-audit>
+          <app-outbound-search-records
+            *ngSwitchCase="7"
+          ></app-outbound-search-records> 
+          <app-upload-schemes *ngSwitchCase="8"></app-upload-schemes>
+          <app-supervisor-reports *ngSwitchCase="9"></app-supervisor-reports>
+          <app-supervisor-calltype-reports
+            *ngSwitchCase="10"
+          ></app-supervisor-calltype-reports>
+          <app-knowledge-management
+            *ngSwitchCase="11"
+          ></app-knowledge-management>
+          <app-insert-complaint *ngSwitchCase="12"></app-insert-complaint>
+          <app-reallocate-calls *ngSwitchCase="13"></app-reallocate-calls>
+          <app-supervisor-emergency-contacts
+            *ngSwitchCase="14"
+          ></app-supervisor-emergency-contacts>
+          <app-supervisor-training-resources
+            *ngSwitchCase="16"
+          ></app-supervisor-training-resources>
+          <app-supervisor-alerts-notifications
+            *ngSwitchCase="15"
+          ></app-supervisor-alerts-notifications>
+          <app-supervisor-location-communication
+            *ngSwitchCase="17"
+          ></app-supervisor-location-communication>
+          <app-supervisor-blood-url
+            *ngSwitchCase="18"
+          ></app-supervisor-blood-url>
+          <app-force-logout *ngSwitchCase="19"></app-force-logout>
+          <app-sms-template *ngSwitchCase="20"></app-sms-template>
+          <app-supervisor-call-quality-report
+            *ngSwitchCase="21"
+          ></app-supervisor-call-quality-report>
+          <app-supervisor-district-wise-call-volume-report
+            *ngSwitchCase="22"
+          ></app-supervisor-district-wise-call-volume-report>
+          <app-supervisor-unblock-user-report
+            *ngSwitchCase="23"
+          ></app-supervisor-unblock-user-report>
+          <app-supervisor-complaint-detail-report
+            *ngSwitchCase="24"
+          ></app-supervisor-complaint-detail-report>
+          <app-blood-on-call-detailed-report
+            *ngSwitchCase="25"
+          ></app-blood-on-call-detailed-report>
+          <app-mental-health-report
+            *ngSwitchCase="26"
+          ></app-mental-health-report>
+          <app-medical-advise-report
+            *ngSwitchCase="27"
+          ></app-medical-advise-report>
+          <app-supervisor-quality-report
+            *ngSwitchCase="28"
+          ></app-supervisor-quality-report>
+          <app-supervisor-call-summary-report
+            *ngSwitchCase="29"
+          ></app-supervisor-call-summary-report>
+          <app-supervisor-diseases-summary
+            *ngSwitchCase="30"
+          ></app-supervisor-diseases-summary>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

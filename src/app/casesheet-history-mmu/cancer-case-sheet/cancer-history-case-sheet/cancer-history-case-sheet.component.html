@@ -1,0 +1,251 @@
+<div class="container-fluid">
+  <div class="row col-xs-12">
+    <h2 class="text-center">{{currentLanguageSet?.history}}</h2>
+    <hr/>
+  </div>
+  <!--Family Medical History Starts-->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.familyMedicalHistory}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-bordered table-striped casesheet-table" aria-describedby="cancerCasesheetFamilyMedicalHistory">
+        <thead>
+          <tr>
+            <th id ="cancerCasesheetFamilyMedicalHistorySNo">{{currentLanguageSet?.sno}}.</th>
+            <th id ="cancerCasesheetDiseaseType">{{currentLanguageSet?.diseaseType}}</th>
+            <th id ="cancerCasesheetFamilyMembers">{{currentLanguageSet?.familyMembers}}</th>
+            <th id ="cancerCasesheetFamilyMedicalHistorySpace">&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!familyDiseaseHistory || familyDiseaseHistory.length == 0">
+          <tr *ngFor="let row of blankRows">
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="familyDiseaseHistory">
+          <tr *ngFor="let familyCancerDiseaseHistory of familyDiseaseHistory; let i = index">
+            <td> {{ i + 1 }} </td>
+            <td>{{familyCancerDiseaseHistory.cancerDiseaseType}}</td>
+            <td>{{familyCancerDiseaseHistory.familyMemberList}}</td>
+            <td> &nbsp; </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Personal History ends-->
+
+  <div class="row m-t-10">
+
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.personalHistory}}</h4>
+    </div>
+
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="cancerCasesheetPersonalHistory">
+        <tr>
+          <th id ="cancerCasesheetTobaccoUse"> {{currentLanguageSet?.tobaccoUse}} :</th>
+          <td>
+            {{patientPersonalHistory?.tobaccoUse}}
+          </td>
+          <th id ="cancerCasesheetStartAgeYear"> {{currentLanguageSet?.startAgeInYears}}:</th>
+          <td> {{ patientPersonalHistory?.startAge_year}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetEndAgeYear"> {{currentLanguageSet?.stopAgeInYears}}:</th>
+          <td> {{patientPersonalHistory?.endAge_year}} </td>
+          <th id ="cancerCasesheetTypeOfTobaccoProduct"> {{currentLanguageSet?.tobaccoProductsUsed}}:</th>
+          <td> {{ patientPersonalHistory?.typeOfTobaccoProduct}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetCigarettesBeediQuantityPerDay"> {{currentLanguageSet?.cigarettesBeediQuantityDay}}:</th>
+          <td> {{patientPersonalHistory?.quantityPerDay}} </td>
+          <th id ="cancerCasesheetisFilteredCigarette"> {{currentLanguageSet?.cigarettesFiltered}}:</th>
+          <td>
+            <span *ngIf="patientPersonalHistory?.isFilteredCigaerette == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientPersonalHistory?.isFilteredCigaerette == false">{{currentLanguageSet?.no}}</span>
+          </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetIsCigaretteExposure"> {{currentLanguageSet?.exposureToSecondHandSmokeFivemin}}:</th>
+          <td>
+            <span *ngIf="patientPersonalHistory?.isCigaretteExposure == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientPersonalHistory?.isCigaretteExposure == false">{{currentLanguageSet?.no}}</span>
+          </td>
+          <th id ="cancerCasesheetIsBetelNutChewing"> {{currentLanguageSet?.habitOfBetelNutChewing}} :</th>
+          <td>
+            <span *ngIf="patientPersonalHistory?.isBetelNutChewing == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientPersonalHistory?.isBetelNutChewing == false">{{currentLanguageSet?.no}}</span>
+          </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetDurationOfBetelQuid"> {{currentLanguageSet?.durationOfQuidInMouthInMins}}:</th>
+          <td> {{patientPersonalHistory?.durationOfBetelQuid}} </td>
+          <th id ="cancerCasesheetAlcoholUse"> Alcohol use:</th>
+          <td>
+            {{patientPersonalHistory?.alcoholUse}}
+          </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetAlcoholUsed"> {{currentLanguageSet?.alcoholConsumedWithinMonths}}:</th>
+          <td>
+            <span *ngIf="patientPersonalHistory?.ssAlcoholUsed == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientPersonalHistory?.ssAlcoholUsed == false">{{currentLanguageSet?.no}}</span>
+          </td>
+          <th id ="cancerCasesheetFrequencyOfAlcoholUsed"> {{currentLanguageSet?.frequencyWithinMonths}}:</th>
+          <td> {{patientPersonalHistory?.frequencyOfAlcoholUsed}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetDietType"> {{currentLanguageSet?.dietType}}:</th>
+          <td> {{ patientPersonalHistory?.dietType }} </td>
+          <th id ="cancerCasesheetIntakeOfOutsidePreparedMeal"> {{currentLanguageSet?.weeklyIntakeOfOutsideMeal}}:</th>
+          <td> {{patientPersonalHistory?.intakeOfOutsidePreparedMeal}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetFruitConsumptionDays"> {{currentLanguageSet?.fruitsConsumedDaysPerWeek}}:</th>
+          <td> {{ patientPersonalHistory?.fruitConsumptionDays }} </td>
+          <th id ="cancerCasesheetFruitQuantityPerDay"> {{currentLanguageSet?.quantityConsumedCupsDay}}:</th>
+          <td> {{patientPersonalHistory?.fruitQuantityPerDay}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetVegetableConsumptionDays"> {{currentLanguageSet?.vegetablesConsumedDaysPerWeek}}:</th>
+          <td> {{ patientPersonalHistory?.vegetableConsumptionDays }} </td>
+          <th id ="cancerCasesheetVegetableQuantityPerDay"> {{currentLanguageSet?.quantityConsumedCupsDay}}:</th>
+          <td> {{patientPersonalHistory?.vegetableQuantityPerDay}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheettypeOfOilConsumedList"> {{currentLanguageSet?.typeOfOilConsumed}}:</th>
+          <td> {{ patientPersonalHistory?.typeOfOilConsumedList }} </td>
+          <th id ="cancerCasesheetPhysicalActivityType"> {{currentLanguageSet?.physicalActivityType}}:</th>
+          <td> {{patientPersonalHistory?.physicalActivityType}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetRadiationExposure"> {{currentLanguageSet?.historyOfExposureToRadiation}}:</th>
+          <td>
+            <span *ngIf="patientPersonalHistory?.ssRadiationExposure == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientPersonalHistory?.ssRadiationExposure == false">{{currentLanguageSet?.no}}</span>
+          </td>
+          <th id ="cancerCasesheetIsThyroidDisorder"> {{currentLanguageSet?.historyOfThyroidDisorder}}:</th>
+          <td>
+            <span *ngIf="patientPersonalHistory?.isThyroidDisorder == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientPersonalHistory?.isThyroidDisorder == false">{{currentLanguageSet?.no}}</span>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+
+  </div>
+  <!--Personal History Ends-->
+
+
+  <!--Obstetric History ends-->
+
+  <div class="row m-t-10" *ngIf="beneficiaryDetails && beneficiaryDetails.genderName == 'Female'">
+
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.obstetricHistory}}</h4>
+    </div>
+
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="cancerCasesheetObstetricHistory">
+        <tr>
+          <th id ="cancerCasesheetPregnancyStatus"> {{currentLanguageSet?.pregnancyStatus}}:</th>
+          <td> {{patientObstetricHistory?.pregnancyStatus}} </td>
+          <th id ="cancerCasesheetIsUrinePregTest"> Urine pregnancy test:</th>
+          <td>
+            <span *ngIf="patientObstetricHistory?.isUrinePregTest == true">{{currentLanguageSet?.positive}}</span>
+            <span *ngIf="patientObstetricHistory?.isUrinePregTest == false">{{currentLanguageSet?.negative}}</span>
+          </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetPregnantNo"> {{currentLanguageSet?.noOfTimesPregnant}}:</th>
+          <td> {{patientObstetricHistory?.pregnant_No}} </td>
+          <th id ="cancerCasesheetNoOfLivingChild">{{currentLanguageSet?.noOfLivingChildren}} :</th>
+          <td> {{ patientObstetricHistory?.noOfLivingChild}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetIsAbortion"> {{currentLanguageSet?.abortions}}:</th>
+          <td>
+            <span *ngIf="patientObstetricHistory?.isAbortion == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientObstetricHistory?.isAbortion == false">{{currentLanguageSet?.no}}</span>
+          </td>
+          <th id ="cancerCasesheetIsOralContraceptiveUsed"> {{currentLanguageSet?.oralContraceptiveUsedInFiveYears}}:</th>
+          <td>
+            <span *ngIf="patientObstetricHistory?.isOralContraceptiveUsed == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientObstetricHistory?.isOralContraceptiveUsed == false">{{currentLanguageSet?.no}}</span>
+          </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetIsHormoneReplacementTherapy"> {{currentLanguageSet?.harmoneReplacementTherapyInFiveYears}}:</th>
+          <td>
+            <span *ngIf="patientObstetricHistory?.isHormoneReplacementTherapy == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientObstetricHistory?.isHormoneReplacementTherapy == false">{{currentLanguageSet?.no}}</span>
+          </td>
+          <th id ="cancerCasesheetMenarcheAge"> {{currentLanguageSet?.ageAtMenarcheInYears}}:</th>
+          <td> {{ patientObstetricHistory?.menarche_Age}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetIsMenstrualCycleRegular"> {{currentLanguageSet?.regularityOfMenstrualCycles}}:</th>
+          <td>
+            <span *ngIf="patientObstetricHistory?.isMenstrualCycleRegular == true">{{currentLanguageSet?.regular}}</span>
+            <span *ngIf="patientObstetricHistory?.isMenstrualCycleRegular == false">{{currentLanguageSet?.irregular}}</span>
+          </td>
+          <th id ="cancerCasesheetMenstrualCycleLength"> {{currentLanguageSet?.lengthOfMenstrualCycleInDays}}:</th>
+          <td> {{ patientObstetricHistory?.menstrualCycleLength}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetMenstrualFlowDuration"> {{currentLanguageSet?.menstrualFlowDurationInDays}}:</th>
+          <td> {{patientObstetricHistory?.menstrualFlowDuration}} </td>
+          <th id ="cancerCasesheetMenstrualFlowType"> {{currentLanguageSet?.typeOfFlow}}:</th>
+          <td> {{ patientObstetricHistory?.menstrualFlowType}} </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetIsDysmenorrhea"> {{currentLanguageSet?.dysmenorrhea}}:</th>
+          <td>
+            <span *ngIf="patientObstetricHistory?.isDysmenorrhea == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientObstetricHistory?.isDysmenorrhea == false">{{currentLanguageSet?.no}}</span>
+          </td>
+          <th id ="cancerCasesheetIsInterMenstrualBleeding"> {{currentLanguageSet?.interMenstrualBleeding}}:</th>
+          <td>
+            <span *ngIf="patientObstetricHistory?.isInterMenstrualBleeding == true"> {{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientObstetricHistory?.isInterMenstrualBleeding == false">{{currentLanguageSet?.no}}</span>
+          </td>
+        </tr>
+
+        <tr>
+          <th id ="cancerCasesheetMenopauseAge"> {{currentLanguageSet?.ageAtMenopauseInYears}}:</th>
+          <td> {{patientObstetricHistory?.menopauseAge}} </td>
+          <th id ="cancerCasesheetIsPostMenopauseBleeding"> {{currentLanguageSet?.postMenopausalBleeding}}:</th>
+          <td>
+            <span *ngIf="patientObstetricHistory?.isPostMenopauseBleeding == true">{{currentLanguageSet?.yes}}</span>
+            <span *ngIf="patientObstetricHistory?.isPostMenopauseBleeding == false">{{currentLanguageSet?.no}}</span>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+
+  </div>
+  <!--Obstetric History Ends-->
+</div>

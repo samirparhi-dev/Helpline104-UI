@@ -1,0 +1,43 @@
+.md2-autocomplete-menu {
+	position: relative!important;
+	height: 95px!important;
+}
+
+.gridListHeight {
+height: 100%;
+}
+
+.height-420
+{
+    min-height: 420px !important;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.question{
+     width: 95%;
+     word-wrap: break-word;
+}
+
+
+.questionSet{
+     width: 95%;
+     /*height: 500px;*/
+        /*overflow: scroll;*/
+   
+}
+.questionSet1{
+     width: 100%;
+     /*height: 500px;*/
+        /*overflow-y: scroll;*/
+   
+}
+
+.md-tabs-content {
+        display: flex;
+        flex: 1;
+        overflow: scroll;
+      }
+
+
+

@@ -1,0 +1,12 @@
+.error{
+    font-size: 15px;
+    color: red;
+}
+
+.help-block {
+    color: red;
+}
+
+.file-upload {
+    color: grey;
+}

@@ -1,0 +1,43 @@
+<div class="headerDiv">
+  <md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="Close" role="img" aria-hidden="true"
+    (click)="dialogRef.close()">
+    clear
+  </md-icon>
+  <h4 class="popupHeader">{{currentLanguageSet?.emergencyContacts}}</h4>
+
+</div>
+<md-dialog-content style="min-height:400px">
+  <div class="table-responsive ">
+    <table class="table table-striped td-m-t-b-5 m-b-0" [md2Data]="contacts" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="emergencyContacts">
+      
+        <thead *ngIf="md2.data.length!=0">
+          <tr>
+            <th id="emergencyContactName" md2SortBy="emergContactName">{{currentLanguageSet?.contactName}}</th>
+            <th id="emergencyContactDesignation">{{currentLanguageSet?.designation}}</th>
+            <th id="emergencyContactLocation">{{currentLanguageSet?.location}}</th>
+            <th id="emergencyContactNumber">{{currentLanguageSet?.contactNumber}}</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of md2.data">
+          <td>{{row.emergContactName}}</td> 
+          <td>{{row.designation?.designationName}}</td>
+          <td>{{row.location}}</td>
+          <td>{{row.emergContactNo}}</td>
+        </tr>
+        <tr *ngIf="md2.data.length==0">
+          <td class="text-center" colspan="2">{{currentLanguageSet?.NoEmergencyContactsExists}}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+          <tr > 
+            <td colspan="4">
+              <md2-pagination></md2-pagination>
+            </td>
+        
+       
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</md-dialog-content>

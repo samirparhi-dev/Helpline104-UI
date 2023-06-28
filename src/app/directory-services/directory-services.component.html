@@ -1,0 +1,140 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+  <h4 class="f-s-b m-t-20">
+    <strong>{{currentLanguageSet?.directoryServices}}</strong>
+  </h4>
+</div>
+<div class="col-xs-12 col-sm-12 m-t-20">
+  <div class="row">
+    <form autocomplete="off" #directoryServicesForm="ngForm" id="directoryServicesFormm">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select class="width100" placeholder="{{currentLanguageSet?.state}}" name="state" (blur)="GetDistricts(selected_state)"
+            [(ngModel)]="selected_state" #state="ngModel" required>
+            <md-option *ngFor="let state of states" [value]="state.stateID">{{state.stateName}}</md-option>
+          </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select class="width100" placeholder="{{currentLanguageSet?.district}}" name="district" (change)="GetTaluks(selected_district)"
+            [(ngModel)]="selected_district" #district="ngModel" required>
+            <md-option *ngFor="let district of districts" [value]="district.districtID">{{district.districtName}}</md-option>
+          </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select class="width100" placeholder="{{currentLanguageSet?.subDistrict}}" name="taluk" (change)="GetSDTB(selected_taluk)"
+            [(ngModel)]="selected_taluk">
+            <md-option *ngFor="let taluk of taluks" [value]="taluk.blockID">{{taluk.blockName}}</md-option>
+          </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select class="width100" placeholder="{{currentLanguageSet?.village}}" name="sdtb" [(ngModel)]="selected_branch">
+            <md-option *ngFor="let sdtb of blocks" [value]="sdtb.districtBranchID">{{sdtb.villageName}}</md-option>
+          </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5 ">
+          <input mdInput style="display:none">
+          <md-select class="width100" placeholder="{{currentLanguageSet?.informationRequired}}" name="whatInformation"
+            (change)="GetSubDirectory(selected_directory)" [(ngModel)]="selected_directory" #directoryInfo="ngModel" required>
+            <md-option *ngFor="let directoryItem of directory" [value]="directoryItem.instituteDirectoryID">{{directoryItem.instituteDirectoryName}}</md-option>
+          </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select required class="width100" placeholder="{{currentLanguageSet?.instituteSubDirectory}}" name="subDirectory"
+            [(ngModel)]="selected_sub_directory" #subDirectory="ngModel">
+            <md-option *ngFor="let sub_directoryItem of sub_directory" [value]="sub_directoryItem.instituteSubDirectoryID">{{sub_directoryItem.instituteSubDirectoryName}}</md-option>
+          </md-select>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-t-10">
+        <div class="form-group ">
+
+          <label class="control-label " for="subDirectory"></label>
+          <button class="pull-right" md-raised-button color="accent" type="button" [disabled]="subDirectory.errors || directoryInfo.errors || state.errors || district.errors"
+            class="font-regular pull-right f-s-18 m-l-10" (click)="GetReferralDetails()">{{currentLanguageSet?.search}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-12 ">
+  <div class="min-height-180 border-1-g m-t-5" for="subCategoryDetails">
+
+    <div class="col-xs-12 col-sm-12" *ngIf="emptyArrayFlag">
+      <span>{{currentLanguageSet?.recordNotFound}}</span>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 p-l-0 p-r-0" *ngFor=" let detail of searchHistory;let i=index ">
+      <div class="col-xs-9 col-sm-9 p-l-0">
+        {{detail.institute.institutionID}} ,{{detail.institute.institutionName}} , {{detail.institute.address}}
+        <span *ngIf="detail.institute.contactNo1"> ,{{detail.institute.contactNo1}}</span>
+        <span *ngIf="detail.institute.contactNo2"> ,{{detail.institute.contactNo2}}</span>
+        <span *ngIf="detail.institute.contactNo3"> ,{{detail.institute.contactNo3}}</span>
+      </div>
+      <div class="col-xs-3 col-sm-3">
+        <md-checkbox class="pull-right" color="primary" name={{detail.institute.institutionID}} (click)="addHospital(detail.institute,i)">
+          {{currentLanguageSet?.checkToSendThroughSms}}
+        </md-checkbox>
+      </div>
+    </div>
+  </div>
+ <form autocomplete="off" #sendSMSform="ngForm">
+  <div class="col-xs-12 col-sm-12 p-a-0" *ngIf="searchHistory.length > 0">
+    <button [disabled]="!smsFlag || ( altNum && !validNumber)" type="button " md-raised-button color="accent" class="pull-right font-regular f-s-18 m-t-10 m-l-10"
+      id=" " (click)=sendSms(mobileNumber)>{{currentLanguageSet?.sendSms}}</button>
+     
+    <div *ngIf="altNum" class="col-xs-3 col-sm-3 col-lg-3 col-md-3 pull-right ">
+
+      <md-input-container appMobileNumber class="width100">
+        <input mdInput class="pull-right" autocomplete="off" type="text" required minlength="10" maxlength="10" placeholder="{{currentLanguageSet?.mobileNumber}}"
+          name="mobileNumber" (keyup)="mobileNum(mobileNumber)" [(ngModel)]="mobileNumber" #phnNum="ngModel">
+        <md-hint *ngIf="!phnNum.valid && phnNum.touched" class="errorText">
+          {{currentLanguageSet?.tenDigitNumberRequired}}
+        </md-hint>
+      </md-input-container>
+
+    </div>
+    <div class="m-t-20">
+      <md-checkbox color="primary" class="pull-right" name="altNum" [(ngModel)]="altNum">
+        {{currentLanguageSet?.alternateNumber}}
+      </md-checkbox>
+    </div>
+     
+  </div> </form>
+</div>
+
+<div>
+  <div class="col-xs-12 col-sm-12 ">
+    <h4 class="f-s-b m-t-20 m-b-20">
+      <strong>{{currentLanguageSet?.referralHistory}}</strong>
+    </h4>
+    <div class="table-responsive ">
+      <table class="table table-striped" [md2Data]="tableArray" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="directoryService">
+        <thead>
+          <tr>
+            <th id="instituteDirectory">{{currentLanguageSet?.instituteDirectory}}</th>
+            <th id="instituteSubDirectory">{{currentLanguageSet?.instituteSubDirectory}}</th>
+            <th id="institutionName">{{currentLanguageSet?.institutionName}}</th>
+            <th id="institutionAddress">{{currentLanguageSet?.address}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="tableArray.length == 0">
+            <td class="record-not-found" colspan="6">
+              {{currentLanguageSet?.noRecordsFound}}</td>
+          </tr>
+          <tr *ngFor="let referral of md2.data">
+            <td>{{referral?.instituteDirectory.instituteDirectoryName}}</td>
+            <td>{{referral?.instituteSubDirectory?.instituteSubDirectoryName}}</td>
+            <td>{{referral?.institute?.institutionName}}</td>
+            <td>{{referral?.institute?.address}}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="6">
+              <md2-pagination></md2-pagination>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

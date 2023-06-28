@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12">
+    <h4 class="f-s-b m-t-20 m-b-10">{{assignSelectedLanguageValue?.outboundCallReAllocation}}</h4>
+    <div class="row">
+      <form #reallocationForm="ngForm" autocomplete="off">
+        <div class="col-xs-12 col-sm-6 col-lg-3 col-md-3   p-b-1-5">
+              <md-select class="width100" placeholder="{{assignSelectedLanguageValue?.selectRole}}" name="role" [(ngModel)]="search_role" (change)="roleChange(search_role)" #role="ngModel" required>
+                  <md-option *ngFor="let role of roles" [value]="role.roleID">{{role.roleName}}</md-option>
+              </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-lg-3 col-md-3  p-b-1-5">
+              <md-select class="width100" placeholder="{{assignSelectedLanguageValue?.agentName}}" name="agentName" [(ngModel)]="searchAgent" #agentname="ngModel" required>
+                <md-option *ngFor="let user of users" [value]="user">{{user.firstName+ " "+user.lastName}}</md-option>
+              </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+          <button md-raised-button color="accent" class="m-t-15 xs-pull-right sm-pull-right" [disabled]="!(reallocationForm.valid) || (endDate.value < startDate.value)&&(endDate.touched)&&(startDate.touched) || (startDate.touched && startDate.dirty && !endDate.touched && startDate.value) || (startDate.touched && startDate.dirty && !endDate.dirty && startDate.value)" type="button" (click)="onSubmit()">{{assignSelectedLanguageValue?.submit}}</button>
+        </div>
+        <div class="form-group col-lg-3 col-md-3 col-sm-12 col-xs-12" style="display: none">
+            <md2-datepicker class="width100" name="startDate" placeholder="{{assignSelectedLanguageValue?.startDate}}" #startDate="ngModel" ngModel></md2-datepicker>
+        </div>
+        <div class="form-group col-lg-3 col-md-3 col-sm-12 col-xs-12" style="display: none">
+            <md2-datepicker class="width100" name="endDate" placeholder="{{assignSelectedLanguageValue?.endDate}}" [min]="startDate.value" #endDate="ngModel" ngModel></md2-datepicker>
+            <span class="error_text f-s-10 p-l-10" *ngIf="(startDate.touched && startDate.dirty && !endDate.touched && startDate.value) || (startDate.touched && startDate.dirty && !endDate.dirty && startDate.value)">{{assignSelectedLanguageValue?.endDateIsRequired}}</span>
+            <span class="error_text f-s-10 p-l-10" *ngIf="(endDate.value < startDate.value) && endDate.touched && startDate.touched">{{assignSelectedLanguageValue?.endDateCannotBeBeforeStartDates}}</span>
+        </div>
+      </form>
+    </div>
+    <div class="row c-b p-t-20" *ngIf="onAgentSelected">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+              <table class="table table-bordered table-hover" aria-describedby="outboundCallReAllocation">
+                <thead>
+                  <tr>
+                    <th id="outboundCallReAllocationAgentName">{{assignSelectedLanguageValue?.agentName}}</th>
+                    <th id="outboundCallReAllocationNoOfRecords">{{assignSelectedLanguageValue?.noOfRecords}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{{agentName}}</td>
+                    <td>{{totalAgentRecords?.length}}
+                      <button md-raised-button color="primary" type="button" (click)="moveToBin(agentName, totalAgentRecords, $event)" class="pull-right m-r-5" [disabled]="!(totalAgentRecords?.length)">{{assignSelectedLanguageValue?.moveToBin}}</button>
+                      <button md-raised-button color="primary" type="button" (click)="allocateCalls(agentName, totalAgentRecords, $event)" class="pull-right m-r-5" [disabled]="!(totalAgentRecords?.length)">{{assignSelectedLanguageValue?.reAllocate}}</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="showFlag">
+        <app-outbound-allocate-records [outboundCallRequests] ="records" (refreshScreen)="reallocationDone()" [filterAgent]="selectedAgent"></app-outbound-allocate-records>     
+      </div>
+    </div>
+  </div>
+</div>

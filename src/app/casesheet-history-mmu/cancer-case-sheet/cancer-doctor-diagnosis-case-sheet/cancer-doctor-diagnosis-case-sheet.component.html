@@ -1,0 +1,187 @@
+<div class="container-fluid">
+  <div class="row m-t-20">
+    <div class="col-xs-6 text-left">
+      <p>
+        <strong> {{currentLanguageSet?.visitCategory}}: </strong> {{ beneficiaryDetails?.VisitCategory }}
+      </p>
+    </div>
+    <div class="col-xs-6 text-right" *ngIf="casesheetData?.serviceID == 2">
+      <p>
+        <strong> {{currentLanguageSet?.servicePoint}}: </strong> {{ beneficiaryDetails?.servicePointName}}
+      </p>
+    </div>
+  </div>
+
+  <!-- Beneficiary Details -->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <fieldset>
+        <legend>{{currentLanguageSet?.beneficiaryDetails}} </legend>
+        <table class="table table-no-border casesheet-table" aria-describedby="cancercasesheetBeneficiaryDetails">
+          <tr>
+            <th id ="cancerCasesheetBeneficiaryID"> {{currentLanguageSet?.beneficiaryid}}:</th>
+            <td> {{ beneficiaryDetails && beneficiaryDetails.beneficiaryID }} </td>
+            <th id ="cancerCasesheetBeneficiaryVisitCode"> {{currentLanguageSet?.visitCode}}:</th>
+            <td> {{ beneficiaryDetails && beneficiaryDetails.visitCode }} </td>
+          </tr>
+          <tr>
+            <th id ="cancerCasesheetBeneficiaryName"> {{currentLanguageSet?.name}}:</th>
+            <td colspan="3"> {{ beneficiaryDetails && beneficiaryDetails.beneficiaryName }} </td>
+          </tr>
+          <tr>
+            <th id ="cancerCasesheetBeneficiaryGender"> {{currentLanguageSet?.gender}}:</th>
+            <td> {{ beneficiaryDetails && beneficiaryDetails.genderName }} </td>
+            <th id ="cancerCasesheetBeneficiaryAge"> {{currentLanguageSet?.age}}:</th>
+            <td> {{ beneficiaryDetails && beneficiaryDetails.age }} </td>
+          </tr>
+        </table>
+      </fieldset>
+    </div>
+  </div>
+  <!-- End of Beneficiary Details -->
+
+  <!-- Current Vitals -->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <fieldset>
+        <legend>{{currentLanguageSet?.currentVitals}}</legend>
+        <table class="table table-no-border casesheet-table" aria-describedby="cancerCasesheetBeneficiaryVitals">
+          <tr>
+            <th id ="cancerCasesheetHeight"> {{currentLanguageSet?.heightInCm}}:</th>
+            <td> {{ currentVitals && currentVitals.height_cm }} </td>
+            <th id ="cancerCasesheetWeight"> {{currentLanguageSet?.weight}}:</th>
+            <td> {{ currentVitals && currentVitals.weight_Kg }} </td>
+          </tr>
+          <tr>
+            <th id ="cancerCasesheetWaistCircumference"> {{currentLanguageSet?.waistCircumference}}:</th>
+            <td> {{ currentVitals && currentVitals.waistCircumference_cm }} </td>
+            <th id ="cancerCasesheet">&nbsp;</th>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <th id ="cancerCasesheetSystolicBP"> {{currentLanguageSet?.bloodPressureMmhgSystolic}}:</th>
+            <td> {{ currentVitals && currentVitals.systolicBP_1stReading }} </td>
+            <th id ="cancerCasesheetDiastolicBP"> {{currentLanguageSet?.bloodPressureMmhgDiastolic}}:</th>
+            <td> {{ currentVitals && currentVitals.diastolicBP_1stReading }} </td>
+          </tr>
+          <tr>
+            <th id ="cancerCasesheetBloodSugarFasting"> {{currentLanguageSet?.bloodSugarMgdlFasting}}:</th>
+            <td> {{ currentVitals && currentVitals.bloodGlucose_Fasting }} </td>
+            <th id ="cancerCasesheetBloodSugarRandom"> {{currentLanguageSet?.bloodSugarMgdlRandom}}:</th>
+            <td> {{ currentVitals && currentVitals.bloodGlucose_Random }} </td>
+          </tr>
+          <tr>
+            <th id ="cancerCasesheetBloodSugarPP"> {{currentLanguageSet?.bloodSugarMgdlPp}}:</th>
+            <td> {{ currentVitals && currentVitals.bloodGlucose_2HrPostPrandial }} </td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <th id ="cancerCasesheetHbA1C"> {{currentLanguageSet?.hba1c}}:</th>
+            <td> {{ currentVitals && currentVitals.hbA1C }} </td>
+            <th id ="cancerCasesheetHb"> {{currentLanguageSet?.hbMgdl}}:</th>
+            <td> {{ currentVitals && currentVitals.hemoglobin }} </td>
+          </tr>
+        </table>
+      </fieldset>
+    </div>
+  </div>
+  <!-- End of Current Vitals -->
+
+  <h4>{{currentLanguageSet?.observations}}</h4>
+
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h5>{{currentLanguageSet?.briefHistory}}:</h5>
+      <div class="textarea">
+        {{ casesheetData?.nurseData?.signsAndSymptoms?.observation }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h5>{{currentLanguageSet?.oralExamination}}:</h5>
+      <div class="textarea">
+        {{ casesheetData?.nurseData?.oralExamination?.observation }}
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h5>{{currentLanguageSet?.abdominalExamination}}:</h5>
+      <div class="textarea">
+        {{ casesheetData?.nurseData?.abdominalExamination?.observation }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h5>{{currentLanguageSet?.gynecologicalExamination}}:</h5>
+      <div class="textarea">
+        {{ casesheetData?.nurseData?.gynecologicalExamination?.observation }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.provisionalDiagnosisByPrimaryDoctor}}</h4>
+      <div class="textarea">
+        {{ caseSheetDiagnosisData?.provisionalDiagnosisPrimaryDoctor }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.remarksByPrimaryDoctor}}</h4>
+      <div class="textarea">
+        {{ caseSheetDiagnosisData?.remarks }}
+      </div>
+    </div>
+  </div>
+
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.oncologistObservation}}</h4>
+      <div class="textarea">
+        {{ caseSheetDiagnosisData?.provisionalDiagnosisOncologist }}
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.refer}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-bordered" aria-describedby="cancerCasesheetBeneficiaryRefer">
+        <tr>
+          <th id ="cancerCasesheetInstituteName">{{currentLanguageSet?.instituteName}}</th>
+          <th id ="cancerCasesheetAdditionalService">{{currentLanguageSet?.additionalService}}</th>
+        </tr>
+        <tr>
+          <td>{{caseSheetDiagnosisData?.referredToInstituteName }} &nbsp;</td>
+          <td> {{caseSheetDiagnosisData?.refrredToAdditionalService}} &nbsp;</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Doctor's Sign -->
+  <div class="row m-t-50">
+    <div class="col-xs-6">&nbsp;</div>
+    <div class="col-xs-6">
+      <p>
+        <strong>{{currentLanguageSet?.doctorSign}}: </strong>
+      </p>
+    </div>
+  </div>
+  <!-- End of Doctor's Sign -->
+</div>

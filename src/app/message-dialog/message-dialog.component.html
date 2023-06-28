@@ -1,0 +1,44 @@
+<div class="headerDiv">
+  <md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="{{currentLanguageSet?.close}}" role="img" aria-hidden="true"
+    (click)="dialogRef.close()">
+    clear
+  </md-icon>
+  <h4 class="popupHeader">{{data.type}}</h4>
+
+</div>
+<md-dialog-content>
+  <div class="table-responsive ">
+    <table class="table td-m-t-b-5 m-b-0" [md2Data]="docs" #md2="md2DataTable" [rowsPerPage]="3" aria-describedby="messageDialog">
+      <th id="resolvingSonarqubeIssue"></th>
+      <tbody>
+        <tr *ngFor="let doc of md2.data;let i=index ">
+          <td class="b-l-1 col-xs-1 col-sm-1">{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}}.</td>
+          <td class="b-r-1 col-xs-11 col-sm-11">
+            <h4 class="media-heading f-s-b">{{doc.notificationDesc}}</h4>
+            <p class="f-c-585857 f-s-b" *ngIf="doc.kmFilePath">
+              <a href="{{doc?.kmFilePath}}" target="_blank">{{currentLanguageSet?.clickHereForMoreInfo}}</a>
+            </p>
+            <ul class="list-unstyled" *ngIf="doc.urls.length>0">
+              <li *ngIf="doc.urls.length>1">{{currentLanguageSet?.referTheLinksBelow}}</li>
+              <li *ngIf="doc.urls.length===1">{{currentLanguageSet?.referTheLinkBelow}}</li>
+              <li *ngFor="let url of doc.urls">
+                <a target="_blank" href="{{url}}">{{url}}</a>
+              </li>
+            </ul>
+          </td>
+        </tr>
+        <tr *ngIf="md2.data.length==0">
+          <td class="text-center" colspan="2"> {{currentLanguageSet?.noMessage}} {{data.type}} {{currentLanguageSet?.documentsFound}} </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr *ngIf="docs.length>3">
+          <td colspan="2">
+            <md2-pagination></md2-pagination>
+
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</md-dialog-content>

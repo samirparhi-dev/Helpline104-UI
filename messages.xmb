@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE messagebundle [
+<!ELEMENT messagebundle (msg)*>
+<!ATTLIST messagebundle class CDATA #IMPLIED>
+
+<!ELEMENT msg (#PCDATA|ph|source)*>
+<!ATTLIST msg id CDATA #IMPLIED>
+<!ATTLIST msg seq CDATA #IMPLIED>
+<!ATTLIST msg name CDATA #IMPLIED>
+<!ATTLIST msg desc CDATA #IMPLIED>
+<!ATTLIST msg meaning CDATA #IMPLIED>
+<!ATTLIST msg obsolete (obsolete) #IMPLIED>
+<!ATTLIST msg xml:space (default|preserve) "default">
+<!ATTLIST msg is_hidden CDATA #IMPLIED>
+
+<!ELEMENT source (#PCDATA)>
+
+<!ELEMENT ph (#PCDATA|ex)*>
+<!ATTLIST ph name CDATA #REQUIRED>
+
+<!ELEMENT ex (#PCDATA)>
+]>
+<messagebundle>
+  <msg id="2128755808672960949"><source>E:/Angular4/helpline104-ui/src/app/login/login.component.ts:11</source>User ID</msg>
+  <msg id="1431416938026210429"><source>E:/Angular4/helpline104-ui/src/app/login/login.component.ts:17</source>Password</msg>
+  <msg id="931252989873527145"><source>E:/Angular4/helpline104-ui/src/app/login/login.component.ts:27</source>Remember me</msg>
+  <msg id="2454050363478003966"><source>E:/Angular4/helpline104-ui/src/app/login/login.component.ts:28</source>Login</msg>
+  <msg id="7993400168408015259"><source>E:/Angular4/helpline104-ui/src/app/login/login.component.ts:35</source>Forgot Password?</msg>
+</messagebundle>

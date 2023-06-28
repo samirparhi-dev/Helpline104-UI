@@ -1,0 +1,106 @@
+<div class="table-responsive">
+
+  <!-- <div *ngFor="let caseSheet of data"> -->
+  <table
+    class="table table-striped" 
+    aria-describedby="beneficiaryHistoryCasesheet"
+  >
+    <thead>
+      <tr>
+        <th id ="casesheetBeneficiaryHistoryID" class="max-width-300 min-width-50">{{assignSelectedLanguageValue?.id}}</th>
+        <th id ="benCheifCompaints" class="max-width-300 min-width-50">{{assignSelectedLanguageValue?.chiefComplaints}}</th>
+        <th id = "benAppetiteStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.appetite}}</th>
+        <th id = "benSleepStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.sleep}}</th>
+        <th id = "benHygieneStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.hygieneAndTakingCare}}</th>
+        <th id = "benBladderIssue" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.bladder}}</th>
+        <th id = "benBowelStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.bowel}}</th>
+        <th id = "benLibidoStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.libido}}</th>
+        <th id = "benWorkStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.goingToWork}}</th>
+        <th id = "benWorkIssueStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.issuesAtWorkplace}}</th>
+        <th id = "benHouseholdStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.doingOfHouseholdWork}}</th>
+        <th id = "benHouseholdStatus" class="max-width-300 min-width-80" > Getting Along With Family</th>
+        <th id = "benTreatmentStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.treatmentDetail}}</th>
+        <th id = "benPreciptionStatus" class="max-width-300 min-width-80" > {{assignSelectedLanguageValue?.possiblePrecipitatingFactor}}</th>
+        <th id = "benRelationshipStatus" class="max-width-300 min-width-80" > Concurrent Medical Condition</th>
+        <th id ="benPastPyschiarticConditions" class="max-width-300 min-width-50">{{assignSelectedLanguageValue?.pastPsychiatricCondition}}</th>
+        <th id ="benPastMedicalConditions" class="max-width-300 min-width-50">Past Medical Conditions</th>
+        <th id = "benRelationshipStatus" class="max-width-300 min-width-80" > Current Drugs Medication </th>
+        <th id ="benPastMedicalConditions" class="max-width-300 min-width-50">Conditions In Family</th>
+        <th id = "benPersonalSocStatus" class="max-width-300 min-width-80" > Personal & Social History </th>
+        <th id = "benMentalExamStatus" class="max-width-300 min-width-80" > Mental Status Examination </th>
+        <th id = "benRelationshipStatus" class="max-width-300 min-width-80" > Summary </th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngIf="data?.length==0">
+          <td class="record-not-found" colspan="23">
+            {{assignSelectedLanguageValue?.noRecordFound}}
+          </td>
+        </tr>
+        <ng-container
+          *ngFor="
+            let case of data;
+            let i = index
+          "
+        >
+        <tr>
+          <!-- <tr *ngFor="let function of case.biologicalFunctioning"> -->
+          <td>{{ i + 1}}</td>
+          
+          <td>
+            <ng-container *ngFor="let cheifCompaint of case?.chiefComplaints">
+            <ng-container *ngIf="cheifCompaint !== null" >
+            {{cheifCompaint?.chiefComplaint}},
+            </ng-container>
+          </ng-container>
+          </td>
+          <td>{{case?.biologicalFunctioning?.appetite}}</td>
+          <td>{{case?.biologicalFunctioning?.sleep}}</td>
+          <td>{{case?.biologicalFunctioning?.hygieneAndTakingCare}}</td>
+          <td>{{case?.biologicalFunctioning?.bladder}}</td>
+          <td>{{case?.biologicalFunctioning?.bowel}}</td>
+          <td>{{case?.biologicalFunctioning?.sexualLibido}}</td>
+          <td>{{case?.occupationalFunctioning?.goingToWork}}</td>
+          <td>{{case?.occupationalFunctioning?.issuesAtWorkplace}}</td>
+          <td>{{case?.socialFunctioning?.householdWork}}</td>
+          <td>{{case?.socialFunctioning?.gettingAlong}}</td>
+          <td>{{case?.treatmentDetails}}</td>
+          <td>{{case?.precipitatingFactors}}</td>
+          <td> {{case?.concurrentMedicalCondition}}</td>
+          <td>
+          <ng-container *ngFor="let condition of case?.pastHistory?.pastPsychiatricConditions">
+            <ng-container *ngIf="condition !== null" >
+            {{condition?.pastPsychiatricCondition}},
+          </ng-container>
+            </ng-container>
+          </td>
+          <td>
+          <ng-container *ngFor="let condition of case?.pastHistory?.pastMedicalConditions">
+            <ng-container *ngIf="condition !== null" >
+            {{condition?.pastMedicalCondition}},
+          </ng-container>
+            </ng-container>
+          </td>
+          <td> {{case?.currentDrugsMedication}}</td>
+          <td>
+            <ng-container *ngFor="let condition of case?.conditionInFamilyList">
+              <ng-container *ngIf="condition !== null  && condition !== ''" >
+              {{condition?.familyCondition?.familyConditionName}},
+            </ng-container>
+              </ng-container>
+            </td>
+          <td> {{case?.personalAndSocialHistory}}</td>
+          <td>{{case?.mentalStatusExamination}}</td>
+          <td> {{case?.summary}}</td>
+        </tr>
+        </ng-container>
+      </tbody>
+      <tfoot >
+        <tr>
+          <td colspan="23">
+          </td>
+        </tr>
+      </tfoot>
+  </table>
+<!-- </div> -->
+</div>

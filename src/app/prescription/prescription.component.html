@@ -1,0 +1,241 @@
+<div class="headerDiv">
+  <md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="{{assignSelectedLanguageValue?.close}}"
+    role="img" aria-hidden="true" (click)="closePrescription()">
+    clear
+  </md-icon>
+  <h4 class="popupHeader">{{assignSelectedLanguageValue?.prescription}}</h4>
+
+</div>
+<md-dialog-content class="p-t-12">
+  <form autocomplete="off">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+
+      <md-input-container class="width100" appName>
+        <input mdInput [disabled]="true" placeholder="{{assignSelectedLanguageValue?.name}}" name="firstName"
+          [(ngModel)]="firstName">
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+
+      <md-input-container class="width100" appMobileNumber>
+        <input mdInput [disabled]="true" placeholder="{{assignSelectedLanguageValue?.age}}"
+          name="prescriptionAge" [(ngModel)]="age">
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+
+      <md-select class="width100 p-t-17" [disabled]="true"
+        placeholder="{{assignSelectedLanguageValue?.gender}}" name="gender" [(ngModel)]="gender">
+        <md-option *ngFor="let gender of commonData?.m_genders" [value]="gender.genderID">{{gender.genderName}}
+        </md-option>
+      </md-select>
+
+    </div>
+  </form>
+  <div class="clearfix"></div>
+  <form #prescriptionForm="ngForm" autocomplete="off" id="prescription_form">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+      <md-input-container class="width100">
+        <textarea mdInput rows="2" placeholder="{{presFlag == true ? assignSelectedLanguageValue?.provisionalDiagnosis : assignSelectedLanguageValue?.informationGiven}}"
+          maxlength="300" name="diagnosisProvided" [(ngModel)]="diagnosisProvided" #message="ngModel" required
+          (keyup)="updateCount()"></textarea>
+        <md-hint align="end">{{count}}</md-hint>
+
+        <md-hint *ngIf="message.errors && message.touched">
+          <span class="error_text">{{assignSelectedLanguageValue?.diagnosisValidation}}</span>
+        </md-hint>
+      </md-input-container>
+    </div>
+    
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 p-b-1-5">
+      <md2-autocomplete
+      class="m-b-20"
+      [items]="drugNames"
+      [style.width]="'100%'"
+      item-text="drugNames"
+      [value]="drugName"
+      [(ngModel)]="drugName"
+      name="drugName"
+      placeholder="{{ assignSelectedLanguageValue?.drugList }} *"
+      #drug="ngModel"
+      (change)="populateDrugGroup(drugName)"
+    >
+    </md2-autocomplete>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 p-b-1-5">
+      <md-select class="width100 p-t-17" placeholder="{{assignSelectedLanguageValue?.drugGroup}}"
+        name="drugGroupID" [(ngModel)]="drugGroupID" #drugGroup="ngModel" required>
+        <md-option *ngFor="let drug_group of drugGroups" [value]="drug_group">{{drug_group.drugGroupName}}</md-option>
+      </md-select>
+    </div>
+    <!-- Start - Added to push Save button to 3rd Quadrant-->
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 p-b-1-5">
+      <md-select class="width100" placeholder="{{assignSelectedLanguageValue?.strength}}" name="dosage"
+        [(ngModel)]="dosage" required>
+        <md-option *ngFor="let strength of Strenghts" [value]="strength.drugStrength">{{strength.drugStrength}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+
+      <md-input-container class="width100" appNameSpace>
+        <input mdInput placeholder="{{assignSelectedLanguageValue?.routeSuggestion}}" maxlength="30"
+          name="usage" [(ngModel)]="usage" #usages="ngModel">
+        <md-hint *ngIf="usages.errors && usages.touched">
+          <span class="error_text"></span>
+        </md-hint>
+      </md-input-container>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3 p-b-1-5">
+      <md-select class="width100" placeholder="{{assignSelectedLanguageValue?.frequency}}" name="frequency"
+        [(ngModel)]="frequency" #frequency1="ngModel" required>
+        <md-option *ngFor="let frequencies of drugFrequency" [value]="frequencies.frequency">{{frequencies.frequency}}
+        </md-option>
+      </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+      <md-input-container [style.width]="'100%'" appstrength>
+        <input mdInput placeholder="{{assignSelectedLanguageValue?.numberofDays}}" name="noOfDays"
+          [(ngModel)]="noOfDays" required #noOfday="ngModel" minlength="1" maxlength="2">
+
+        <md-hint *ngIf="!noOfday.valid && noOfday.touched">
+          <span class="error_text">{{assignSelectedLanguageValue?.provideNumberofDays}}</span>
+        </md-hint>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
+
+      <md-input-container class="width100">
+        <input mdInput textAreaValidator  placeholder="{{assignSelectedLanguageValue?.remarks}}" minlength="2" maxlength="150"
+          name="remarks" [(ngModel)]="remarks" #remark="ngModel">
+        <md-hint *ngIf="remark.dirty" align="end">
+          {{remark.value.length?remark.value.length:0}}/150
+        </md-hint>
+        <md-hint *ngIf="remark.errors && remark.touched">
+          <span class="error_text">{{assignSelectedLanguageValue?.enterRemarks}}</span>
+        </md-hint>
+      </md-input-container>
+
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-b-20 ">
+      <button md-raised-button color="primary" *ngIf="!prescriptionHistory && dataList.length > 0" type="button"
+        class="pull-left"
+        (click)="showPrescriptionHistory()">{{assignSelectedLanguageValue?.showPrescriptionHistory}}</button>
+      <button md-raised-button color="primary" [disabled]="!(prescriptionForm.valid)" type="button" class="pull-right"
+        data-dismiss="modal"
+        (click)=" addPrescription(prescriptionForm.value)">{{assignSelectedLanguageValue?.add}}</button>
+    </div>
+  </form>
+
+  <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12" *ngIf="currentPrescription.length > 0">
+    <h4 class="">
+      <strong>{{assignSelectedLanguageValue?.currentPrescription}}</strong>
+    </h4>
+    <div class="table-responsive">
+      <table class="table table-striped" [md2Data]="currentPrescription" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="prescriptionDetails">
+        <thead>
+          <tr>
+            <th id="prescriptionDiagnosisProvided">{{assignSelectedLanguageValue?.provisionalDiagnosis}}</th>
+            <th id="prescriptionDrug">{{assignSelectedLanguageValue?.drug}}</th>
+            <th id="prescriptionStrength">{{assignSelectedLanguageValue?.strength}}</th>
+
+
+            <th id="prescriptionFrequency">{{assignSelectedLanguageValue?.frequency}}</th>
+            <th id="prescriptionNumberOfDays">{{assignSelectedLanguageValue?.numberofDays}}</th>
+
+            <th id="prescriptionRemarks">{{assignSelectedLanguageValue?.remarks}}</th>
+            <th id="prescriptionAction">{{assignSelectedLanguageValue?.action}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let prescription of md2.data let i=index ">
+            <td>{{prescription.diagnosisProvided}}</td>
+            <td>{{prescription.drugName}}</td>
+            <td>{{prescription.dosage === "Not Applicable" ? "" : prescription.dosage}}</td>
+            <td>{{prescription.frequency}}</td>
+            <td>{{prescription.noOfDays}}</td>
+            <td>{{prescription.remarks}}</td>
+            <td><span class="mdicon material-icons cursorPointer" mdTooltip="{{assignSelectedLanguageValue?.edit}}"
+                (click)="editCurrentPrescription(prescription,i)">edit</span></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <td colspan="3">
+            <md2-pagination></md2-pagination>
+          </td>
+        </tfoot>
+      </table>
+    </div>
+
+    <md-checkbox color="primary" class="pull-left m-t-5" name="altNum" [(ngModel)]="altNum">
+      {{assignSelectedLanguageValue?.alternateNumber}}:
+    </md-checkbox>
+    <div *ngIf="altNum" class="col-xs-3 col-sm-3 col-lg-3 col-md-3 pull-left m-t--15">
+
+      <md-input-container appMobileNumber>
+        <input mdInput class="pull-left" autocomplete="off" type="text" required minlength="10" maxlength="10"
+          placeholder="{{assignSelectedLanguageValue?.mobileNumber}}" name="mobileNumber"
+          (keyup)="mobileNum(mobileNumber)" [(ngModel)]="mobileNumber" #phnNum="ngModel">
+        <md-hint *ngIf="phnNum.invalid && phnNum.touched">
+          <span class="error_text">{{assignSelectedLanguageValue?.enterTenDigitMobileNumber}}</span>
+        </md-hint>
+      </md-input-container>
+    </div>
+
+    <button md-raised-button color="accent" [disabled]="altNum && !validNumber" type="button"
+      class="pull-left m-l-5 m-r-5"
+      (click)="save_and_sendSMS(mobileNumber)">{{assignSelectedLanguageValue?.saveAndSend}}</button>
+    <button md-raised-button color="accent" type="button" class="pull-right"
+      (click)="savePrescription()">{{assignSelectedLanguageValue?.save}}</button>
+
+  </div>
+  <div class="col-xs-12 col-sm-12" *ngIf="prescriptionHistory">
+    <h4 class="f-s-b m-t-20 m-b-20">
+      <strong>{{assignSelectedLanguageValue?.prescriptionHistory}}</strong>
+    </h4>
+    <div class="table-responsive">
+      <table class="table table-striped" [md2Data]="dataList" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="prescriptionHistoryDetails">
+        <thead>
+          <tr>
+            <th id="prescriptionIDHistory">{{assignSelectedLanguageValue?.prescriptionId}}</th>
+            <th id="prescriptionHistoryDiagnosisProvided">{{assignSelectedLanguageValue?.provisionalDiagnosis}}</th>
+            <th id="prescriptionHistoryDrug">{{assignSelectedLanguageValue?.drug}}</th>
+            <th id="prescriptionHistoryStrength">{{assignSelectedLanguageValue?.strength}}</th>
+            <th id="prescriptionHistoryFrequency">{{assignSelectedLanguageValue?.frequency}}</th>
+            <th id="prescriptionHistoryNumberOfDays">{{assignSelectedLanguageValue?.numberofDays}}</th>
+            <th id="prescriptionHistoryRemarks">{{assignSelectedLanguageValue?.remarks}}</th>
+            <th id="prescriptionHistoryCreatedDate">{{assignSelectedLanguageValue?.createdDate}}</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let prescription of md2.data">
+          <tr *ngFor="let p of prescription.prescribedDrugs let i = index">
+            <td>
+              {{prescription.prescriptionID}}
+            </td>
+            <td>{{prescription.diagnosisProvided}}</td>
+            <td>{{p.drugName}}</td>
+            <td>{{p.dosage}}</td>
+            <td>{{p.frequency}}</td>
+            <td>{{p.noOfDays}}</td>
+            <td>{{prescription.remarks}}</td>
+            <td>{{prescription.createdDate}}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <md2-pagination></md2-pagination>
+            </td>
+            <td colspan="4">
+              <button md-raised-button color="primary" type="button" class="pull-right"
+                (click)="hidePrescriptionHistory()">{{assignSelectedLanguageValue?.hideHistory}}</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</md-dialog-content>

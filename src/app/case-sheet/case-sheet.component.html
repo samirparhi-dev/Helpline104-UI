@@ -1,0 +1,1337 @@
+<div class="col-xs-12 col-sm-12">
+  <div>
+    <h4 class="pull-left f-s-b m-t-20 m-b-20" *ngIf="current_role === 'CO'">
+      <strong>{{ currentLanguageSet?.counsellingSheet }}</strong>
+    </h4>
+    <h4 class="pull-left f-s-b m-t-20 m-b-20" *ngIf="current_role === 'MO'">
+      <strong>{{ currentLanguageSet?.caseSheet }}</strong>
+    </h4>
+    <h4 class="pull-left f-s-b m-t-20 m-b-20" *ngIf="current_role === 'HAO'">
+      <strong>{{ currentLanguageSet?.caseSheet }}</strong>
+    </h4>
+    <h4 class="pull-left f-s-b m-t-20 m-b-20" *ngIf="current_role === 'PD'">
+      <strong>{{ currentLanguageSet?.caseSheet }}</strong>
+    </h4>
+
+    <button
+      *ngIf="!displayHistory"
+      type="button"
+      md-raised-button
+      color="accent"
+      class="pull-right m-t-5"
+      (click)="showHistory()"
+    >
+      {{ currentLanguageSet?.history }}
+    </button>
+  </div>
+  <div class="clearfix"></div>
+  <div class="box-shadow m-t-10">
+    <div class="row">
+      <div
+        *ngIf="current_campaign == 'INBOUND'"
+        class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-10"
+      >
+        <label class="f-s-n-b m-r-5 f-s-16">{{
+          currentLanguageSet?.patientIs
+        }}</label>
+        <md-radio-group
+          [disabled]="disableRadioButton"
+          name="is_patient"
+          [(ngModel)]="is_patient"
+          (change)="patientDetailsFields(is_patient)"
+        >
+          <md-radio-button class="m-l-15" value="self" color="primary"
+            >{{ currentLanguageSet?.self }}
+          </md-radio-button>
+          <md-radio-button class="m-l-15" value="other" color="primary"
+            >{{ currentLanguageSet?.other }}
+          </md-radio-button>
+        </md-radio-group>
+      </div>
+      <form #patientDetailForm="ngForm" autocomplete="off">
+        <div class="clearfix"></div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container appName [style.width]="'100%'">
+            <input
+              mdInput
+              placeholder="{{ currentLanguageSet?.firstName }}"
+              required
+              class="test"
+              disabled="{{ disableFlag }}"
+              minlength="3"
+              maxlength="50"
+              name="firstName"
+              [(ngModel)]="firstName"
+              #first="ngModel"
+            />
+            <md-hint *ngIf="!first.valid && is_patient == 'other'">
+              <span
+                class="error_text"
+                *ngIf="!first.required && (first.dirty || first.touched)"
+                >{{ currentLanguageSet?.enteratLeast3Characters }}</span
+              >
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container appName [style.width]="'100%'">
+            <input
+              mdInput
+              disabled="{{ disableFlag }}"
+              class="test"
+              placeholder="{{ currentLanguageSet?.lastName }}"
+              maxlength="50"
+              name="lastName"
+              [(ngModel)]="lastName"
+            />
+          </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select
+            [style.width]="'100%'"
+            class="test"
+            disabled="{{ disableFlag }}"
+            required
+            placeholder="{{ currentLanguageSet?.gender }}"
+            [(ngModel)]="gender"
+            name="gender"
+            #genderSelected="ngModel"
+            (change)="genderchange(genderSelected.value)"
+          >
+            <md-option
+              *ngFor="let gen of commonData.m_genders"
+              [value]="gen.genderID"
+            >
+              {{ gen.genderName }}
+            </md-option>
+          </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" appMobileNumber>
+          <md-input-container [style.width]="'100%'">
+            <input
+              mdInput
+              placeholder="{{ currentLanguageSet?.age }}"
+              disabled="{{ disableFlag }}"
+              required
+              name="age"
+              [(ngModel)]="age"
+              minlength="1"
+              maxlength="3"
+              (keyup)="ageInput(age)"
+              #ageRef
+              (change)="calculateDOB()"
+              #ageEvent="ngModel"
+            />
+            <md-hint *ngIf="ageFlag && is_patient == 'other'">
+              <span
+                class="error_text"
+                *ngIf="ageFlag && (ageEvent.dirty || ageEvent.touched)"
+                >{{ currentLanguageSet.entervalidAgeMax120 }}</span
+              >
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div class="clearfix"></div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5"
+          *ngIf="is_patient == 'other' && current_role == 'HAO'"
+        >
+          <md-select
+            [style.width]="'100%'"
+            class="test"
+            required
+            placeholder="{{ currentLanguageSet?.ageunit }}"
+            [(ngModel)]="ageUnit"
+            name="ageunit"
+            #ageunit="ngModel"
+            (change)="onAgeUnitEntered()"
+          >
+            <md-option value="days">Day(s)</md-option>
+            <md-option value="months">Month(s)</md-option>
+            <md-option value="years">Year(s)</md-option>
+            <!-- <md-option *ngFor="let ageunit of ageUnitList" [value]="ageunit">
+              {{ageunit}}
+            </md-option> -->
+          </md-select>
+         
+        </div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="is_patient == 'other' && current_role === 'HAO'"
+        >
+          <md2-datepicker
+            [min]="minDate"
+            [max]="maxDate"
+            [style.width]="'100%'"
+            placeholder="{{ currentLanguageSet?.dob }}"
+            name="dateOfBirth"
+            (change)="calculateAge($event.value)"
+            (keydown)="blockey($event)"
+            [(ngModel)]="DOB"
+            #DateOB="ngModel"
+          >
+          </md2-datepicker>
+          <span class="error_text f-s-10"> </span>
+        </div>
+      </form>
+    </div>
+    <div class="row" *ngIf="current_role === 'CO' || current_role === 'PD'">
+      <p class="pull-left m-l-15 m-t-5" style="color: #b3b3b3; font-size: 12px;">Note: Category is mandatory only for guideline search</p>
+    </div>
+    <div class="row">
+      <div
+        class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-20"
+        *ngIf="current_role === 'CO' || current_role === 'PD'"
+      >
+        <md-radio-group
+          name="wellbeing_information"
+          [(ngModel)]="wellbeing_infotype"
+          (change)="on_WB_or_INFO_change(wellbeing_infotype)"
+        >
+          <md-radio-button color="primary" [value]="1"
+            >{{ currentLanguageSet?.wellBeing }}
+          </md-radio-button>
+          <md-radio-button class="m-l-15" color="primary" [value]="2"
+            >{{ currentLanguageSet?.information }}
+          </md-radio-button>
+        </md-radio-group>
+      </div>
+
+      <form #catSubcatForm="ngForm" autocomplete="off">
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="current_role === 'CO' || current_role === 'PD'"
+        >
+          <md-select
+            [style.width]="'100%'"
+            placeholder="{{ currentLanguageSet?.category }}"
+            [(ngModel)]="category"
+            name="category"
+            (change)="getSubCategories(category)"
+            #CAT="ngModel"
+            required
+          >
+            <md-option
+              *ngFor="let categories of filteredCategories"
+              value="{{ categories.categoryID }}"
+            >
+              {{ categories.categoryName }}</md-option
+            >
+          </md-select>
+        </div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="current_role === 'CO' || current_role === 'PD'"
+        >
+          <md-select
+            [style.width]="'100%'"
+            placeholder="{{ currentLanguageSet?.subCategory }}"
+            [(ngModel)]="subcategory"
+            name="subcategory"
+            (change)="hideDocument()"
+          >
+            <md-option
+              *ngFor="let subCategry of subCategories"
+              value="{{ subCategry.subCategoryID }}"
+            >
+              {{ subCategry.subCategoryName }}</md-option
+            >
+          </md-select>
+        </div>
+      </form>
+      <div
+        class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+        *ngIf="current_role === 'CO' || current_role === 'PD'"
+      >
+        <button
+          [disabled]="catSubcatForm.invalid"
+          md-mini-fab
+          color="accent"
+          *ngIf="testFlagOne"
+          class="m-l-10"
+          (click)="showDetails(category, subcategory)"
+        >
+          <md-icon
+            mdSuffix
+            class="mat-icon material-icons"
+            mdTooltip="{{ currentLanguageSet?.getGuidelines }}"
+            role="img"
+            aria-hidden="true"
+            style="cursor: pointer"
+            >search</md-icon
+          >
+        </button>
+        <button
+          [disabled]="catSubcatForm.invalid"
+          type="button"
+          md-mini-fab
+          color="accent"
+          *ngIf="!testFlagOne"
+          class="m-l-10"
+          (click)="showDetails(category, subcategory)"
+        >
+          <md-icon
+            mdSuffix
+            class="mat-icon material-icons"
+            mdTooltip="{{ currentLanguageSet?.getInformation }}"
+            role="img"
+            aria-hidden="true"
+            style="cursor: pointer"
+            >search</md-icon
+          >
+        </button>
+      </div>
+    </div>
+
+  <br>
+  
+    <div class="row" *ngIf="showDocument">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="border-1-g m-b-20 scrolldiv" for="subCategoryDetails">
+          <ul class="m-t-10">
+            <div  *ngFor="let detail of detailsList">
+            <li *ngIf="(detail?.subCatFilePath) && (detail?.subCatFilePath !== null)">
+              <a *ngIf="(detail?.subCatFilePath) && (detail?.subCatFilePath != null)" href="{{detail?.subCatFilePath}}" target="_blank">
+                <md-icon class="f-s-22 icon" color="">file_download</md-icon>
+                <span class="m-l-10"
+                >{{ detail?.subCategoryName }}
+                <span *ngIf="detail?.fileManger[0]?.fileName">:</span
+                >{{ detail?.fileManger[0]?.fileName }}</span
+              >
+              </a>
+            </li>
+          </div>
+          <span *ngIf="noDocument">{{currentLanguageSet?.noDocumentAvailable}}</span>
+          </ul>
+        </div>
+      </div>
+      </div>
+
+    <div class="row">
+      <div
+        class="col-xs-12 col-sm-12 col-md-12 col-lg-12"
+        *ngIf="current_role === 'MO' || current_role === 'HAO'"
+      >
+        <md-radio-group 
+          [(ngModel)]="chiefCompliantOrDiseaseSummary"
+          name="chiefCompliantOrDiseaseSummary"
+          (change)="switchPccAndDS(chiefCompliantOrDiseaseSummary)"
+          [disabled] ="is_patient === 'other' ? patientDetailForm.invalid : null"
+        >
+          <md-radio-button [value]="1">{{
+            currentLanguageSet?.presentChiefComplaint
+          }}</md-radio-button>
+          <md-radio-button class="m-l-10" [value]="2">{{
+            currentLanguageSet?.diseasesSummary
+          }}</md-radio-button>
+        </md-radio-group>
+      </div>
+    </div>
+    <form #caseSheetForm="ngForm" autocomplete="off">
+      <div class="row m-t-20">
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t--10"
+          *ngIf="chiefComplaint"
+        >
+          <md-input-container
+            [style.width]="'100%'"
+            *ngIf="current_role === 'CO'"
+            class='m-t-10'
+          >
+            <textarea
+              maxlength="800"
+              mdInput
+              presentChiefComplaintValidator 
+              placeholder="{{ currentLanguageSet?.presentChiefComplaint }} *"
+              rows="2"
+              name="copcc"
+              [(ngModel)]="pcc"
+              #pccs="ngModel"
+            ></textarea>
+            <md-hint>
+              <span *ngIf="pccs.dirty && pccs.untouched">{{
+                currentLanguageSet?.max800
+              }}</span>
+            </md-hint>
+          </md-input-container>
+          <md2-autocomplete
+            class="m-b-20"
+            [items]="chiefCompliants"
+            [style.width]="'100%'"
+            item-text="chiefCompliants"
+            *ngIf="
+              current_role === 'MO' ||
+              current_role === 'HAO' ||
+              current_role == 'PD' ||
+              screens.includes('Health_Advice')
+            "
+            item-value="chiefCompliants"
+            class="pccStyle"
+            [(ngModel)]="pcc"
+            name="pcc"
+            placeholder="{{ currentLanguageSet?.presentChiefComplaint }} *"
+            (change)="invokeDialog(pcc)"
+            mdTooltip="{{ sctID_pcc }}"
+            #pccs="ngModel"
+            [readonly]="(psd !== undefined && psd !== null && psd !== '')"
+          >
+          </md2-autocomplete>
+        </div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="chiefComplaint && current_role === 'CO'"
+        >
+          <md-input-container [style.width]="'100%'">
+            <textarea
+              mdInput
+              textAreaValidator 
+              placeholder="{{
+                currentLanguageSet?.provisionalSelectedDiagnosis
+              }}"
+              rows="2"
+              name="psd"
+              required="{{ requiredRole }}"
+              minlength="4"
+              [(ngModel)]="psd"
+              maxlength="100"
+              #psdT="ngModel"
+              mdTooltip="{{ sctID_psd }}"
+            ></textarea>
+            <md-hint>
+              <div *ngIf="psdT.hasError('minlength')">
+                {{ currentLanguageSet?.atLeastFourCharactersPlease }}
+              </div>
+              <div *ngIf="psdT.hasError('maxlength')">
+                {{ currentLanguageSet?.max100 }}
+              </div>
+            </md-hint>
+          </md-input-container>
+        </div>
+
+        <div class="col-xs-12 col-sm-4 col-md-3" style="margin-top: 15px;" *ngIf="chiefComplaint && current_role === 'CO'">
+          <md-select
+            class="input-full-width"
+            [(ngModel)]="riskLevel"
+            name="riskLevel"
+            placeholder="{{ currentLanguageSet?.riskLevel}}">
+              <md-option value="Mild">Mild</md-option>
+              <md-option value="Moderate">Moderate</md-option>
+              <md-option value="High">High</md-option>
+            </md-select>
+          </div>
+        <div
+        class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+        *ngIf="chiefComplaint && current_role !== 'CO'"
+      >
+        <md-input-container [style.width]="'100%'">
+          <textarea
+            mdInput
+            textAreaValidator 
+            placeholder="{{
+              currentLanguageSet?.provisionalSelectedDiagnosis
+            }}"
+            rows="2"
+            name="psd"
+            required="{{ requiredRole }}"
+            minlength="4"
+            [(ngModel)]="psd"
+            maxlength="100"
+            #psdT="ngModel"
+            mdTooltip="{{ sctID_psd }}"
+            readonly
+          ></textarea>
+          <md-hint>
+            <div *ngIf="psdT.hasError('minlength')">
+              {{ currentLanguageSet?.atLeastFourCharactersPlease }}
+            </div>
+            <div *ngIf="psdT.hasError('maxlength')">
+              {{ currentLanguageSet?.max100 }}
+            </div>
+          </md-hint>
+        </md-input-container>
+      </div>
+        <div *ngIf="current_role === 'MO'" class="clearfix visible-sm"></div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="chiefComplaint && current_role !== 'CO'"
+        >
+          <md-input-container [style.width]="'100%'">
+            <textarea
+              mdInput
+              textAreaValidator 
+              placeholder="{{ currentLanguageSet?.recommendedAction }}"
+              rows="2"
+              name="recommendedAction"
+              required="{{ requiredRole }}"
+              minlength="{{ minlength }}"
+              [(ngModel)]="recommendedAction"
+              maxlength="300"
+              #rAction="ngModel"
+            ></textarea>
+            <md-hint>
+              <span
+                *ngIf="rAction.errors && rAction.touched && requiredRole"
+                class="error_text"
+                >{{ currentLanguageSet?.enteratLeast3Characters }}</span
+              >
+              <span *ngIf="rAction.dirty && rAction.untouched">{{
+                currentLanguageSet?.max300
+              }}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <!-- <div
+        class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+        *ngIf="chiefComplaint && current_role === 'CO'"
+      >
+        <md-input-container [style.width]="'100%'">
+          <textarea
+            mdInput
+            textAreaValidator 
+            placeholder="{{ currentLanguageSet?.recommendedAction }}"
+            rows="2"
+            name="recommendedAction"
+            required="{{ requiredRole }}"
+            minlength="{{ minlength }}"
+            [(ngModel)]="recommendedAction"
+            maxlength="300"
+            #rAction="ngModel"
+          ></textarea>
+          <md-hint>
+            <span
+              *ngIf="rAction.errors && rAction.touched && requiredRole"
+              class="error_text"
+              >{{ currentLanguageSet?.enteratLeast3Characters }}</span
+            >
+            <span *ngIf="rAction.dirty && rAction.untouched">{{
+              currentLanguageSet?.max300
+            }}</span>
+          </md-hint>
+        </md-input-container>
+      </div> -->
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t--10"
+          *ngIf="
+            !chiefComplaint && (current_role === 'MO' || current_role === 'HAO')
+          "
+        >
+          <md2-autocomplete
+            m
+            class="m-b-20"
+            [items]="diseaseNames"
+            [style.width]="'100%'"
+            item-text="diseaseNames"
+            item-value="diseaseNames"
+            class="pccStyle"
+            [(ngModel)]="diseasesSummary"
+            name="diseasesSummary"
+            placeholder="{{ currentLanguageSet?.diseasesSummary }} *"
+            (change)="showDiseaseSummary(diseasesSummary)"
+            #disease="ngModel"
+            [readonly]="(informationGiven !== undefined && informationGiven !== null && informationGiven !== '')"
+          >
+          </md2-autocomplete>
+        </div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="!chiefComplaint"
+        >
+          <md-input-container [style.width]="'100%'">
+            <textarea
+              mdInput
+              textAreaValidator 
+              placeholder="{{ currentLanguageSet?.informationGiven }}"
+              rows="2"
+              [(ngModel)]="informationGiven"
+              name="informationGiven"
+              #informationGivenT="ngModel"
+              minlength="4"
+              maxlength="100"
+              readonly
+            ></textarea>
+            <md-hint>
+              <div *ngIf="informationGivenT.hasError('minlength')">
+                {{ currentLanguageSet?.atLeastFourCharactersPlease }}
+              </div>
+              <div *ngIf="informationGivenT.hasError('maxlength')">
+                {{ currentLanguageSet?.max100 }}
+              </div>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="!chiefComplaint"
+        >
+          <md-input-container [style.width]="'100%'">
+            <textarea
+              mdInput
+              textAreaValidator 
+              placeholder="{{ currentLanguageSet?.recommendedAction }} ({{
+                currentLanguageSet?.selfCare
+              }})"
+              rows="2"
+              name="recommendedAction"
+              [(ngModel)]="recommendedAction"
+              maxlength="7000"
+              #rAction="ngModel"
+            ></textarea>
+            <md-hint>
+              <span
+                *ngIf="rAction.errors && rAction.touched && requiredRole"
+                class="error_text"
+                >{{ currentLanguageSet?.enteratLeast3Characters }}</span
+              >
+              <span *ngIf="rAction.dirty && rAction.untouched">{{
+                currentLanguageSet?.maximumSevenThousandCharacters
+              }}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="current_role === 'HAO' || screens.includes('Health_Advice')"
+        >
+          <md-input-container [style.width]="'100%'">
+            <textarea
+              mdInput
+              textAreaValidatorWithCopyPaste 
+              placeholder="{{ currentLanguageSet?.actionByHao }}"
+              rows="2"
+              name="actionByHao"
+              required
+              minlength="3"
+              [(ngModel)]="actionByHao"
+              maxlength="200"
+              #HAOaction="ngModel"
+              (keyup)="actionBy(actionByHao)"
+            ></textarea>
+            <md-hint>
+              <span
+                *ngIf="HAOaction.errors && HAOaction.touched"
+                class="error_text"
+                >{{ currentLanguageSet?.enteratLeast3Characters }} {{ currentLanguageSet?.specialCharactersAllowed}}</span
+              >
+              <span *ngIf="HAOaction.dirty && HAOaction.untouched">{{
+                currentLanguageSet?.max200
+              }}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="current_role === 'MO'"
+        >
+          <md-input-container [style.width]="'100%'">
+            <textarea
+              mdInput
+              textAreaValidatorWithCopyPaste 
+              placeholder="{{ currentLanguageSet?.actionByMo }}"
+              rows="2"
+              name="actionByMo"
+              required
+              minlength="3"
+              [(ngModel)]="actionByMo"
+              maxlength="200"
+              #MOaction="ngModel"
+              (keyup)="actionBy(actionByMo)"
+            ></textarea>
+            <md-hint>
+              <span
+                *ngIf="MOaction.invalid && MOaction.touched"
+                class="error_text"
+                >{{ currentLanguageSet?.enteratLeast3Characters }} {{ currentLanguageSet?.specialCharactersAllowed}}</span
+              >
+              <span *ngIf="MOaction.dirty && MOaction.untouched">{{
+                currentLanguageSet?.max200
+              }}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div
+          class="col-xs-12 col-sm-4 col-md-2 col-lg-3"
+          *ngIf="chiefComplaint && current_role === 'CO'"
+        >
+          <md-input-container [style.width]="'100%'">
+            <textarea
+              mdInput
+              textAreaValidator 
+              placeholder="{{ currentLanguageSet?.treatmentRecommendation}}"
+              rows="2"
+              name="treatmentRecommendation"
+              [(ngModel)]="treatmentRecommendation"
+              maxlength="300" minlength="3"
+              #Treatment = "ngModel"
+            ></textarea>
+            <md-hint>
+              <span
+              *ngIf="Treatment.invalid && Treatment.touched"
+              class="error_text"
+              >{{ currentLanguageSet?.enteratLeast3Characters }} {{ currentLanguageSet?.specialCharactersAllowed}}</span
+            >
+              <span *ngIf="Treatment.dirty && Treatment.untouched">{{
+                currentLanguageSet?.max300
+              }}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="current_role === 'PD'"
+        >
+          <md-input-container [style.width]="'100%'">
+            <textarea
+              mdInput
+              textAreaValidator 
+              placeholder="{{ currentLanguageSet?.actionByPd }}"
+              rows="2"
+              name="actionByPd"
+              [(ngModel)]="actionByPd"
+              maxlength="200"
+              #PDaction="ngModel"
+              required
+            ></textarea>
+            <md-hint>
+              <span *ngIf="PDaction.dirty && PDaction.untouched">{{
+                currentLanguageSet?.max200
+              }}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+      </div>
+      <!--COVID-CR-->
+      <div
+        class="container"
+        style="margin-left: 0px"
+        *ngIf="current_role === 'MO' || current_role === 'HAO'"
+      >
+        <label style="padding-left: 1%"
+          >{{ currentLanguageSet?.covid19qc }}*</label
+        >
+        <md-radio-group
+          name="coviddisplay"
+          [(ngModel)]="coviddisplay"
+          (change)="changeCovidDisplay(coviddisplay, caseSheetForm.value)"
+        >
+          <md-radio-button value="yes" color="primary"
+            >{{ currentLanguageSet?.yes }}
+          </md-radio-button>
+          <md-radio-button value="no" color="primary" checked="checked"
+            >{{ currentLanguageSet?.no }}
+          </md-radio-button>
+        </md-radio-group>
+        <div class="container" *ngIf="isdisplay">
+          <h4>
+            {{ currentLanguageSet?.travelHistory }}
+          </h4>
+          <br />
+
+          <md-select
+            class="test"
+            [style.width]="'50%'"
+            placeholder="{{ currentLanguageSet?.haveYouTravelledLast14Days }} *"
+            [(ngModel)]="travelstat"
+            name="travelstatus"
+            (change)="travelStatuschange(travelstat)"
+          >
+            <md-option value="true">Yes</md-option>
+            <md-option value="false">No</md-option>
+          </md-select>
+          <br />
+
+          <div *ngIf="istravelStatus">
+            <div>
+              <br />
+              <h5>{{ currentLanguageSet?.travelType }}</h5>
+
+              <md-checkbox
+                color="primary"
+                class="font-weight-normal"
+                name="domestic"
+                value="domestic"
+                [(ngModel)]="domest"
+                (change)="travelTypeDomesticchange(domest)"
+                >{{ currentLanguageSet?.domestic }}</md-checkbox
+              >
+              <md-checkbox
+                color="primary"
+                class="font-weight-normal"
+                name="international"
+                value="international"
+                [(ngModel)]="inter"
+                (change)="travelTypeInternationalchange(inter)"
+                >{{ currentLanguageSet?.international }}</md-checkbox
+              >
+            </div>
+
+            <div *ngIf="istravelModeDomestic">
+              <div>
+                <md-select
+                  [style.width]="'50%'"
+                  class="test"
+                  placeholder="{{ currentLanguageSet?.modeOfTravel }}"
+                  [(ngModel)]="modeOfTravelDom"
+                  name="modeOfTravelDomestic"
+                >
+                  <md-option value="bus">Bus</md-option>
+                  <md-option value="train">Train</md-option>
+                  <md-option value="flight">Flight</md-option>
+                  <md-option value="ship">Ship</md-option>
+                </md-select>
+              </div>
+              <br />
+              <h5>
+                {{ currentLanguageSet?.locationTravelledFrom }}
+              </h5>
+
+              <div>
+                <md-select
+                  placeholder="{{ currentLanguageSet?.state }}"
+                  [style.width]="'50%'"
+                  [(ngModel)]="DomFromstate"
+                  name="FromstateDom"
+                  (change)="GetDistrictsFromDom(DomFromstate)"
+                  #FromstateSelectedDom="ngModel"
+                >
+                  <md-option
+                    *ngFor="let state of states"
+                    [value]="state.stateID"
+                  >
+                    {{ state.stateName }}
+                  </md-option>
+                </md-select>
+              </div>
+
+              <div>
+                <md-select
+                  [style.width]="'50%'"
+                  placeholder="{{ currentLanguageSet?.district }}"
+                  [(ngModel)]="DomFromDistrict"
+                  name="FromDistrictDom"
+                  #FromDistrictelectedDom="ngModel"
+                  (change)="getSubDistrictFromDom(FromDistrictelectedDom.value)"
+                >
+                  <md-option
+                    *ngFor="let district of districtsFromDom"
+                    [value]="district.districtID"
+                  >
+                    {{ district.districtName }}
+                  </md-option>
+                </md-select>
+              </div>
+
+              <div>
+                <md-select
+                  [style.width]="'50%'"
+                  placeholder="{{ currentLanguageSet?.subDistrict }}"
+                  [(ngModel)]="DomFromsubDistrict"
+                  name="FromsubDistrictDom"
+                  (change)="getVillage(DomFromsubDistrict)"
+                >
+                  <md-option
+                    *ngFor="let item of subDistrictsFromDom"
+                    [value]="item.blockID"
+                    >{{ item.blockName }}
+                  </md-option>
+                </md-select>
+              </div>
+              <br />
+              <h5>
+                {{ currentLanguageSet?.locationTravelledTo }}
+              </h5>
+
+              <div>
+                <md-select
+                  placeholder="{{ currentLanguageSet?.state }}"
+                  [style.width]="'50%'"
+                  [(ngModel)]="DomTostate"
+                  name="TostateDom"
+                  (change)="GetDistrictsToDom(DomTostate)"
+                  #TostateSelectedDom="ngModel"
+                >
+                  <md-option
+                    *ngFor="let state of states"
+                    [value]="state.stateID"
+                  >
+                    {{ state.stateName }}
+                  </md-option>
+                </md-select>
+              </div>
+
+              <div>
+                <md-select
+                  [style.width]="'50%'"
+                  placeholder="{{ currentLanguageSet?.district }}"
+                  [(ngModel)]="DomToDistrict"
+                  name="ToDistrictDom"
+                  #ToDistrictSelectedDom="ngModel"
+                  (change)="getSubDistrictToDom(ToDistrictSelectedDom.value)"
+                >
+                  <md-option
+                    *ngFor="let district of districtsToDom"
+                    [value]="district.districtID"
+                  >
+                    {{ district.districtName }}
+                  </md-option>
+                </md-select>
+              </div>
+
+              <div>
+                <md-select
+                  [style.width]="'50%'"
+                  placeholder="{{ currentLanguageSet?.subDistrict }}"
+                  [(ngModel)]="DomTosubDistrict"
+                  name="TosubDistrictDom"
+                  (change)="getVillage(DomTosubDistrict)"
+                >
+                  <md-option
+                    *ngFor="let item of subDistrictsToDom"
+                    [value]="item.blockID"
+                    >{{ item.blockName }}
+                  </md-option>
+                </md-select>
+              </div>
+            </div>
+
+            <div *ngIf="istravelModeInternatinal">
+              <div>
+                <md-select
+                  [style.width]="'50%'"
+                  class="test"
+                  placeholder="{{ currentLanguageSet?.modeOfTravel }}"
+                  [(ngModel)]="IntermodeOfTravel"
+                  name="modeOfTravelInter"
+                >
+                  <md-option value="flight">Flight</md-option>
+                  <md-option value="ship">Ship</md-option>
+                </md-select>
+              </div>
+              <br />
+              <h5>
+                {{ currentLanguageSet?.locationTravelledFrom }}
+              </h5>
+
+              <div>
+                <md-select
+                  placeholder="{{ currentLanguageSet?.country }}"
+                  [style.width]="'50%'"
+                  [(ngModel)]="InterFromCountry"
+                  name="FromCountryInter"
+                  (change)="getCitiesFromInter(InterFromCountry)"
+                  #FromstateSelectedInter="ngModel"
+                >
+                  <md-option
+                    *ngFor="let country of countries"
+                    [value]="country.countryID"
+                  >
+                    {{ country.countryName }}
+                  </md-option>
+                </md-select>
+              </div>
+
+              <div>
+                <md-select
+                  [style.width]="'50%'"
+                  placeholder="{{ currentLanguageSet?.city }}"
+                  [(ngModel)]="InterFromcity"
+                  name="FromcityInter"
+                  #FromcitySelectedInter="ngModel"
+                >
+                  <md-option
+                    *ngFor="let city of citiesFromInter"
+                    [value]="city.cityID"
+                  >
+                    {{ city.cityName }}
+                  </md-option>
+                </md-select>
+              </div>
+
+              <br />
+              <h5>
+                {{ currentLanguageSet?.locationTravelledTo }}
+              </h5>
+
+              <div>
+                <md-select
+                  placeholder="{{ currentLanguageSet?.country }}"
+                  [style.width]="'50%'"
+                  [(ngModel)]="InterToCountry"
+                  name="ToCountryInter"
+                  (change)="getCitiesToInter(InterToCountry)"
+                  #FromstateSelectedInter="ngModel"
+                >
+                  <md-option
+                    *ngFor="let country of countries"
+                    [value]="country.countryID"
+                  >
+                    {{ country.countryName }}
+                  </md-option>
+                </md-select>
+              </div>
+
+              <div>
+                <md-select
+                  [style.width]="'50%'"
+                  placeholder="{{ currentLanguageSet?.city }}"
+                  [(ngModel)]="InterTocity"
+                  name="TocityInter"
+                  #FromcitySelectedInter="ngModel"
+                >
+                  <md-option
+                    *ngFor="let city of citiesToInter"
+                    [value]="city.cityID"
+                  >
+                    {{ city.cityName }}
+                  </md-option>
+                </md-select>
+              </div>
+            </div>
+          </div>
+          <br />
+
+          <h5>{{ currentLanguageSet?.symptom }}</h5>
+          <md-checkbox
+            color="primary"
+            class="font-weight-normal"
+            name="fever"
+            value="Fever"
+            [(ngModel)]="fev"
+            (change)="onCheckboxChagen($event, 'Fever'); onCheckQuestion1(fev)"
+            [disabled]="diableOtherSymptom"
+            >{{ currentLanguageSet?.fever }}</md-checkbox
+          >
+          <md-checkbox
+            color="primary"
+            class="font-weight-normal"
+            name="cough"
+            value="Cough"
+            [(ngModel)]="cough"
+            (change)="
+              onCheckboxChagen($event, 'Cough'); onCheckQuestion2(cough)
+            "
+            [disabled]="diableOtherSymptom"
+            >{{ currentLanguageSet?.cough }}</md-checkbox
+          >
+          <md-checkbox
+            color="primary"
+            class="font-weight-normal"
+            name="breathingdifficulties"
+            value="Breathing Difficulties"
+            [(ngModel)]="breathingDiff"
+            (change)="
+              onCheckboxChagen($event, 'Breathing Difficulties');
+              onCheckQuestion3(breathingDiff)
+            "
+            [disabled]="diableOtherSymptom"
+            >{{ currentLanguageSet?.breathingDifficulties }}</md-checkbox
+          >
+          <md-checkbox
+            color="primary"
+            class="font-weight-normal"
+            name="noSymptoms"
+            value="No Symptoms"
+            [(ngModel)]="nosymp"
+            (change)="
+              onCheckboxChagen($event, 'No Symptoms'); onCheckQuestion4(nosymp)
+            "
+            [disabled]="disablenoSymptom"
+            >{{ currentLanguageSet?.noSymptoms }}</md-checkbox
+          ><br /><br />
+          <br />
+          <h5>
+            {{ currentLanguageSet?.covid19ContactHistory }}
+          </h5>
+
+          <md-select
+            [style.width]="'50%'"
+            class="test"
+            [multiple]="true"
+            placeholder="{{ currentLanguageSet?.historyOfContact }}"
+            [(ngModel)]="contactstat"
+            name="contactstatus"
+            (change)="contactStatuschange(contactstat)"
+          >
+            <md-option value="Is a confirmed case of COVID-19"
+              >Is a confirmed case of COVID-19</md-option
+            >
+            <md-option
+              value="Is having symptoms of Fever, Cough or breathing difficulty"
+              >Is having symptoms of Fever, Cough or breathing
+              difficulty</md-option
+            >
+            <md-option
+              value="Has a history of travel to places reporting local transmission"
+              >Has a history of travel to places reporting local
+              transmission</md-option
+            >
+          </md-select>
+          <div
+            *ngIf="
+              confirmedCaseCOVID_flag ||
+              feverCoughBreath_flag ||
+              TravelPlaces_flag
+            "
+          >
+            <br />
+            <md-select
+              [style.width]="'50%'"
+              class="test"
+              placeholder="{{ currentLanguageSet?.seekMedicalConsultation }}"
+              [(ngModel)]="seekMedicalConsult"
+              name="seekMedicalConsultation"
+            >
+              <md-option value="true">Yes</md-option>
+              <md-option value="false">No</md-option>
+            </md-select>
+          </div>
+          <br />
+
+          <h5>
+            {{ currentLanguageSet?.outcome }}
+          </h5>
+          <div>
+            <md-input-container [style.width]="'50%'">
+              <h5>{{ currentLanguageSet?.suspectedCovid19 }}</h5>
+              <input
+                mdInput
+                class="test"
+                name="suspectedstatus"
+                [(ngModel)]="suspectedstat"
+                value="{{ suspectedCovid }}"
+                readonly
+              />
+            </md-input-container>
+
+            <md-input-container
+              [style.width]="'50%'"
+              style="margin-left: 600px"
+            >
+              <label>{{ currentLanguageSet?.recommendation }}</label>
+              <textarea
+                mdInput
+                textAreaValidator 
+                rows="5"
+                name="recommendation"
+                [(ngModel)]="recommend"
+                value="{{ recommendationText }}"
+                readonly
+                >{{ recommendationText }}</textarea
+              >
+            </md-input-container>
+          </div>
+        </div>
+      </div>
+      <!--End-COVID CR-->
+ <!--Covid Vaccine Update-->
+ <form #covidVaccineForm="ngForm" autocomplete="off">
+ <div
+ class="col-xs-12 col-sm-12 col-md-12 col-lg-12"
+        style="margin-left: 0px;margin-top: 8px;"
+        *ngIf="current_role === 'MO' || current_role === 'HAO'"
+      >
+      <md-checkbox
+                color="primary"
+                class="font-weight-normal"
+                name="isCovidVaccine"
+                value="isCovidVaccine"
+                [(ngModel)]="isCovidVaccine"
+                (change)="changeCovidVaccine(isCovidVaccine)"
+                >{{ currentLanguageSet?.covidVaccineStatus }}</md-checkbox
+              >
+              
+      <md-card *ngIf="isCovidVaccine" style="margin-bottom: 14px;">
+     <md-card-content>
+      <div class="row" *ngIf="isCovidVaccine">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+          <md-select
+            class="input-full-width"
+            placeholder="{{ currentLanguageSet?.ageGroup }}"
+            [(ngModel)]="ageGroup"
+            name="ageGroup" (change)="ageGroupChange(ageGroup)"
+            required
+            disabled
+          >
+            <md-option *ngFor="let val of vaccineApplicableAge" [value]="val" >
+              {{val}}
+            </md-option>
+          </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+          <md-select
+            class="input-full-width"
+            placeholder="{{ currentLanguageSet?.isApplicableForVaccine }}"
+            name="vaccApplicableText"
+            [(value)]="vaccApplicableText"
+            disabled
+          >
+          <md-option value="Applicable for Vaccination">Applicable for Vaccination</md-option>
+          <md-option value="Not Applicable for Vaccination">Not Applicable for Vaccination</md-option>
+          </md-select>
+        </div>
+      </div>
+      <div class="row m-t-10" *ngIf="isCovidVaccine && isApplicableForVaccine">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+          <md-select
+            class="input-full-width"
+            placeholder="{{ currentLanguageSet?.vaccineStatus }}"
+            [(ngModel)]="vaccineStatus"
+            name="vaccineStatus"
+            required
+            (change)="vaccineStatusChange(vaccineStatus)"
+          >
+            <md-option value="YES" >YES</md-option>
+            <md-option value="NO">NO</md-option>
+          </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" *ngIf="vaccineStatus =='YES'">
+          <md-select
+            class="input-full-width"
+            placeholder="{{ currentLanguageSet?.vaccineTypes }}"
+            [(ngModel)]="covidVaccineTypeID"
+            name="covidVaccineTypeID"
+            (change)="vaccineTypeChange()"
+            required
+          >
+            <md-option *ngFor="let val of vaccineTypes" [value]="val.covidVaccineTypeID">{{val.vaccineType}}</md-option>
+          </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" *ngIf="vaccineStatus =='YES'">
+          <md-select
+            class="input-full-width"
+            placeholder="{{ currentLanguageSet?.doseTaken }}"
+            [(ngModel)]="doseTypeID"
+            name="doseTypeID"
+            (change)="doseChange()"
+            required
+          >
+            <md-option *ngFor="let val of doseTypes" [value]="val.covidDoseTypeID">{{val.doseType}}</md-option>
+          </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="isCovidVaccine">
+          <button
+            md-raised-button
+            color="accent"
+            [disabled]="(isCovidVaccine && (vaccineStatus != 'YES' && vaccineStatus != 'NO')) || 
+            covidVaccineForm.invalid || disableCovidSave"
+            type="button"
+            style="margin-bottom: 10px;margin-top: 6px;"
+            class="pull-right p-l-r-25"
+            (click)="saveCovidVaccineStatus()"
+          >
+            {{ currentLanguageSet?.save }}
+          </button>
+        </div>
+      </div>
+     
+     </md-card-content>
+    </md-card>
+ </div>
+</form>
+      <div *ngIf="doFollow"></div>
+      <div
+        class="col-xs-12 col-sm-12 p-l-lg-1 p-r-lg-1 m-t-5"
+        *ngIf="!doFollow"
+      >
+        <div *ngIf="current_role === 'MO' || current_role === 'PD'">
+          <button
+            [disabled]="
+              patientDetailForm.invalid ||
+              (psd?.length < 4 && informationGiven?.length < 4)
+            "
+            type="button"
+            md-raised-button
+            color="accent"
+            class="pull-left"
+            (click)="showPrescription()"
+          >
+            {{ currentLanguageSet?.prescription }}
+          </button>
+          <button
+            *ngIf="recentPrescriptionData.length > 0"
+            type="button"
+            mdTooltip="{{ currentLanguageSet?.lastFiveDaysPrescriptionIfAny }}"
+            (click)="recentPresData()"
+            md-raised-button
+            color="accent"
+            class="pull-left m-l-5"
+          >
+            {{ currentLanguageSet?.resendPrescription }}
+          </button>
+        </div>
+        <button
+          md-raised-button
+          color="accent"
+          [disabled]="
+           (isCovidVaccine && (vaccineStatus != 'YES' && vaccineStatus != 'NO')) ||
+            patientDetailForm.invalid ||
+            caseSheetForm.invalid ||
+            genderFlag ||
+            ageFlag ||
+            HaoActionErr ||
+            MoActionErr ||
+            disableSaveButton ||
+            disableSaveForGender
+          "
+          type="button"
+          class="pull-right p-l-r-25"
+          (click)="saveCaseSheetData(caseSheetForm.value)"
+        >
+          {{ currentLanguageSet?.save }}
+        </button>
+        <button
+          md-raised-button
+          color="primary"
+          type="button"
+          class="pull-right p-l-r-25 m-r-10"
+          (click)="resetPatientForm();"
+        >
+          {{ currentLanguageSet?.clear }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-12" *ngIf="displayHistory">
+  <h4 class="pull-left f-s-b">
+    <strong
+      >{{
+        currentLanguageSet?.history ? currentLanguageSet?.history : "History"
+      }}
+    </strong>
+  </h4>
+  <span
+    class="mdicon material-icons pull-left m-a-6 f-s-27 cursorPointer"
+    mdTooltip="{{ currentLanguageSet?.hideHistory }}"
+    (click)="displayHistory = !displayHistory"
+  >
+    backspace
+  </span>
+  <div class="clearfix"></div>
+  <md-tab-group (selectChange)="onLinkClick($event)">
+    <md-tab label="{{ currentLanguageSet?.oneZeroFourHistory }}">
+      <app-case-sheet-history [medHistory]="caseSheetData">
+      </app-case-sheet-history>
+    </md-tab>
+    <md-tab label="{{ currentLanguageSet?.mctsHistory }}">
+      <app-casesheet-history-mcts
+        [benRegID]="benToMcts"
+      ></app-casesheet-history-mcts>
+    </md-tab>
+    <md-tab label="{{ currentLanguageSet?.eHealthFacilityHistory }}">
+      <app-casesheet-history-mmu
+        [benRegID]="benToMmu"
+        [isTm]="false"
+      ></app-casesheet-history-mmu>
+    </md-tab>
+    <md-tab label="{{ currentLanguageSet?.tMHistory }}">
+      <app-casesheet-history-mmu
+        [benRegID]="benToMmu"
+        [isTm]="true"
+      ></app-casesheet-history-mmu>
+    </md-tab>
+    <md-tab label="104-HIHL Casesheet">
+      <app-104-counsellor-history  [cocasesheet]="benHihlData">
+      </app-104-counsellor-history>
+    </md-tab>
+  </md-tab-group>
+</div>

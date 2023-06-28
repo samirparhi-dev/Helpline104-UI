@@ -1,0 +1,83 @@
+<div *ngIf="!showHistoryFlag" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+  <h4>
+    <strong>{{currentLanguageSet?.schemesAvailable}}</strong>
+    <button md-raised-button color="accent" type="button" class="pull-right p-l-r-38 m-t-5 font-regular f-s-18 " (click)="showHistory()">{{currentLanguageSet?.history}}</button>
+    
+  </h4>
+  <div class="col-sm-12 col-xs-12 table-responsive p-l-0 p-r-0">
+    <table class="table table-striped" [md2Data]="schemeList" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="sioSchemeService">
+      <thead>
+        <tr>
+          <th id="sioSchemeSNo" >{{currentLanguageSet?.sno}}</th>
+          <th id="sioSchemeName" md2SortBy="schemeName" >{{currentLanguageSet?.schemeName}}</th>
+          <th id="sioSchemeDescription" >{{currentLanguageSet?.schemeDescription}}</th>
+          <th id="sioSchemeDocument" >{{currentLanguageSet?.document}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="md2.data?.length==0">
+          <td colspan="4" class="record-not-found">
+            {{currentLanguageSet?.noRecordAvailable}}
+          </td>
+        </tr>
+        <tr *ngFor="let scheme of md2.data; let i = index ">
+          <td>
+            <strong>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}}</strong>
+          </td>
+          <td>{{scheme?.schemeName}}</td>
+          <td>{{scheme?.schemeDesc}}</td>
+          <td>
+            <a href="{{scheme?.kmFilePath}}" (click)="schemeServiceAvailed(scheme.kmFilePath,scheme)"  target="_blank">{{scheme?.kmFilePath ? scheme.kmFileManager.fileName : " "}}</a>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">
+            <md2-pagination></md2-pagination>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<div *ngIf="showHistoryFlag" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+  <h4>
+    <strong>{{currentLanguageSet?.history}}</strong>    
+  </h4>
+  <div class="table-responsive">
+    <table class="table table-striped" [md2Data]="schemeSearchHistory" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="sioSchemeServiceHistory">
+      <thead>
+        <tr>
+          <th id="sioSchemeServiceSNo" >{{currentLanguageSet?.sno}}</th>
+          <th id="sioSchemeServiceName" md2SortBy="schemeName" >{{currentLanguageSet?.schemeName}}</th>
+          <th id="sioSchemeServiceAvailedDate" >{{currentLanguageSet?.availedDate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="md2.data?.length==0">
+          <td colspan="3" class="record-not-found">
+            {{currentLanguageSet?.noRecordAvailable}}
+          </td>
+        </tr>
+        <tr *ngFor="let history of md2.data; let i = index ">
+          <td>
+            <strong>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}}</strong>
+          </td>
+          <td>{{history?.scheme?.schemeName}}</td>
+          <td>{{history?.createdDate| date: 'dd/MM/yyyy'}}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2">
+            <md2-pagination></md2-pagination>
+          </td>
+          <td colspan="1" class="p-r-0">
+            <button md-raised-button color="primary" class="pull-right" (click)="showSchemes()">{{currentLanguageSet?.viewSchemes}}</button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

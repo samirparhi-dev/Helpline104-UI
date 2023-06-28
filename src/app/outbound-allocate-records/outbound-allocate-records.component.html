@@ -1,0 +1,34 @@
+<div class="row">
+<form #allocateForm="ngForm" autocomplete="off">
+  <div class="col-xs-12 col-sm-12">
+    <h4 class="f-s-b">{{assignSelectedLanguageValue?.allocateRecords}}</h4>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-lg-3 col-md-3 ">
+          <md-select [style.width]="'100%'" placeholder="{{assignSelectedLanguageValue?.allocateTo}}" name="userID" [multiple]="true" (change)="OnSelectChange()" [(ngModel)]="userID" #agentList="ngModel"
+            required>
+            <md-option value="all" *ngIf="switch==0">Select All</md-option>
+            <md-option value="all" *ngIf="switch==1">Deselect All</md-option>
+            <md-option *ngFor="let user of users" [value]="user.userID">{{user.firstName+ " "+user.lastName}}</md-option>
+          </md-select>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-lg-3 col-md-3 ">
+        <input type="hidden" class="form-control" placeholder="{{assignSelectedLanguageValue?.enterTotalNewRecords}}" id="outboundCallRequests" [(ngModel)]="outboundCallRequests"
+          name="outboundCallRequests">
+        <md-input-container [style.width]="'100%'">
+          <input mdInput type="number" max="maxCount" placeholder="{{assignSelectedLanguageValue?.enterNoOfRecords}}" name="allocateNo" [ngModel]="initialCount" (input)="validate('allocateNo',$event.target.value)"
+            (keydown)="blockKey($event)" #records="ngModel" required>
+          <md-hint *ngIf="records.errors && records.touched">
+            <span class="error_text">{{assignSelectedLanguageValue?.noOfRecordsIsRequired}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-lg-3 col-md-3 ">
+        <button md-raised-button color="accent" type="button" [disabled]="!(allocateForm.valid) || records.value == 0" class="p-l-r-38 font-regular f-s-18 m-t-10"
+          (click)="onCreate(allocateForm.value)" id="">{{assignSelectedLanguageValue?.allocate}}</button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>

@@ -1,0 +1,95 @@
+<div class="headerDiv">
+	<md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="Close" role="img"
+	 aria-hidden="true" (click)="dialogReff.close()">
+		clear
+	</md-icon>
+	<h4 class="popupHeader">{{data.type.requestedFeature}}</h4>
+</div>
+
+<md-dialog-content *ngIf="feature == 'Epidemic Outbreak Service'">
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+		<strong> Nature Of Complaint :  </strong>{{epidemicData?.natureOfComplaint}}
+	</div>
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+		<strong>People Affected :  </strong>{{epidemicData?.totalPeopleAffected}}
+	</div>
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+		<strong> District :  </strong>{{epidemicData?.m_district?.districtName}}
+	</div>
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+		<strong>Sub District :  </strong>{{epidemicData?.m_districtblock?.blockName}}
+	</div>
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+		<strong> Village :  </strong>{{epidemicData?.districtBranchMapping?.villageName}}
+	</div>
+	<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+		<strong>Remarks :  </strong> {{epidemicData?.remarks}}
+	</div>
+</md-dialog-content>
+<md-dialog-content *ngIf="feature == 'Food safety'">
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> Diarrhea :  </strong>{{foodSafetyData.isDiarrhea == 0 ? "No" : "Yes"}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>Vomiting :  </strong>{{foodSafetyData.isVomiting == 0 ? "No" : "Yes"}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> AbdominalPain :  </strong>{{foodSafetyData.isAbdominalPain == 0 ? "No" : "Yes"}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>Chills / Rigors :  </strong>{{foodSafetyData.isChillsOrRigors == 0 ? "No" : "Yes"}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> Giddiness :  </strong>{{foodSafetyData.isGiddiness == 0 ? "No" : "Yes"}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>Dehydration :  </strong>{{foodSafetyData.isDehydration == 0 ? "No" : "Yes"}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> Rashes :  </strong>{{foodSafetyData.isRashes == 0 ? "No" : "Yes"}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>FoodConsumed :  </strong>{{foodSafetyData.isFoodConsumed == 0 ? "No" : "Yes"}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> Request Type  :  </strong>{{foodSafetyData?.typeOfRequest}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>Diet History :  </strong>{{foodSafetyData?.historyOfDiet}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> Food Type :  </strong>{{foodSafetyData?.typeOfFood}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>Consumed From :  </strong>{{foodSafetyData?.foodConsumedFrom}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> Symptons :  </strong>{{foodSafetyData?.associatedSymptoms}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>From when :  </strong>{{foodSafetyData?.fromWhen}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> District :  </strong>{{foodSafetyData?.district.districtName}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> Sub District :  </strong>{{foodSafetyData?.districtBlock.blockName}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>Village :  </strong>{{foodSafetyData?.districtBranchMapping.villageName}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>Remarks :  </strong> {{foodSafetyData?.remarks}}
+		</div>
+	</md-dialog-content>
+	<md-dialog-content *ngIf="feature == 'Organ Donation'">
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong> Donation Type :  </strong>{{organdonationData?.m_donationType?.donationType}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>Organ :  </strong>{{organ.length > 0 ? organ : "-"}}
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 m-a-10-0">
+			<strong>Remarks :  </strong> {{organdonationData?.remarks}}
+		</div>
+	</md-dialog-content>

@@ -1,0 +1,159 @@
+<div class="row">
+  <div class='col-xs-12 col-sm-12 m-t-10'>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <label>
+        <h4 class="f-s-b m-t-10 m-b-10">{{currentLanguageSet?.closure}}</h4>
+      </label>
+    </div>
+    <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-20 m-b-30" *ngIf="current_role == 'RO'">
+              <md-checkbox color="primary" class="emer" name="isEmergency" [(ngModel)]="isEmergency" (change)="Emergency(isEmergency)">
+                {{currentLanguageSet?.emergency}}
+              </md-checkbox>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-20 m-b-30" *ngIf="current_role == 'RO'">
+          <md-checkbox color="primary" id="suic" name="isSuicidal" [(ngModel)]="isSuicidal" (change)="Suicidal(isSuicidal)">
+              {{currentLanguageSet?.suicidalTendency}}
+          </md-checkbox>
+      </div>
+      <div>
+      <div style="padding-left: 15px;" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-20 m-b-10" *ngIf="showFeedbackRequiredFlag">
+        <md-checkbox color="primary" name="isFeedbackRequired" (change)="isFeedbackRequired($event)">
+          {{currentLanguageSet?.iVRFeedbackRequired}}</md-checkbox>
+      </div>
+      <div class="" *ngIf="showRadio && showFollowUp">
+        <div class="col-xs-12 col-sm-12 m-t-10 m-b-20" *ngIf="current_role != 'SIO' && current_role != 'RO' && features?.length>0">
+          <span align="center">
+
+            <label class="m-r-10 f-s-16 f-s-n-b" for="calledEarlier">{{currentLanguageSet?.isFollowUpRequired}}</label>
+            <md-radio-group name="calledEarlier" [(ngModel)]="isFollowupRequired" (change)="isFollow(isFollowupRequired)">
+              <md-radio-button color="primary" value="1">{{currentLanguageSet?.yes}}</md-radio-button>
+              <md-radio-button color="primary" value="0">{{currentLanguageSet?.no}}</md-radio-button>
+            </md-radio-group>
+          </span>
+        
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-b-30" *ngIf="doFollow && features?.length>1">
+            <md-select placeholder="{{currentLanguageSet?.feature}}" required [style.width]="'100%'" [(ngModel)]="selectedFeature"
+              name="feature" #feature="ngModel">
+              <md-option *ngFor="let feature of features" [value]="feature">
+                {{feature}}
+              </md-option>
+            </md-select>
+        </div>
+        <!--<div >-->
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-b-30" *ngIf="doFollow">
+          <md2-datepicker name="prefferedDateTime" placeholder="{{currentLanguageSet?.followUpOn}}" [(ngModel)]="followupOn"
+            (change)="followupDateChange(followupOn)" (keydown)="false" [mode]="mode" [min]="minDate" [format]="dd/MM/yyyy"
+            [style.width]="'100%'"></md2-datepicker>
+        </div>
+      </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 m-b-10" *ngIf="current_role == 'CO'">
+        <md-select
+        class="input-full-width"
+        name="externalRefferal"
+        [(ngModel)]="externalRefferal"
+        placeholder="{{ currentLanguageSet?.externalRefferal}}"
+        (change)="checkExternalRefferal(externalRefferal)">
+        <md-option value="Yes">Yes</md-option>
+        <md-option value="No">No</md-option>
+      </md-select>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 m-b-10" *ngIf="current_role == 'CO' && enableInstitute">
+        <md-select
+        class="input-full-width"
+        name="institutionID"
+        [(ngModel)]="institutionID" (change)="getInstituteName()"
+        placeholder="Institute Type">
+        <md-option *ngFor="let item of instituteTypeData" [value]="item.institutionTypeID"> {{item.institutionType}}</md-option>
+        
+      </md-select>
+      </div>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 m-b-10" *ngIf="current_role == 'CO' && enableInstitute">
+        <md-select
+        class="input-full-width"
+        name="instituteName"
+        [(ngModel)]="instituteName" 
+        [multiple]="true"
+        placeholder="Institute Name">
+        <md-option *ngFor="let item of instituteNameData" [value]="item.institutionName">
+          {{item.institutionName}}
+        </md-option>
+        
+      </md-select>
+      </div>
+<div class="clearfix"></div>
+    <div class="row m-0">
+      <form  #Form="ngForm" autocomplete="off">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3  p-b-1-5">
+            <md-select [disabled]="disableCallType" placeholder="{{currentLanguageSet?.callType}}"
+            required [style.width]="'100%'" [(ngModel)]="callType"
+              (change)="getCallSubType(callType)" name="callType" #calltype="ngModel">
+              <md-option *ngFor="let calltype of calltypes" value="{{calltype.callTypeDesc}}">
+                {{calltype.callTypeDesc}}
+              </md-option>
+            </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3  p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.callSubType}}" required [style.width]="'100%'" [(ngModel)]="subCallTypeID"
+              (change)="radioVisibility(subCallTypeID)" name="callTypeID" #subCalltype="ngModel">
+              <md-option *ngFor="let callSubtype of callSubTypes" value="{{callSubtype?.callTypeID}},{{callSubtype?.fitToBlock}},{{callSubtype.fitForFollowUp}}">
+                {{callSubtype.callType}}
+              </md-option>
+            </md-select>
+        </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3  p-b-1-5"  *ngIf="validTrans">
+              <md-select [disabled]="disableTransfer" placeholder="{{currentLanguageSet?.transferCall}}" name="transferCall" [(ngModel)]="transferCall" (change)="chooseService(transferCall)" [style.width]="'100%'" [disabled]="current_campaign=='OUTBOUND'">
+                <md-option [value]="">Select none</md-option>
+                <md-option *ngFor="let availableService of services" [value]="availableService.subServiceName">{{availableService.subServiceName}}</md-option>
+              </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3  p-b-1-5"  *ngIf="validTrans && transferSkills.length>0 && (current_role == 'MO' || current_role == 'HAO' || current_role == 'RO')">
+            <input mdInput style="display:none">
+            <md-select [disabled]="disableTransfer" placeholder="{{currentLanguageSet?.skill}}" name="transferSkill" [(ngModel)]="transferSkill" [style.width]="'100%'" [disabled]="current_campaign=='OUTBOUND'">
+              <md-option *ngFor="let skill of transferSkills" [value]="skill.skill_name">{{skill.skill_name}}</md-option>
+            </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5" *ngIf="(current_role != 'RO' && (beneficiarySelectedRegID || outboundBenRegID))">
+      <md-select placeholder="{{currentLanguageSet?.caste}}"  [style.width]="'100%'" [(ngModel)]="caste"
+      name="caste">
+      <md-option *ngFor="let caste of commonData.m_communities" [value]="caste.communityID">
+        {{caste.communityType}}
+      </md-option>
+    </md-select>
+</div>
+ <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5" *ngIf="(current_role == 'CO' && (beneficiarySelectedRegID || outboundBenRegID))">
+    <md-select placeholder="{{currentLanguageSet?.education}}"  [style.width]="'100%'" [(ngModel)]="education"
+    name="education">
+    <md-option *ngFor="let educ of commonData.i_BeneficiaryEducation" [value]="educ.educationID">
+      {{educ.educationType}}
+    </md-option>
+  </md-select>
+</div> 
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+          <md-input-container [style.width]="'100%'">
+            <input mdInput remarksValidator  placeholder="{{currentLanguageSet?.remarks }}" maxlength="100" name="remarks" [(ngModel)]="remarks">
+          </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div *ngIf="!toBeTransfered">
+            <button [disabled]="((Form.invalid) || (isFollowupRequired=='1' && followupOn==undefined) || (isFollowupRequired=='1' && selectedFeature==undefined && features?.length>1)) || !(transferCall && transferCall!='') ||current_campaign=='OUTBOUND'" *ngIf="validTrans" md-raised-button color="accent" type="button" class="pull-right font-regular f-s-18 m-l-5" value="submitClose" (click)="callTransfer(transferCall,Form.value)">
+            {{currentLanguageSet?.transferCall}} </button>
+
+            <button md-raised-button color="accent" [disabled]="((Form.invalid) || (isFollowupRequired=='1' && followupOn==undefined) || (isFollowupRequired=='1' && selectedFeature==undefined && features?.length>1) || ( transferCall!='' && transferCall!=undefined))"
+              type="button" class="pull-right  font-regular f-s-18 m-l-5" value="submitClose" (click)="closeCall(Form.value,$event.currentTarget.value)">{{currentLanguageSet?.submitAndClose}}</button>
+
+            <button *ngIf="current_campaign == 'INBOUND'" md-raised-button color="accent" [disabled]="((Form.invalid) || (isFollowupRequired=='1' && followupOn==undefined) || (isFollowupRequired=='1' && selectedFeature==undefined && features?.length>1)) || nuisanceBLock || ( transferCall!='' && transferCall!=undefined)"
+              type="button" class="pull-right  font-regular f-s-18 " value="submitContinue" (click)="closeCall(Form.value,$event.currentTarget.value)">{{currentLanguageSet?.submitAndContinue}}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" class="alignCenter">
+  <label><h4>{{currentLanguageSet?.outboundProvider}}</h4></label>
+</div>
+<div *ngIf="providerData != undefined" class="col-xs-12 col-sm-12 ">
+  <div class="row">
+    <h4 class="m-l-15"><strong>{{currentLanguageSet?.beneficiaryDetails}}</strong></h4>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput placeholder="{{currentLanguageSet?.beneficiaryName}}" readonly value={{providerData?.beneficiary?.firstName}}>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput placeholder="{{currentLanguageSet?.age}}" disabled value=" ">
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput placeholder="{{currentLanguageSet?.gender}}" disabled value=" ">
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput placeholder="{{currentLanguageSet?.beneficiaryRegistrationID}}" readonly value={{providerData?.beneficiary?.beneficiaryRegID}}>
+      </md-input-container>
+    </div>
+  </div>
+  <div class="row">
+    <h4 class="m-l-15"><strong>{{currentLanguageSet?.bloodRequirement}}</strong></h4>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput placeholder="{{currentLanguageSet?.componentType}}" readonly value={{blood_details?.m_componentType?.componentType}}>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput placeholder="{{currentLanguageSet?.bloodGroup}}" readonly value={{blood_details?.m_bloodGroup?.bloodGroup}}>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput appMobileNumber placeholder="{{currentLanguageSet?.bloodUnits}}" readonly value={{blood_details?.unitRequired}}>
+      </md-input-container>
+    </div>
+  </div>
+  <form #bloodForm="ngForm" autocomplete="off">
+    <div class="row">
+      <h4 class="m-l-15"><strong>{{currentLanguageSet?.bloodBankDetails}}</strong>&nbsp;<a href="http://www.google.com"
+          target="_blank">({{currentLanguageSet?.checkBloodBankDetails}})</a></h4>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" appName>
+        <md-input-container [style.width]="'100%'">
+          <input mdInput placeholder="{{currentLanguageSet?.contactPerson}}" name="contactPerson" [(ngModel)]="contactPerson"
+            #contact_person="ngModel" required minlength="3" maxlength="25">
+          <md-hint [hidden]=c ontact_person.valid>
+            <span class="error_text" [hidden]="contact_person.errors?.required">{{currentLanguageSet?.atLeastThreeCharactersPlease}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" appName>
+        <md-input-container [style.width]="'100%'">
+          <input mdInput placeholder="{{currentLanguageSet?.designation}}" name="designation" [(ngModel)]="designation"
+            required minlength="3" maxlength="25" #design="ngModel">
+          <md-hint [hidden]=d esign.valid>
+            <span class="error_text" [hidden]="design.errors?.required">{{currentLanguageSet?.atLeastThreeCharactersPlease}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <div appMobileNumber>
+          <md-input-container [style.width]="'100%'">
+            <input mdInput placeholder="{{currentLanguageSet?.mobileNumber}}" required minlength="10" maxlength="10"
+              name="mobileNum" [(ngModel)]="phoneNumber" #number="ngModel">
+            <md-hint [hidden]=n umber.valid>
+              <span class="error_text" [hidden]="number.errors?.required">{{currentLanguageSet?.tenDigitNumberRequired}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md-input-container [style.width]="'100%'">
+          <textarea mdInput placeholder="{{currentLanguageSet?.address}}" name="address" [(ngModel)]="address"
+            required minlength="10" maxlength="100" #fullAddress="ngModel"></textarea>
+          <md-hint [hidden]=fullAddress.valid>
+            <span class="error_text" [hidden]="fullAddress.errors?.required">{{currentLanguageSet?.enterMinimumTenCharacters}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md-input-container [style.width]="'100%'">
+          <textarea mdInput placeholder="{{currentLanguageSet?.feedback}}" name="feedback" [(ngModel)]="feedback"></textarea>
+        </md-input-container>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+        <md-input-container [style.width]="'100%'">
+          <textarea mdInput textAreaValidator  placeholder="{{currentLanguageSet?.remarks}}" name="remarks" [(ngModel)]="remarks"></textarea>
+        </md-input-container>
+      </div>
+      <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3 m-t-40">
+        <md-checkbox color="primary" class="m-t-5" name="isRequestFulfilled" [(ngModel)]="isRequestFulfilled">
+          {{currentLanguageSet?.requestFulfilled}}
+        </md-checkbox>
+      </div>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12 ">
+      <button [disabled]="contact_person.errors || design.errors || fullAddress.errors || number.errors" type="button" md-raised-button color="accent" class="pull-right m-t-15"
+        (click)="saveBloodDetails(bloodForm.value)">{{currentLanguageSet?.saveAndSend}}</button>
+    </div>
+  </div>
+</div>

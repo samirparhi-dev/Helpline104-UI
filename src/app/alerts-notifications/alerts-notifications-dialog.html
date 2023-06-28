@@ -1,0 +1,36 @@
+<div class="headerDiv">
+  <md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="{{currentLanguageSet?.close}}" role="img" aria-hidden="true" (click)="dialogRef.close()">
+    clear
+  </md-icon>
+	<h4 class="popupHeader">{{heading}} {{currentLanguageSet?.messages}}</h4>
+  
+</div>
+	<md-dialog-content style="min-height:400px">
+		<div class="table-responsive ">
+			<table class="table td-m-t-b-5 m-b-0" [md2Data]="messages" #md2="md2DataTable" [rowsPerPage]="3" aria-describedby="notificationDetails">
+				<th id="resolveSonarLint"></th>
+				<tbody>
+					<tr *ngFor="let row of md2.data">
+						<td class="b-l-1 col-xs-11 col-sm-11">
+							<h4 class="media-heading" [ngClass]="(row.notificationState=='unread')?'f-s-b':''">{{row.notification.notification}}</h4>
+							<p class="f-c-585857" [ngClass]="(row.notificationState=='unread')?'f-s-b':''">{{row.notification.notificationDesc}}</p>
+						</td>
+						<td class="b-r-1 col-xs-1 col-sm-1"><span class="mdicon material-icons cursorPointer" mdTooltip="{{currentLanguageSet?.delete}}" (click)="deleteNotification(row.userNotificationMapID)">delete</span></td>
+						<td *ngIf="row.notificationState=='unread'" class="b-r-1 col-xs-1 col-sm-1"><span class="mdicon material-icons cursorPointer" mdTooltip="{{currentLanguageSet?.read}}" (click)="readSingle(row.userNotificationMapID)">check</span></td>
+						<td *ngIf="row.notificationState=='read'" class="b-r-1 col-xs-1 col-sm-1"><span class="mdicon material-icons cursorPointer" mdTooltip="{{currentLanguageSet?.unread}}" (click)="unreadSingle(row.userNotificationMapID)">refresh</span></td>
+					</tr>
+					<tr *ngIf="md2.data.length==0">
+						<td class="text-center" colspan="2"> {{currentLanguageSet?.noMessage}} {{heading}} {{currentLanguageSet?.messagesFound}} </td>
+					</tr>
+        </tbody>
+        <tfoot>
+         <md2-pagination></md2-pagination>  
+        </tfoot>
+			</table>
+		</div>
+  </md-dialog-content>
+  <md-dialog-actions >
+      <button md-raised-button color="primary" type="button" class="pull-right" (click)="dialogRef.close()">{{currentLanguageSet?.close}}</button>
+			<button md-raised-button color="primary" type="button" class="pull-right m-r-5" (click)="unreadAll()">{{currentLanguageSet?.unreadAll}}</button>
+			<button md-raised-button color="accent" type="button" class="pull-right m-r-5" (click)="readAll()">{{currentLanguageSet?.readAll}}</button>
+  </md-dialog-actions>

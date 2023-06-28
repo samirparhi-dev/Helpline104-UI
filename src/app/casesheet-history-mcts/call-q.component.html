@@ -1,0 +1,39 @@
+<div class="headerDiv">
+    <md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="{{currentLanguageSet?.close}}" role="img"
+        aria-hidden="true" (click)="dialogReff.close()">
+        clear
+    </md-icon>
+    <h4 class="popupHeader">{{currentLanguageSet?.callQuestionsAndAnswers}}</h4>
+</div>
+<md-dialog-content>
+        <div class="table-responsive">
+            <table class="table table-striped" [md2Data]="qarows" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="callQuestionsAnswers">
+                <thead>
+                    <tr>
+                        <th id ="callQuestion">{{currentLanguageSet?.question}}</th>
+                        <th id ="callAnswer">{{currentLanguageSet?.answer}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="qarows?.length==0">
+                        <td colspan="2" class="record-not-found">
+                            {{currentLanguageSet?.noRecordFound}}
+                        </td>
+                    </tr>
+                    <tr *ngFor="let qa of qarows; let i = index ">
+                        <td>{{qa.questionnaireDetail.question}}</td>
+                        <td>{{qa.answer}}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <md2-pagination></md2-pagination>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    <div class="m-t-10 m-b-5">
+        <button md-raised-button class="m-l-15 m-r-15 pull-right" md-dialog-close>{{currentLanguageSet?.close}}</button>
+    </div>

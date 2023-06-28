@@ -1,0 +1,187 @@
+<md-icon class="mdicon pull-right mat-icon material-icons close-icon pull-right cursorPointer" mdTooltip="{{currentLanguageSet?.close}}"
+  role="img" aria-hidden="true" (click)="dialogReff.close()">clear</md-icon>
+<h4 class="f-s-b" md-dialog-title *ngIf="showFeedBack">{{currentLanguageSet?.customerDelightIndex}}</h4>
+<h4 class="f-s-b" md-dialog-title *ngIf="!showFeedBack">{{currentLanguageSet?.customerDelightReport}}</h4>
+<md-dialog-content>
+  <div class="col-xs-12 col-sm-12">
+    <div class="row" *ngIf="showFeedBack">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <form
+          *ngIf="questionaireForm"
+          class="c-b"
+          [formGroup]="questionaireForm"
+          autocomplete="off"
+        >
+          <div class="form-group row" *ngIf="questionaireForm?.length==0">
+            <h4 class="t-a-c">**{{currentLanguageSet?.noQuestionaireForCalltype}}**</h4>
+          </div>
+          <div class="form-group row" *ngIf="questionaireForm?.length!=0">
+            <table class="table" aria-describedby="surveyorQuestionaireDetails">
+              <thead>
+                <tr>
+                  <th id="surveyorQuestion">{{currentLanguageSet?.question}}</th>
+                  <th id="surveyorAnswer">{{currentLanguageSet?.answer}}</th>
+                </tr>
+              </thead>
+              <tbody
+                formArrayName="questions"
+                *ngFor="let question of questionaireForm?.get('questions').controls; let i = index"
+              >
+                <tr [formGroupName]="i">
+                  <td style="word-wrap: break-word">
+                    <textarea
+                      mdInput
+                      formControlName="question"
+                      readonly
+                    ></textarea>
+                    <label *ngIf="enablereason[i] && (valueIndex[i] == i)"
+                      >{{currentLanguageSet?.reasonIfNo}}</label
+                    >
+                    <label
+                      *ngIf="enableQualitativeReason && lastQualitativeIndex== i"
+                      >{{currentLanguageSet?.reasonIfNo}}</label
+                    >
+                  </td>
+                  <td>
+                    <span
+                      *ngIf="questionaireForm?.controls.questions.controls[i].controls.answerType.value == 'radio' || questionaireForm?.controls.questions.controls[i].controls.answerType.value == 'Radio'"
+                    >
+                      <md-radio-group
+                        formControlName="answer"
+                        (change)="checkreasonIfNO(i,questionaireForm?.controls.questions.controls[i].controls.questionId.value)"
+                      >
+                        <span
+                          *ngFor="let answers of questionaireForm?.get('questions').controls[i].controls.questionOptions.value"
+                        >
+                          <md-radio-button
+                            *ngIf="answers.deleted === false"
+                            class="m-l-15"
+                            color="primary"
+                            value="{{answers.answer}}"
+                            >{{answers.answer}}</md-radio-button
+                          >
+                        </span>
+                      </md-radio-group>
+                    </span>
+
+                    <md-input-container
+                      class="m-t-0 p-t-0"
+                      *ngIf="questionaireForm?.controls.questions.controls[i].controls.answerType.value == 'Free Text'"
+                    >
+                      <input
+                        mdInput
+                        formControlName="answer"
+                        placeholder="{{currentLanguageSet?.enter}}"
+                        maxlength="500"
+                      />
+                    </md-input-container>
+                    <span
+                      *ngIf="questionaireForm?.controls.questions.controls[i].controls.answerType.value == 'select' || questionaireForm?.controls.questions.controls[i].controls.answerType.value == 'Dropdown'"
+                    >
+                      <md-select
+                        placeholder="{{currentLanguageSet?.select}}"
+                        formControlName="answer"
+                        style="padding-top: 14px"
+                      >
+                        <span
+                          *ngFor="let answers of questionaireForm?.get('questions').controls[i].controls.questionOptions.value"
+                        >
+                          <md-option
+                            *ngIf="answers.deleted === false"
+                            value="{{answers.answer}}"
+                            >{{answers.answer}}
+                          </md-option>
+                        </span>
+                      </md-select>
+                    </span>
+
+                    <md-input-container
+                      *ngIf="enablereason[i] && (valueIndex[i] == i)"
+                      class="m-t-0 p-t-0"
+                    >
+                      <input mdInput formControlName="UtilityreasonIfNo" />
+                    </md-input-container>
+                    <md-input-container
+                      *ngIf="enableQualitativeReason && lastQualitativeIndex== i"
+                      class="m-t-0 p-t-0"
+                    >
+                      <input mdInput formControlName="QualitativereasonIfNo" />
+                    </md-input-container>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!showFeedBack">
+    <table
+      class="table table-color"
+      aria-describedby="surveyorQuestionaireWeightageDetails"
+    >
+      <thead>
+        <tr>
+          <th id="surveyorQuestions">{{currentLanguageSet?.question}}</th>
+          <th id="surveyorAnswers">{{currentLanguageSet?.answer}}</th>
+          <th id="surveyorWeightage">{{currentLanguageSet?.weightage}}</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let report of reportData">
+        <tr *ngIf="reportData?.length==0">
+          <td colspan="3">{{currentLanguageSet?.noRecordsFound}}</td>
+        </tr>
+        <tr>
+          <td>
+            <span>{{report.m_questionnaire.question}}</span>
+          </td>
+          <td>
+            <span>{{report.answer}}</span>
+          </td>
+
+          <td>
+            <span
+              >{{report.m_questionnaire.answerType === 'Free Text' ?'NA':
+              report.score }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div>
+      <label class="pull-right">{{currentLanguageSet?.totalWeightage}} {{totalScore}}</label>
+    </div>
+  </div>
+</md-dialog-content>
+<md-dialog-actions *ngIf="showFeedBack">
+  <button
+    color="accent"
+    *ngIf="qualitativeQuestions?.length!=0"
+    md-raised-button
+    class="pull-left"
+    [disabled]="!(questionaireForm?.valid)"
+    (click)="cancelCall()"
+  >
+  {{currentLanguageSet?.cancelCall}}
+  </button>
+  <button
+    class="pull-right"
+    md-raised-button
+    color="accent"
+    *ngIf="qualitativeQuestions?.length!=0"
+    md-raised-button
+    [disabled]="!(questionaireForm?.valid)"
+    (click)="storeData()"
+  >
+  {{currentLanguageSet?.submitCloseCall}}
+  </button>
+  <md-checkbox
+    *ngIf="questionaireForm?.length!=0"
+    class="pull-right m-r-15"
+    color="primary"
+    #notIntreasted
+    [(ngModel)]="notInteresting"
+    >{{currentLanguageSet?.notInterested}}
+  </md-checkbox>
+</md-dialog-actions>

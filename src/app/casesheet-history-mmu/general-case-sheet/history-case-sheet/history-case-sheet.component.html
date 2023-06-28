@@ -1,0 +1,608 @@
+<div class="container-fluid">
+  <div class="row col-xs-12">
+    <h2 class="text-center">{{assignSelectedLanguageValue?.history}}</h2>
+    <hr/>
+  </div>
+  <!--Past Illness Starts-->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.pastIllness}}Past Illness</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-bordered table-striped casesheet-table" aria-describedby="historyPastIllness">
+        <thead>
+          <tr>
+            <th id="pastIllnessSNo">{{assignSelectedLanguageValue?.sno}}</th>
+            <th id="pastIllness">{{assignSelectedLanguageValue?.illness}}</th>
+            <th id="pastIllnessDuration">{{assignSelectedLanguageValue?.duration}}</th>
+            <th id="pastIllnessDurationUnit">{{assignSelectedLanguageValue?.durationUnit}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!pastIllnessList">
+          <tr>
+            <td class="text-center" colspan="4"> {{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="pastIllnessList">
+          <tr *ngFor="let pastIllness of pastIllnessList; let i = index">
+            <td> {{ i + 1 }} </td>
+            <td>{{ pastIllness.illnessType }}</td>
+            <td>{{ pastIllness.timePeriodAgo }}</td>
+            <td>{{ pastIllness.timePeriodUnit }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Past Illness ends-->
+
+  <!--Past Surgery Starts-->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.pastSurgery}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-bordered table-striped casesheet-table" aria-describedby="historyPastSurgery">
+        <thead>
+          <tr>
+            <th id="pastSurgerySno">{{assignSelectedLanguageValue?.sno}}</th>
+            <th id="pastSurgery">{{assignSelectedLanguageValue?.surgery}}</th>
+            <th id="pastSurgeryDuration">{{assignSelectedLanguageValue?.duration}}</th>
+            <th id="pastSurgeryDurationUnit">{{assignSelectedLanguageValue?.durationUnit}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!pastSurgeryList">
+          <tr>
+            <td class="text-center" colspan="4"> {{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="pastSurgeryList">
+          <tr *ngFor="let pastSurgery of pastSurgeryList; let i = index">
+            <td> {{ i + 1 }} </td>
+            <td>{{ pastSurgery.surgeryType }}</td>
+            <td>{{ pastSurgery.timePeriodAgo }}</td>
+            <td>{{ pastSurgery.timePeriodUnit }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Past Surgery Ends-->
+
+  <!--Family History Starts-->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.familyHistory}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-bordered table-striped" aria-describedby="familyDiseasesHistory">
+        <thead>
+          <tr>
+            <th id="familyHistorySNo" style="width: 25%">{{assignSelectedLanguageValue?.sno}}</th>
+            <th id="familyDiseaseHistory" style="width: 25%">{{assignSelectedLanguageValue?.disease}} </th>
+            <th id="familyMembersHistory" style="width: 50%">{{assignSelectedLanguageValue?.familyMembers}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!familyHistory?.familyDiseaseList || familyHistory?.familyDiseaseList.length == 0">
+          <tr>
+            <td class="text-center" colspan="3">{{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="familyHistory?.familyDiseaseList">
+          <tr *ngFor="let familyDisease of familyHistory?.familyDiseaseList; let i = index">
+            <td> {{ i + 1 }} </td>
+            <td>{{ familyDisease.diseaseType }}</td>
+            <td>{{ familyDisease.familyMembers }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-xs-12 m-t-10">
+      <table class="table table-no-border casesheet-table" aria-describedby="familyHistory">
+        <tr>
+          <th id="isGeneticDisorder">{{assignSelectedLanguageValue?.hOGeneticDisorders}} :</th>
+          <td> {{ (familyHistory?.isGeneticDisorder == undefined)? null : (familyHistory?.isGeneticDisorder ? 'Yes' : 'No') }}
+          </td>
+          <th id="geneticDisorder"> {{assignSelectedLanguageValue?.geneticDisorders}}:</th>
+          <td> {{ familyHistory?.geneticDisorder}} </td>
+        </tr>
+        <tr>
+          <th id="isConsanguineousMarrige">{{assignSelectedLanguageValue?.hoConsanguineousMarriage}} :</th>
+          <td> {{ (familyHistory?.isConsanguineousMarrige == undefined)? null : (familyHistory?.isConsanguineousMarrige ? 'Yes'
+            : 'No') }}</td>
+          <td colspan="2"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <!--Family History Ends-->
+
+  <!--Child Optional Vaccine Starts-->
+  <div class="row m-t-10" *ngIf="beneficiary && beneficiary?.ageVal <= 16">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.childOptionalVaccine}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-bordered table-striped casesheet-table" aria-describedby="childOptionalVaccines">
+        <thead>
+          <tr>
+            <th id="childOptionalVaccineSNo">{{assignSelectedLanguageValue?.sno}}</th>
+            <th id="childOptionalVaccine">{{assignSelectedLanguageValue?.vaccine}}</th>
+            <th id="childOptionalVaccinatedAge">{{assignSelectedLanguageValue?.ageAtReceived}}</th>
+            <th id="childOptionalVaccineFacilityName">{{assignSelectedLanguageValue?.facilityName}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!childOptionalVaccineList || childOptionalVaccineList.length == 0">
+          <tr>
+            <td class="text-center" colspan="4">{{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="childOptionalVaccineList">
+          <tr *ngFor="let childOptionalVaccine of childOptionalVaccineList; let i = index">
+            <td> {{ i + 1 }} </td>
+            <td>{{ childOptionalVaccine.vaccineName }}</td>
+            <td>{{ childOptionalVaccine.actualReceivingAge }}</td>
+            <td>{{ childOptionalVaccine.receivedFacilityName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Child Optional Vaccine Ends-->
+
+  <!--Comorbid condition Starts-->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.comorbidCondition}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-bordered table-striped casesheet-table" aria-describedby="comorbidConditions">
+        <thead>
+          <tr>
+            <th id="comorbidConditionSNo">{{assignSelectedLanguageValue?.sno}}</th>
+            <th id="comorbidCondition">{{assignSelectedLanguageValue?.comorbidCondition}}</th>
+            <th id="comorbidConditionDuration">{{assignSelectedLanguageValue?.duration}}</th>
+            <th id="comorbidConditionDurationUnit">{{assignSelectedLanguageValue?.durationUnit}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!comorbidConditionList || comorbidConditionList.length == 0">
+          <tr>
+            <td class="text-center" colspan="4">{{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="comorbidConditionList">
+          <tr *ngFor="let comorbidityConditions of comorbidConditionList; let i = index">
+            <td> {{ i + 1 }} </td>
+            <td>{{ comorbidityConditions.comorbidCondition }}</td>
+            <td>{{ comorbidityConditions.timePeriodAgo }}</td>
+            <td>{{ comorbidityConditions.timePeriodUnit }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Comorbid condition Ends-->
+
+  <!--Medication History Starts-->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.medicationHistory}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-bordered table-striped casesheet-table" aria-describedby="medicationHistoryDetails">
+        <thead>
+          <tr>
+            <th id="medicationHistorySNo">{{assignSelectedLanguageValue?.sno}}</th>
+            <th id="medicationHistory">{{assignSelectedLanguageValue?.medicationHistory}}</th>
+            <th id="medicationHistoryDuration">{{assignSelectedLanguageValue?.duration}}</th>
+            <th id="medicationHistoryDurationUnit">{{assignSelectedLanguageValue?.durationUnit}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!medicationHistoryList || medicationHistoryList.length == 0">
+          <tr>
+            <td class="text-center" colspan="4">{{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="medicationHistoryList">
+          <tr *ngFor="let medicationHistory of medicationHistoryList; let i = index">
+            <td> {{ i + 1 }} </td>
+            <td>{{ medicationHistory.currentMedication}}</td>
+            <td>{{ medicationHistory.timePeriodAgo }}</td>
+            <td>{{ medicationHistory.timePeriodUnit }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Medication History Ends-->
+
+
+  <!--Menstrual History Starts-->
+  <div class="row m-t-10" *ngIf="beneficiary && beneficiary?.ageVal >= 8 && beneficiary?.genderName != 'Male'">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.menstrualHistory}}</h4>
+    </div>
+
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="menstrualHistory">
+
+        <tr>
+          <th id="menstrualCycleStatus"> {{assignSelectedLanguageValue?.menstrualCycleStatus}} :</th>
+          <td> {{ menstrualHistory?.menstrualCycleStatus }} </td>
+          <th id="menstrualRegularity"> {{assignSelectedLanguageValue?.regularityOfMenstrualCycles}} :</th>
+          <td> {{ menstrualHistory?.regularity}} </td>
+        </tr>
+
+        <tr>
+          <th id="menstrualCycleLength"> {{assignSelectedLanguageValue?.lengthOfMenstrualCycle}} :</th>
+          <td> {{ menstrualHistory?.cycleLength }} </td>
+          <th id="menstrualBloodFlowDuration">{{assignSelectedLanguageValue?.menstrualBloodFlowDuration}} :</th>
+          <td> {{menstrualHistory?.bloodFlowDuration}}</td>
+        </tr>
+
+        <tr>
+          <th id="menstrualProblemName">{{assignSelectedLanguageValue?.menstrualProblems}} :</th>
+          <td> {{ menstrualHistory?.problemName}} </td>
+          <th id="menstrualLMPDate"> {{assignSelectedLanguageValue?.lastMenstrualPeriod}} :</th>
+          <td> {{ menstrualHistory?.lMPDate }} </td>
+
+        </tr>
+      </table>
+    </div>
+
+  </div>
+  <!--Menstrual History Ends-->
+
+  <!--Developmental History Starts-->
+  <div class="row m-t-10" *ngIf="beneficiary && beneficiary?.ageVal <= 2">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.developmentalHistory}}</h4>
+    </div>
+
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="developmentalHistory">
+        <tr>
+          <th id="grossMotorMilestone">{{assignSelectedLanguageValue?.grossMotorMilestone}} :</th>
+          <td> {{ developmentalHistory?.grossMotorMilestone }} </td>
+          <th id="fineMotorMilestone"> {{assignSelectedLanguageValue?.fineMotorMilestone}} :</th>
+          <td> {{ developmentalHistory?.fineMotorMilestone}} </td>
+        </tr>
+
+        <tr>
+          <th id="socialMilestone">{{assignSelectedLanguageValue?.socialMilestone}} :</th>
+          <td> {{ developmentalHistory?.socialMilestone }} </td>
+          <th id="languageMilestone"> {{assignSelectedLanguageValue?.languageMilestone}} :</th>
+          <td> {{ developmentalHistory?.languageMilestone}} </td>
+        </tr>
+
+        <tr>
+          <th id="developmentProblem"> {{assignSelectedLanguageValue?.developmentalProblems}} :</th>
+          <td> {{ developmentalHistory?.developmentProblem }} </td>
+          <td colspan="2"></td>
+
+        </tr>
+      </table>
+    </div>
+
+  </div>
+  <!--Developmental History Ends-->
+
+  <!--Feeding History Starts-->
+  <div class="row m-t-10" *ngIf="beneficiary && beneficiary?.ageVal <= 6">
+
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.feedingHistory}}</h4>
+    </div>
+
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="feedingHistory">
+
+        <tr>
+          <th id="typeOfFeed"> {{assignSelectedLanguageValue?.typeOfFeedsDuringFirst6Months}} :</th>
+          <td> {{ feedingHistory?.typeOfFeed }} </td>
+          <th id="complimentaryFeedStartAge"> {{assignSelectedLanguageValue?.ageAtWeaningComplimentaryFeedsIntroduced}} :</th>
+          <td> {{ feedingHistory?.compFeedStartAge}} </td>
+        </tr>
+
+        <tr>
+          <th id="noOfCompFeedPerDay">{{assignSelectedLanguageValue?.numberOfComplimentaryFoodServingsInADay}} :</th>
+          <td> {{ feedingHistory?.noOfCompFeedPerDay }} </td>
+          <th id="foodIntoleranceStatus">{{assignSelectedLanguageValue?.foodIntoleranceStatus}} :</th>
+          <td> {{ feedingHistory?.foodIntoleranceStatus}} </td>
+        </tr>
+
+        <tr>
+          <th id="typeofFoodIntolerance">{{assignSelectedLanguageValue?.typeOfFoodIntolerance}} :</th>
+          <td> {{ (feedingHistory?.typeofFoodIntolerance == undefined) ? null : (feedingHistory?.typeofFoodIntolerance ? 'Yes'
+            : 'No') }} </td>
+          <td>
+          </td>
+          <td> </td>
+        </tr>
+      </table>
+    </div>
+
+  </div>
+  <!--Feeding History Ends-->
+
+
+  <!--Perinatal History Starts-->
+  <div class="row m-t-10" *ngIf="beneficiary && beneficiary?.ageVal <= 1">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.perinatalHistory}}</h4>
+    </div>
+
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="perinatalHistory">
+
+        <tr>
+          <th id="placeOfDelivery"> {{assignSelectedLanguageValue?.placeOfDelivery}} :</th>
+          <td> {{ perinatalHistory?.placeOfDelivery }} </td>
+          <th id="typeOfDelivery"> {{assignSelectedLanguageValue?.typeOfDelivery}} :</th>
+          <td> {{ perinatalHistory?.typeOfDelivery}} </td>
+        </tr>
+
+        <tr>
+          <th id="complicationAtBirth">{{assignSelectedLanguageValue?.complicationAtBirth}} :</th>
+          <td> {{ perinatalHistory?.complicationAtBirth }} </td>
+          <th id="gestation">{{assignSelectedLanguageValue?.gestation}} :</th>
+          <td>{{ perinatalHistory?.gestation}}</td>
+        </tr>
+
+        <tr>
+          <th id="birthWeightKg">{{assignSelectedLanguageValue?.birthWeightkg}} :</th>
+          <td> {{ perinatalHistory?.birthWeight_kg}} </td>
+          <td>
+          </td>
+          <td></td>
+
+        </tr>
+      </table>
+    </div>
+
+  </div>
+  <!--Perinatal History Ends-->
+
+  <!--Immunization History Starts-->
+  <div class="row m-t-10" *ngIf="beneficiary && beneficiary?.ageVal <= 16">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.immunizationHistory}}</h4>
+    </div>
+
+    <div class="col-xs-12">
+      <table class="table table-bordered table-striped casesheet-table" aria-describedby="immunizationHistory">
+        <thead>
+          <tr>
+            <th id="immunizationAge">{{assignSelectedLanguageValue?.age}}</th>
+            <th id="immunizationName">{{assignSelectedLanguageValue?.vaccines}}</th>
+            <th id="immunizationStatus">{{assignSelectedLanguageValue?.status}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="!immunizationHistory || immunizationHistory?.immunizationList.length == 0">
+          <tr>
+            <td class="text-center" colspan="3"> {{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="immunizationHistory">
+          <ng-container *ngFor="let immunization of immunizationHistory?.immunizationList">
+            <tr>
+              <th id="defaultReceivingAge" [attr.rowspan]="immunization.vaccines.length+1"> {{ immunization.defaultReceivingAge}} </th>
+            </tr>
+            <tr *ngFor="let vaccine of immunization?.vaccines">
+              <td>{{ vaccine.vaccine }}</td>
+              <td>
+                <md-checkbox [checked]="vaccine.status" disabled></md-checkbox>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Immunization History Ends-->
+
+  <!--Personal History Starts-->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.personalHistory}}</h4>
+    </div>
+
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="personalHistory">
+        <tr>
+          <th id="dietaryType">{{assignSelectedLanguageValue?.dietaryType}} :</th>
+          <td> {{ personalHistory?.dietaryType }} </td>
+          <th id="physicalActivityType"> {{assignSelectedLanguageValue?.physicalActivityType}} :</th>
+          <td> {{ personalHistory?.physicalActivityType}} </td>
+        </tr>
+
+        <tr *ngIf="beneficiary && beneficiary?.ageVal >= 18">
+          <th id="riskySexualPracticesStatus">{{assignSelectedLanguageValue?.riskySexualPracticesStatus}} :</th>
+
+          <td> {{ (personalHistory?.riskySexualPracticesStatus == undefined) ? null : (personalHistory?.riskySexualPracticesStatus
+            ? 'Yes' : 'No') }} </td>
+          <td colspan="2"></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="col-xs-12 m-t-10">
+      <table class="table table-no-border casesheet-table" aria-describedby="allergyDetails">
+        <tbody>
+          <tr>
+            <th id="allergyStatus">{{assignSelectedLanguageValue?.allergicStatus}} :</th>
+            <td>{{ personalHistory?.allergyStatus}}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-xs-12 m-t-10">
+      <table class="table table-bordered table-striped" aria-describedby="allergicStatus">
+        <thead>
+          <tr>
+            <th id="allergySNo" style="width: 5%">{{assignSelectedLanguageValue?.sno}}</th>
+            <th id="allergyType" style="width: 20%">{{assignSelectedLanguageValue?.allergyType}}</th>
+            <th id="allergenName" style="width: 25%">{{assignSelectedLanguageValue?.allergenName}}</th>
+            <th id="typeOfAllergicReaction" style="width: 50%">{{assignSelectedLanguageValue?.typeOfAllergicReaction}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="personalHistory?.allergicList?.length == 0">
+          <tr>
+            <td class="text-center" colspan="4"> {{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="personalHistory?.allergicList">
+          <tr *ngFor="let allergy of personalHistory?.allergicList; let i = index">
+            <td> {{ i + 1 }} </td>
+            <td>{{ allergy.allergyType }}</td>
+            <td>{{allergy.allergyName}}</td>
+            <td>{{ allergy.allergicReactionType }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-xs-12 m-t-10" *ngIf="beneficiary && beneficiary?.ageVal >= 13">
+      <table class="table table-no-border casesheet-table" aria-describedby="tobaccoUsage">
+        <tbody>
+          <tr>
+            <th id="tobaccoUseStatus">{{assignSelectedLanguageValue?.tobaccoUseStatus}} :</th>
+            <td>{{ personalHistory?.tobaccoUseStatus }}</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-xs-12 m-t-10" *ngIf="beneficiary && beneficiary?.ageVal >= 13">
+      <table class="table table-bordered table-striped" aria-describedby="tobaccoUsageStatus">
+        <thead>
+          <tr>
+            <th id="tobaccoUsageSNo" style="width: 5%">{{assignSelectedLanguageValue?.sno}}</th>
+            <th id="tobaccoUseType" style="width: 20%">{{assignSelectedLanguageValue?.typeofTobaccoUse}}</th>
+            <th id="tobaccoUsagePerDay" style="width: 25%">{{assignSelectedLanguageValue?.numberPerDay}}</th>
+            <th id="tobaccoUsageDuration" style="width: 25%">{{assignSelectedLanguageValue?.duration}}</th>
+            <th id="tobaccoUsageDurationUnit" style="width: 25%">{{assignSelectedLanguageValue?.durationUnit}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="personalHistory?.tobaccoList?.length == 0">
+          <tr>
+            <td class="text-center" colspan="5"> {{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="personalHistory?.tobaccoList">
+          <tr *ngFor="let tobacco of personalHistory?.tobaccoList; let i = index">
+            <td> {{ i + 1 }} </td>
+            <td>{{ tobacco.tobaccoUseType }}</td>
+            <td>{{tobacco.numberperDay}}</td>
+            <td>{{ tobacco.duration }}</td>
+            <td>{{ tobacco.durationUnit }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-xs-12 m-t-10" *ngIf="beneficiary && beneficiary?.ageVal >= 13">
+      <table class="table table-no-border casesheet-table" aria-describedby="alcoholUsage">
+        <tbody>
+          <tr>
+            <th id="alcoholIntakeStatus"> {{assignSelectedLanguageValue?.alcoholUseStatus}} :</th>
+            <td>{{ personalHistory?.alcoholIntakeStatus }}</td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-xs-12 m-t-10" *ngIf="beneficiary && beneficiary?.ageVal >= 13">
+      <table class="table table-bordered table-striped" aria-describedby="alcoholUsageStatus">
+        <thead>
+          <tr>
+            <th id="alcoholUsageSNo" style="width: 5%">{{assignSelectedLanguageValue?.sno}}</th>
+            <th id="alcoholUsageType" style="width: 20%">{{assignSelectedLanguageValue?.typeOfAlcohol}}</th>
+            <th id="alcoholUsageFrequency" style="width: 25%">{{assignSelectedLanguageValue?.frequencyOfAlcoholIntake}}</th>
+            <th id="alcoholUsageQty" style="width: 20%">{{assignSelectedLanguageValue?.qtyOfAlcoholIntake}}</th>
+            <th id="alcoholUsageDuration" style="width: 15%">{{assignSelectedLanguageValue?.duration}}</th>
+            <th id="alcoholUsageDurationUnit" style="width: 15%">{{assignSelectedLanguageValue?.durationUnit}}</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="personalHistory?.alcoholList?.length == 0">
+          <tr>
+            <td class="text-center" colspan="6"> {{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="personalHistory?.alcoholList">
+          <tr *ngFor="let alcohol of personalHistory?.alcoholList; let i = index">
+            <td>{{ i+1 }}</td>
+            <td>{{ alcohol.alcoholType }}</td>
+            <td>{{alcohol.alcoholIntakeFrequency}}</td>
+            <td>{{ alcohol.avgAlcoholConsumption }}</td>
+            <td>{{ alcohol.duration }}</td>
+            <td>{{ alcohol.durationUnit }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Personal History Ends-->
+
+  <!--Female Obstetric History Starts-->
+  <div class="row m-t-10" *ngIf="beneficiary && beneficiary?.ageVal >= 12 && beneficiary?.genderName != 'Male' && !ANCDetailsAndFormula?.primiGravida">
+    <div class="col-xs-12">
+      <h4>{{assignSelectedLanguageValue?.femaleObstetricHistory}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-responsive table-bordered" aria-describedby="femaleObstetricHistory">
+        <tbody *ngIf="!femaleObstetricHistory?.femaleObstetricHistoryList || femaleObstetricHistory?.femaleObstetricHistoryList.length == 0">
+          <tr>
+            <td class="text-center" colspan="11"> {{assignSelectedLanguageValue?.noRecordFound}} </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="femaleObstetricHistory?.femaleObstetricHistoryList">
+          <ng-container *ngFor="let femaleObstetricHistory of femaleObstetricHistory?.femaleObstetricHistoryList; let i = index">
+            <tr>
+              <td rowspan="6" style="vertical-align: middle"> {{ i + 1 }} </td>
+            </tr>
+            <tr>
+              <th id="pregnancyOrder">{{assignSelectedLanguageValue?.pregnancyOrder}} :</th>
+              <td>{{ femaleObstetricHistory.pregOrder}}</td>
+              <th id="pregnancyComplicationType">{{assignSelectedLanguageValue?.complication}} :</th>
+              <td>{{ femaleObstetricHistory.pregComplicationType }}</td>
+            </tr>
+            <tr>
+              <th id="pregnancyDurationType">{{assignSelectedLanguageValue?.duratiofPregnancy}} :</th>
+              <td>{{ femaleObstetricHistory.durationType }}</td>
+              <th id="deliveryPlace">{{assignSelectedLanguageValue?.placeOfDelivery}} :</th>
+              <td>{{ femaleObstetricHistory.deliveryPlace}}</td>
+            </tr>
+            <tr>
+              <th id="deliveryType">{{assignSelectedLanguageValue?.deliveryType}} :</th>
+              <td> {{ femaleObstetricHistory.deliveryType }}</td>
+              <th id="deliveryComplicationType">{{assignSelectedLanguageValue?.deliveryComplication}} :</th>
+              <td>{{ femaleObstetricHistory.deliveryComplicationType }}</td>
+            </tr>
+            <tr>
+              <th id="postpartumComplicationType">{{assignSelectedLanguageValue?.postpartumComplication}} :</th>
+              <td>{{ femaleObstetricHistory.postpartumComplicationType}}</td>
+              <th id="pregnancyOutcome">{{assignSelectedLanguageValue?.pregnancyOutcome}} :</th>
+              <td>{{ femaleObstetricHistory.pregOutcome }}</td>
+            </tr>
+            <tr>
+              <th id="newBornComplication">{{assignSelectedLanguageValue?.newBornComplication}} :</th>
+              <td> {{ femaleObstetricHistory.newBornComplication }}</td>
+              <th id="congenitalAnomalies">{{assignSelectedLanguageValue?.congenitalAnomalies}} :</th>
+              <td> {{ femaleObstetricHistory.congenitalAnomalies }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--Female Obstetric History Ends-->
+</div>

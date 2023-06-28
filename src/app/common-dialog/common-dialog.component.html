@@ -1,0 +1,65 @@
+
+<div [ngClass]="{'headerDiv':status=='info','successHeaderDiv': status=='success', 'errorHeaderDiv': status=='error'}">
+  <h4 class="popupHeader" *ngIf="status=='info'"><strong>{{(assignSelectedLanguageValue !== undefined && assignSelectedLanguageValue !== null) ? assignSelectedLanguageValue?.info : 'Info'}}</strong></h4>
+  <h4 class="popupHeader" *ngIf="status=='success'"><strong>{{(assignSelectedLanguageValue !== undefined && assignSelectedLanguageValue !== null) ? assignSelectedLanguageValue?.success : 'Success'}}</strong></h4>
+  <h4 class="popupHeader" *ngIf="status=='error'"><strong>{{(assignSelectedLanguageValue !== undefined && assignSelectedLanguageValue !== null) ? assignSelectedLanguageValue?.error : 'Error'}}</strong></h4>
+</div>
+<div class="container-fluid" *ngIf="confirmAlert" >
+  <h5 md-dialog-title>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center-btn fontClass">{{message}}</div>
+    </div>
+  </h5>
+  <md-dialog-content >
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="center-btn" md-dialog-content>
+          <div class="col-xs-12 col-sm-12 center-btn m-t-5 m-b-5">
+            <button md-raised-button color="primary" (click)="dialogRef.close(true)" class="m-r-5 fontClass2">{{btnOkText}}</button>
+            <button md-raised-button class="borderClass m-l-5 fontClass2" (click)="dialogRef.close(false)">{{btnCancelText}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </md-dialog-content>
+</div>
+<div class="container-fluid" *ngIf="alert">
+  <h5 md-dialog-title>
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 fontClass">{{message}}</div>
+      </div>
+    </h5>
+  <md-dialog-content>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center-btn m-t-5 m-b-5 ">
+        <button class="fontClass2" md-raised-button [color]="(status=='info')? 'primary': ''" [ngClass]="{'borderClass': status!='info'}" (click)="dialogRef.close(true) ">{{btnOkText}}</button>
+      </div>
+    </div>
+  </md-dialog-content>
+</div>
+<div class="container-fluid " *ngIf="remarks ">
+  <h5 md-dialog-title>
+      <div class="row ">
+        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 fontClass">{{message}}</div>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 ">
+          <button class="pull-right " md-icon-button class="closeBtn " md-dialog-close>
+            <em class="material-icons ">{{assignSelectedLanguageValue?.close}}</em>
+          </button>
+        </div>
+      </div>
+    </h5>
+  <md-dialog-content>
+    <div class="row ">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 center-btn">
+        <md-input-container [style.width]="'100%'">
+          <input mdInput placeholder="{{assignSelectedLanguageValue?.enterRemarks}}" name="Remarks" #remarksRef>
+        </md-input-container>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 pull-right">
+        <button class="fontClass2" md-raised-button class="pull-right" color="primary" (click)="dialogRef.close(remarksRef.value) ">{{btnOkText}}</button>
+      </div>
+    </div>
+  </md-dialog-content>
+</div>

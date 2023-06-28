@@ -1,0 +1,123 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-32">
+    <label>
+      <h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.callTypeReports}}</h4>
+    </label>
+  </div>
+</div>
+<form #callTypeForm="ngForm" autocomplete="off">
+
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+    <md2-datepicker class="width100" #startDate="ngModel" placeholder="{{currentLanguageSet?.startDate}}" name="startDate" [(ngModel)]="start_date"
+      [max]="today" required (keydown)="blockey($event)" (change)="setEndDate()"></md2-datepicker>
+    <span class="error_text f-s-10 p-l-10" *ngIf="startDate.touched && startDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+    <md2-datepicker class="width100" #endDate="ngModel" placeholder="{{currentLanguageSet?.endDate}}" name="endDate" [(ngModel)]="end_date"
+      [min]="startDate.value" [max]="maxDate" required (keydown)="blockey($event)" ></md2-datepicker>
+    <span class="error_text f-s-10 p-l-10" *ngIf="endDate.touched && endDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+    <span class="error_text f-s-10 p-l-10" *ngIf="(endDate.value < startDate.value) && endDate.dirty">{{currentLanguageSet?.endDateCannotBeBeforeStartDate}}</span>
+  </div>
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+    <md-select required [style.width]="'100%'" placeholder="{{currentLanguageSet?.services}}" (change)="serviceSelected(service); fieldReset()" [(ngModel)]="service"
+      name="service">
+      <md-option value="Registration">Registration</md-option>
+      <md-option *ngFor="let availableService of populateServicesExceptHAO" [value]="availableService.subServiceName">{{availableService.subServiceName}}</md-option>
+      <md-option value="Prescription">Prescription</md-option>
+      <md-option value="Surveyor">Surveyor</md-option>
+    </md-select>
+  </div>
+  <div *ngIf="showType" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+    <md-select required [style.width]="'100%'" placeholder="{{currentLanguageSet?.type}}" [(ngModel)]="grievanceType" name="grievanceType">
+      <md-option value="all">All</md-option>
+      <md-option [value]="complaint.feedbackTypeID" *ngFor="let complaint of greivanceTypes">{{complaint.feedbackTypeName}}</md-option>
+
+    </md-select>
+  </div>
+  <div class="clearfix visible-md"></div>
+  <ng-template [ngIf]="service == 'Medical Services Detail'">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+      <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.district}}" [(ngModel)]="district" name="district" (change)='getSubDistricts(district)'>
+        <md-option [value]="district.districtID" *ngFor="let district of districts">{{district.districtName}}</md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+      <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.subDistrict}}" [(ngModel)]="subDistrict" name="subDistrict"
+        (change)='getVillages(subDistrict)'>
+        <md-option [value]="subDistrict.blockID" *ngFor="let subDistrict of subDistricts">{{subDistrict.blockName}}</md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+      <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.village}}" [(ngModel)]="village" name="village">
+        <md-option [value]="village.districtBranchID" *ngFor="let village of villages">{{village.villageName}}</md-option>
+      </md-select>
+    </div>
+  </ng-template>
+
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="service == 'Medical Services Detail'">
+    <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.selectSkillset}}" [(ngModel)]="roleID" name="roleID">
+      <md-option *ngFor="let role of roles" [value]="role.roleID">{{role.roleName}}</md-option>
+    </md-select>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="service == 'Medical Services Detail'">
+    <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.selectOffice}}" [(ngModel)]="workLocationID" name="workLocationID">
+      <md-option *ngFor="let workLocation of workLocations" [value]="workLocation.pSAddMapID">{{workLocation.locationName}}</md-option>
+    </md-select>
+  </div>
+
+  <div *ngIf="service == 'Blood Request Detail'" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+    <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.searchCriteria}}" [(ngModel)]="searchCriteriaBRD" name="searchCriteriaBRD" required>
+      <md-option [value]="searchCriteria" *ngFor="let searchCriteria of searchCriteriasForBRD">{{searchCriteria}}</md-option>
+    </md-select>
+  </div>
+  <ng-template [ngIf]="searchCriteriaBRD == 'Component' || searchCriteriaBRD == 'Group'">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+      <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.district}}" [(ngModel)]="district" name="district" (change)='getSubDistricts(district)'>
+        <md-option [value]="district.districtID" *ngFor="let district of districts">{{district.districtName}}</md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+      <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.subDistrict}}" [(ngModel)]="subDistrict" name="subDistrict"
+        (change)='getVillages(subDistrict)'>
+        <md-option [value]="subDistrict.blockID" *ngFor="let subDistrict of subDistricts">{{subDistrict.blockName}}</md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+      <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.village}}" [(ngModel)]="village" name="village">
+        <md-option [value]="village.districtBranchID" *ngFor="let village of villages">{{village.villageName}}</md-option>
+      </md-select>
+    </div>
+  </ng-template>
+  <div *ngIf="service == 'Counselling Service Detail'" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+    <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.reportOn}}" [(ngModel)]="searchCriteriasCD" name="searchCriteriasCD" required>
+      <md-option [value]="searchCriteria" *ngFor="let searchCriteria of searchCriteriasForCD">{{searchCriteria}}</md-option>
+    </md-select>
+  </div>
+
+  <div *ngIf="service == 'Grievance Detail'" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+    <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.feedbackType}}" [(ngModel)]="feedbackTypeID" name="feedbackTypeID" (change)='getFeedbackNatureTypes(feedbackTypeID)'>
+      <md-option *ngFor="let feedbackType of feedbackTypes" [value]="feedbackType">{{feedbackType.feedbackTypeName}}</md-option>
+    </md-select>
+  </div>
+
+  <div *ngIf="service == 'Grievance Detail'" class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+    <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.feedbackNatureType}}" [(ngModel)]="feedbackNatureID" name="feedbackNatureID">
+      <md-option *ngFor="let feedbackNatureType of feedbackNatureTypes" [value]="feedbackNatureType.m_feedbackNature[0].feedbackNatureID">{{feedbackNatureType.m_feedbackNature[0].feedbackNature}}</md-option>
+    </md-select>
+  </div>
+  <div class="clearfix" *ngIf="service == 'Medical Services Detail'"></div>
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 ">
+    <md-input-container [style.width]="'100%'">
+      <input mdInput placeholder="{{currentLanguageSet?.agentId}}" [(ngModel)]="agentid" name="agentid">
+    </md-input-container>
+  </div>
+
+</form>
+<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-10 pull-right">
+  <button [disabled]="callTypeForm.invalid" md-raised-button class="pull-right" color="accent" (click)="searchReports(callTypeForm.value)">{{currentLanguageSet?.downloadReport}}</button>
+</div>

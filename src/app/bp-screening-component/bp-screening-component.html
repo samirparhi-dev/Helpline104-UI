@@ -1,0 +1,99 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+  <h4>
+    <strong>{{currentLanguageSet?.bpScreeningService}}</strong>
+  </h4>
+</div>
+<div class="col-xs-12 col-sm-12">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+      <div *ngFor="let Question of Questions">
+        <label class="control-label width75 f-s-n-b pull-left m-t-18" for="{{Question.question}}">{{Question.question}}</label>
+        <div *ngIf="Question.question == 'Obesity, BMI>25'" class="col-xs-6 col-sm-6 col-md-9 col-lg-9">
+          <md-input-container appMobileNumber>
+            <input autocomplete="off" mdInput type="weight" maxlength="3" min="0" placeholder="{{currentLanguageSet?.weight}}" [(ngModel)]="weight" name="weight" >
+          </md-input-container>
+          <md-input-container appMobileNumber>
+            <input autocomplete="off" mdInput type="height" maxlength="3" min="0" placeholder="{{currentLanguageSet?.height}}" [(ngModel)]="height" name="height" >
+          </md-input-container>
+          <button class="pull-right m-t-10" md-raised-button color="primary" [disabled]="(weight.length==0 && height.length==0)" (click)="claculateBMI(weight,height)">{{currentLanguageSet?.calculateBmi}}</button>
+       
+        </div>
+        <div class="pull-right" *ngIf="Question.question == 'Obesity, BMI>25'">
+          <!-- <md-container> -->
+            <md-select disabled  name="obesity" [(ngModel)]="obesity" placeholder="{{currentLanguageSet?.obesity}}">
+              <md-option value="Yes">Yes</md-option>
+              <md-option value="No">No</md-option>
+              <md-option value="NA">NA</md-option>
+            </md-select>
+        </div>
+         <form [formGroup]="bpQuestions" autocomplete="off">
+          <div class="pull-right" *ngIf="Question.question != 'Obesity, BMI>25'">
+            <!-- <md-container> -->
+              <md-select   formControlName="{{Question.questionID}}" (change)="valueSelected(Question,$event)">
+                <md-option *ngFor="let answer of Question.m_104QuestionScore" [value]="answer.answer">
+                  {{answer.answer}}
+                </md-option>
+              </md-select>
+          </div>
+          </form> 
+
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 m-t-lg-20">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-l-lg-1">
+        <h5 class="pull-left m-b-20">
+          <strong>{{currentLanguageSet?.guidelinesAndInformation}}</strong> - {{currentLanguageSet?.transferToMo}}</h5>
+      </div>
+      <table class="width100 table table-striped" aria-describedby="bpScreeningDetails">
+        <thead>
+          <th id ="bpScreeningCategory">{{currentLanguageSet?.category}}</th>
+          <th id ="systolicBPRange">{{currentLanguageSet?.systolicMMHG}}</th>
+          <th id ="diastolicBPRange">{{currentLanguageSet?.diastolicMMHG}}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{currentLanguageSet?.normal}} </td>
+            <td>90-119</td>
+            <td>60-79</td>
+          </tr>
+          <tr>
+            <td> {{currentLanguageSet?.prehypertension}}</td>
+            <td>120-139</td>
+            <td>80-89</td>
+          </tr>
+          <tr>
+            <td>{{currentLanguageSet?.stageOneHypertension}}</td>
+            <td>140-159</td>
+            <td>90-99</td>
+          </tr>
+          <tr>
+            <td>{{currentLanguageSet?.stageOneHypertension}}</td>
+            <td>140-159</td>
+            <td>90-99</td>
+          </tr>
+          <tr>
+            <td>{{currentLanguageSet?.isolatedSystolicHypertension}} </td>
+            <td>>=140</td>
+            <td><90</td>
+          </tr>
+        </tbody>
+      </table>
+      <form #remarksForm="ngForm" autocomplete="off">
+        <div class="m-t-10">
+          <div class="form-group">
+            <!--<label class="control-label" for="actionByHao">Remarks by HAO (Doctor name)</label>
+              <textarea class="form-control" rows="2" id="" [(ngModel)]="actionByHao" name="actionByHao"></textarea>-->
+            <md-input-container class="width100">
+              <textarea name="actionByHao" rows="2" mdInput textAreaValidator  maxlength="50" placeholder="{{currentLanguageSet?.remarksByHao}}" [(ngModel)]="actionByHao" required></textarea>
+            </md-input-container>
+          </div>
+        </div>
+        <button type="button" [disabled]="!(remarksForm.valid)" md-raised-button color="accent" class="pull-right" (click)="saveCaseSheetData(actionByHao);remarksForm.reset()">{{currentLanguageSet?.save}}</button>
+      </form>
+    </div>
+
+
+    <!--</div>-->
+  </div>
+</div>

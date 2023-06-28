@@ -1,0 +1,97 @@
+<div class="row" *ngIf="showTable">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <label><h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.schemesAvailable}}</h4></label>
+    <div class="table-responsive">
+      <table class="table " [md2Data]="schemeList" #md2="md2DataTable" [rowsPerPage]="6" aria-describedby="supervisorSchemes">
+        <thead>
+          <tr>
+            <th id ="supervisorSchemeSNo">{{currentLanguageSet?.sno}}</th>
+            <th id ="supervisorSchemeName" md2SortBy="schemeName">{{currentLanguageSet?.schemeName}}</th>
+            <th id ="supervisorSchemeDescription">{{currentLanguageSet?.schemeDescription}}</th>
+            <th id ="supervisorSchemeDocument">{{currentLanguageSet?.document}}</th>
+            <th id ="supervisorSchemeEdit">{{currentLanguageSet?.edit}}</th>
+            <th id ="supervisorSchemeAction">{{currentLanguageSet?.action}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="md2.data?.length==0">
+            <td colspan="4" class="record-not-found">
+              {{currentLanguageSet?.noRecordFound}}
+            </td>
+          </tr>
+          <tr *ngFor="let scheme of md2.data; let i = index ">
+            <td><strong>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}}</strong></td>
+            <td>{{scheme?.schemeName}}</td>
+            <td>{{scheme?.schemeDesc}}</td>
+            <td><a href="{{scheme?.kmFilePath}}" target="_blank">{{scheme?.kmFilePath ? scheme.kmFileManager.fileName : " "}}</a></td>
+            <td>
+              <md-icon *ngIf="!scheme.deleted" mdTooltip="{{currentLanguageSet?.edit}}" class="mdicon mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+                (click)="editScheme(scheme)">edit</md-icon>
+            </td>
+            <td>
+              <a style="cursor:pointer" *ngIf="scheme.deleted" (click)="acti_Deactivate(scheme.schemeID,false)">{{currentLanguageSet?.activate}}</a>
+              <a style="cursor:pointer" *ngIf="!scheme.deleted" (click)="acti_Deactivate(scheme.schemeID,true)">{{currentLanguageSet?.deactivate}}</a>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <td colspan="6">
+            <md2-pagination></md2-pagination>
+          </td>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <button md-raised-button color="primary" class="pull-right" type="button" (click)="createScheme()">{{currentLanguageSet?.createScheme}}</button>
+  </div>
+</div>
+<div class="row" *ngIf="!showTable">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <label>
+      <h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.uploadSchemes}}</h4></label>
+  </div>
+  <div class="col-xs-12 col-sm-12 p-a-0">
+    <form id="schemeFormm" #schemeForm="ngForm" autocomplete="off">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <md-input-container class="width100">
+          <input [disabled]="!create" type="text" maxlength="100" mdInput  inputFieldValidator  placeholder="{{currentLanguageSet?.schemeName}}" name="schemeName" [(ngModel)]="Scheme_Name"
+            #schemeName="ngModel" required>
+          <md-hint *ngIf="schemeName.errors && schemeName.touched">
+            <span class="error_text">{{currentLanguageSet?.enterSchemeName}}</span>
+          </md-hint>
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <md-input-container class="width100">
+          <textarea mdInput textAreaValidator  rows="1" placeholder="{{currentLanguageSet?.schemeDescription}}" maxlength="300" name="schemeDesc" [(ngModel)]="Scheme_Desp" #schemeDesc="ngModel"
+            required (keyup)="updateCount()"></textarea>
+          <md-hint *ngIf="schemeDesc.errors && schemeDesc.touched">
+            <span class="error_text">{{currentLanguageSet?.enterSchemeDescription}}</span>
+          </md-hint>
+          <md-hint align="end">{{this.count}}</md-hint>
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 m-b-20">
+        <label for="upload-file">{{currentLanguageSet?.uploadFilesizeLimit}} :{{maxFileSize}} {{currentLanguageSet?.mb}} , {{currentLanguageSet?.supportedFileFormats_msg_pdf_png_jpeg_doc_docx_xlsx_xls_csv_txt}})</label>
+        <input type="file" accept="*" size="100" placeholder="{{currentLanguageSet?.uploadFile}}" id="upload-file" (change)="onFileUpload($event)" name="file"
+          [(ngModel)]="upload" #uploadfile="ngModel">
+        <span class="help-block" *ngIf="invalid_file_flag">{{currentLanguageSet?.supportedFileFormats_msg_pdf_png_jpeg_doc_docx_xlsx_xls_csv_txt}}</span>
+        <span class="help-block" style="color: gray" *ngIf="error1">*{{currentLanguageSet?.pleaseChooseAFileForUpload}}</span>
+        <span class="help-block" *ngIf="error2">{{currentLanguageSet?.fileSizeShouldNotExceed}} {{maxFileSize}} {{currentLanguageSet?.mb}}</span>
+        <span class="help-block" *ngIf="invalidFileNameFlag">{{currentLanguageSet?.invalidFileName}}</span>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4" *ngIf="notUploaded">
+        <md-input-container class="width100">
+          <input type="text" mdInput placeholder="{{currentLanguageSet?.uploadedfile}}" name="uploadedFile" [(ngModel)]="fileName" disabled>
+        </md-input-container>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12">
+        <button md-raised-button color="primary" class="pull-left" type="button" (click)="change();schemeForm.reset()">{{currentLanguageSet?.back}}</button>
+        <button *ngIf="create" md-raised-button color="accent" class="pull-right" type="button" (click)="onSubmit()" [disabled]="schemeForm.invalid || invalid_file_flag || error2 || invalidFileNameFlag">{{currentLanguageSet?.submit}}</button>
+        <button *ngIf="!create" md-raised-button color="accent" class="pull-right" type="button" (click)="onSubmit()" [disabled]="schemeForm.invalid || invalid_file_flag || error2 || invalidFileNameFlag">{{currentLanguageSet?.modify}}</button>
+      </div>
+    </form>
+  </div>
+</div>

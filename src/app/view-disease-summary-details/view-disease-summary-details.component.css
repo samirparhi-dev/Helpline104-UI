@@ -1,0 +1,17 @@
+.title h4 {
+    display: inline-block;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.title .exit {
+    cursor: pointer;
+}
+.sub-header-style {
+    font-weight: bold;
+    font-size: 15px;
+}
+.sub-header-style span {
+    font-weight: normal;
+    white-space: pre-line;
+}

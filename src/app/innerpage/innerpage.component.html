@@ -1,0 +1,99 @@
+<div class="capitalize noprint">
+  <div class="container-fluid p-a-0 header p-t-b-3 navbar-fixed-top">
+    <div class="header">
+      <div class="col-xs-12 col-sm-12">
+        <div class="pull-left">
+          <img src="assets/images/smLogo.png" alt="Logo" title="{{currentLanguageSet?.logo}}">
+        </div>
+        <label class="f-c-w f-s-15 p-t-5">
+          <!--{{current_language_set?.innerpage?.service}}:-->{{current_service.serviceName}}</label>
+        <label class="f-c-w f-s-15 p-t-5">
+          <!--{{current_language_set?.innerpage?.role}}:-->{{current_roleName === 'HYBRID HAO' ? 'HAO' : current_roleName}}</label>
+        <ul class="list-inline list-unstyled pull-left m-b-0">
+          <li class="m-l-lg-40 m-t-5" *ngIf="current_role!='Supervisor' && current_role!='Surveyor'">
+            <span class="m-l-lg-20 f-s-14 font-Semibold lightgreen"><strong>{{callStatus}}</strong></span>
+            <span class="m-l-lg-20 f-s-14 whiteC font-Semibold">{{callDuration}}</span>
+          </li>
+        </ul>
+        <div class="pull-right p-t-1">
+          <ul class="list-inline list-unstyled topIcon pull-right m-l-20 shawdow m-b-0">
+           
+<li>
+                <span style="color: white;">{{currentLanguageSet?.selectLanguage}}: </span> &nbsp;
+                  <select  class="form-control drop-arrow border-radius-20 height-30 width120px pull-right" name="app_language"
+                    [(ngModel)]="app_language" (change)="changeLanguage(app_language)">
+                    <option *ngFor="let language of languageArray" [value]="language.languageName">{{language.languageName}}
+                    </option>
+                  </select>
+              </li>  
+                 <!--END-Multilingual dropdown-->
+            <li class="" mdTooltip="{{currentLanguageSet?.profile}}" [mdMenuTriggerFor]="menu">
+              <img src="assets/images/icon-user-active.png" class="cursorPointer" alt="activeUserIcon">
+            </li>
+            <md-menu #menu  x-position="before"  class="m-t-40 shawdow"  >
+              <md-list class="p-t-0">
+                <md-list-item>
+                  <md-icon class="mat-icon material-icons" role="img" aria-hidden="true">account_circle</md-icon>
+                  {{data.userName}}</md-list-item>
+                <md-list-item class="b-t-1-w" *ngIf="current_role!='Supervisor'">ID: {{id}}-{{current_role}}-{{current_service.serviceName}}</md-list-item>
+              </md-list>
+              </md-menu>
+              <li class="logout" (click)="logOut()" mdTooltip="{{currentLanguageSet?.logout}}">
+                <a>&nbsp;</a>
+              </li>
+          </ul>
+         
+          <ul class="list-inline list-unstyled pull-right m-l-20  m-b-0" *ngIf="current_role !== 'Supervisor'">
+            <li class="m-l-lg-40 m-t-5">
+              <span class="m-l-lg-20 f-s-15 font-Semibold lightgreen">{{currentLanguageSet?.totalCalls}} : {{TotalCalls}}</span>
+              <span class="m-l-lg-20 f-s-15 font-Semibold lightgreen"><strong>{{currentLanguageSet?.totalCallsDuration}} : {{TotalTime}}</strong></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="capitalize  dashboard-m-t-45" (click)="minimizeBar()">
+  <div class="col-xs-12 col-sm-12">
+    <div *ngIf="current_role!='Supervisor' && current_role!='Surveyor'">
+      <div class="row  b-b-2-w">
+        <div class="">
+          <ul class="list-inline list-unstyled pull-left">
+          </ul>
+          <ul class="list-unstyled list-inline pull-left p-a-0 m-b-0">
+            <li class="f-s-16 f-c-0 p-l-20" *ngIf="selectedBenData.fullname"><strong>{{selectedBenData.fullname ? selectedBenData.fullname+', ' : ''}}</strong></li>
+            <li *ngIf="selectedBenData.id">{{selectedBenData.id ? selectedBenData.id+', ' : ''}}</li>
+            <!-- SH20094090,23-092021,HealthID Integration changes on Innerpage -->
+            <li *ngIf="getCommonData.benHealthID !=undefined && getCommonData.benHealthID !=null && getCommonData.benHealthID !='' && getCommonData.benHealthID.length >0">{{getCommonData.benHealthID}}</li>
+            <li *ngIf="selectedBenData.gender">{{selectedBenData.gender ? selectedBenData.gender+', ' : ''}}</li>
+            <li *ngIf="selectedBenData.actualAge">{{selectedBenData.actualAge ? selectedBenData.actualAge+" "+selectedBenData.ageUnits + ','  : ''}}</li>
+            <li *ngIf="selectedBenData.state">{{selectedBenData.state ? selectedBenData.state + ', ' : ''}}</li>
+
+            <li *ngIf="selectedBenData.district">{{selectedBenData.district ? selectedBenData.district + ', ' : ''}}</li>
+            <li *ngIf="selectedBenData.subDistrict">{{selectedBenData.subDistrict ? selectedBenData.subDistrict + ', ' : ''}}</li>
+            <li *ngIf="selectedBenData.village">{{selectedBenData.village ? selectedBenData.village + ', ' : ''}}</li>
+
+            <li *ngIf="selectedBenData.marital">{{selectedBenData.marital ? selectedBenData.marital+", " :''}}</li>
+            <li *ngIf="selectedBenData.type">{{selectedBenData.type ? selectedBenData.type+", ": ''}}</li>
+            <li *ngIf="selectedBenData.caste">{{selectedBenData.caste ? selectedBenData.caste+", ": ''}}</li>            
+            <li *ngIf="selectedBenData.education && current_role == 'CO'">{{selectedBenData.education ? selectedBenData.education: ''}}</li>
+            
+          </ul>
+
+          <span *ngIf="ticks > 0" class="pull-right">{{currentLanguageSet?.timeRemaining}} :
+            <strong>{{ticks}}</strong>
+          </span>
+          <ul class="list-unstyled list-inline pull-right p-a-0 m-b-0">
+            <li *ngIf="traversal_history!=''">{{currentLanguageSet?.callFlow}}: {{traversal_history}}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div>
+      <app-104 *ngIf="current_service.serviceName==='104'" (onBenRegDataSelect)="getSelectedBenDetails($event)" (roleChanged)="changeCurrentRole($event)"
+        [current_language]="current_language_set"></app-104>
+    </div>
+  </div>
+</div>

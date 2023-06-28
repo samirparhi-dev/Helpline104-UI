@@ -1,0 +1,174 @@
+<div class="row" *ngIf="searchMode">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4 class="f-s-b m-t-20 m-b-20">
+      <strong>{{currentLanguageSet?.locationMessages}}</strong>
+    </h4>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-a-0">
+    <form #searchNotificationForm="ngForm" autocomplete="off">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md2-datepicker name="startDate" (keydown)="blockey($event)" [(ngModel)]="searchStartDate" (change)="sdChange(searchStartDate)"
+          placeholder="{{currentLanguageSet?.validFrom}}" #startDate="ngModel" ngModel required [style.width]="'100%'"></md2-datepicker>
+        <span class="error_text f-s-10 p-l-10" *ngIf="startDate.touched && startDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md2-datepicker name="endDate" [min]="startDate.value" (keydown)="blockey($event)" [(ngModel)]="searchEndDate" (change)="edChange(searchEndDate)"
+          placeholder="{{currentLanguageSet?.validTill}}" #endDate="ngModel" ngModel required [style.width]="'100%'"></md2-datepicker>
+        <span class="error_text f-s-10 p-l-10" *ngIf="endDate.touched && endDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+        <span class="error_text f-s-10 p-l-10" *ngIf="(endDate.value < startDate.value) && endDate.dirty">{{currentLanguageSet?.endDateCannotBeBeforeStartDate}}</span>
+      </div>
+    </form>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-10">
+      <button md-raised-button color="accent" class="pull-right" type="button" [disabled]="searchNotificationForm.invalid || (endDate.value < startDate.value)" id="searchNotification"
+        (click)="getNotifications(searchNotificationForm.value)">{{currentLanguageSet?.search}}</button>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-15  table-responsive">
+      <table class="table table-hover table-striped" [md2Data]="location_messages" #md2="md2DataTable" [rowsPerPage]="3" aria-describedby="supervisorLocationMessages">
+        <thead>
+          <tr>
+            <th id="locationMessageSNo">{{currentLanguageSet?.sno}}</th>
+            <th id="locationMessageType">{{currentLanguageSet?.type}}</th>
+            <th id="locationMessageSubject">{{currentLanguageSet?.subject}}</th>
+            <th id="locationMessageDescription">{{currentLanguageSet?.description}}</th>
+            <th id="locationMessageValidFrom">{{currentLanguageSet?.validFrom}}</th>
+            <th id="locationMessageValidTill">{{currentLanguageSet?.validTill}}</th>
+            <th id="locationMessageAction">{{currentLanguageSet?.action}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="location_messages?.length < 1">
+            <td class="record-not-found" colspan="7">
+              {{currentLanguageSet?.noRecordFound}}
+            </td>
+          </tr>
+          <tr *ngFor="let row of md2.data;let i = index ">
+            <td>{{(md2.activePage-1)*3+i+1}}</td>
+            <td>{{row.notificationType.notificationType}} </td>
+            <td>{{row.notification}}</td>
+            <td>{{row.notificationDesc}}</td>
+            <td>{{row.validFrom|utcDate|date:'dd/MM/yyyy'}}</td>
+            <td>{{row.validTill|utcDate|date:'dd/MM/yyyy'}}</td>
+            <td>
+              <md-icon class="cursorPointer" mdTooltip="{{currentLanguageSet?.editCaps}}" (click)="edit(row)">mode_edit</md-icon>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <md2-pagination></md2-pagination>
+            </td>
+            <td colspan="3" class="p-r-0">
+              <button md-raised-button color="primary" type="button" class="pull-right" (click)="showForm()">{{currentLanguageSet?.createNew}}</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="createMode">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4 class="f-s-b m-t-20 m-b-20">
+      <strong>{{currentLanguageSet?.locationMessages}}</strong>
+    </h4>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-a-0">
+    <form #notificationCreationForm="ngForm" autocomplete="off">
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select class="width100" placeholder="{{currentLanguageSet?.selectOffice}}" [multiple]="true" name="offices" ngModel #office="ngModel" required>
+          <md-option *ngFor="let item of offices" [value]="item.pSAddMapID">
+            {{ item.locationName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md2-datepicker name="startDate" (keydown)="blockey($event)" [min]="minDate" placeholder="{{currentLanguageSet?.validFrom}}" #startDate="ngModel"
+          ngModel required [style.width]="'100%'"></md2-datepicker>
+        <span class="error_text f-s-10 p-l-10" *ngIf="startDate.touched && startDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md2-datepicker name="endDate" (keydown)="blockey($event)" [min]="startDate.value" placeholder="{{currentLanguageSet?.validTill}}" #endDate="ngModel"
+          ngModel required [style.width]="'100%'"></md2-datepicker>
+        <span class="error_text f-s-10 p-l-10" *ngIf="endDate.touched && endDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+        <span class="error_text f-s-10 p-l-10" *ngIf="(endDate.value < startDate.value) && endDate.dirty">{{currentLanguageSet?.endDateCannotBeBeforeStartDate}}</span>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-t-10">
+        <md-input-container class="width100">
+          <input mdInput textAreaValidator  placeholder="{{currentLanguageSet?.subject}}" name="subject" ngModel #subject="ngModel" minlength="5" maxlength="100" required>
+          <md-hint align="start" *ngIf="subject.errors && subject.touched">
+            <span class="error_text">{{currentLanguageSet?.subjectIsRequiredminFiveCharacters}}</span>
+          </md-hint>
+          <md-hint align="end">{{subject.value?.length}}/100</md-hint>
+        </md-input-container>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 m-t-10">
+        <md-input-container class="width100">
+          <textarea mdInput textAreaValidator  rows="2" placeholder="{{currentLanguageSet?.message}}" name="message" ngModel #message="ngModel" minlength="5" maxlength="300"
+            required></textarea>
+          <md-hint align="start" *ngIf="message.errors && message.touched">
+            <span class="error_text">{{currentLanguageSet?.messageIsRequiredmin5Characters}}</span>
+          </md-hint>
+          <md-hint align="end">{{message.value?.length}}/300</md-hint>
+        </md-input-container>
+      </div>
+    </form>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-10">
+      <button md-raised-button color="primary" class="pull-left" type="button" (click)="showTable()">{{currentLanguageSet?.back}}</button>
+      <button md-raised-button color="accent" [disabled]="notificationCreationForm.invalid" class="pull-right" type="button" (click)="createLanguageMessage(notificationCreationForm.value)">{{currentLanguageSet?.save}}</button>
+    </div>
+  </div>
+</div>
+
+<div class="row" *ngIf="editMode">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4 class="f-s-b m-t-20 m-b-20">
+      <strong>{{currentLanguageSet?.editCaps}} {{editType}}</strong>
+    </h4>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-a-0">
+    <form #notificationEditingForm="ngForm" autocomplete="off">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md2-datepicker name="startDate" (keydown)="blockey($event)" [(ngModel)]="sdate" (change)="resetEndDate()" [min]="minDate"
+          placeholder="{{currentLanguageSet?.validFrom}}" #startDate="ngModel" required [style.width]="'100%'"></md2-datepicker>
+        <span class="error_text f-s-10 p-l-10" *ngIf="startDate.touched && startDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md2-datepicker name="endDate" (keydown)="blockey($event)" [(ngModel)]="edate" [min]="startDate.value" placeholder="{{currentLanguageSet?.validTill}}"
+          #endDate="ngModel" required [style.width]="'100%'"></md2-datepicker>
+        <span class="error_text f-s-10 p-l-10" *ngIf="endDate.touched && endDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+        <span class="error_text f-s-10 p-l-10" *ngIf="(endDate.value < startDate.value) && endDate.dirty">{{currentLanguageSet?.endDateCannotBeBeforeStartDate}}</span>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-t-10">
+        <md-input-container class="width100">
+          <input mdInput textAreaValidator  placeholder="{{currentLanguageSet?.subject}}" name="subject" [(ngModel)]="notification_subject" ngModel #subject="ngModel" minlength="5"
+            maxlength="100" required>
+          <md-hint align="start" *ngIf="subject.errors && subject.touched">
+            <span class="error_text">{{currentLanguageSet?.subjectIsRequiredminFiveCharacters}}</span>
+          </md-hint>
+          <md-hint align="end">{{subject.value?.length}}/100</md-hint>
+        </md-input-container>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 m-t-10">
+        <md-input-container class="width100">
+          <textarea mdInput  textAreaValidator  rows="2" placeholder="{{currentLanguageSet?.message}}" [(ngModel)]="description" name="message" ngModel #message="ngModel" minlength="5"
+            maxlength="300" required></textarea>
+          <md-hint align="start" *ngIf="message.errors && message.touched">
+            <span class="error_text">{{currentLanguageSet?.messageIsRequiredminFiveCharacters}}</span>
+          </md-hint>
+          <md-hint align="end">{{message.value?.length}}/300</md-hint>
+        </md-input-container>
+      </div>
+    </form>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-10">
+      <button md-raised-button color="primary" class="pull-left" type="button" (click)="showTable()">{{currentLanguageSet?.back}}</button>
+      <button md-raised-button color="accent" [disabled]="notificationEditingForm.invalid" class="pull-right" type="button" (click)="editLocationMessage(notificationEditingForm.value)">{{currentLanguageSet?.update}}</button>
+    </div>
+  </div>
+</div>

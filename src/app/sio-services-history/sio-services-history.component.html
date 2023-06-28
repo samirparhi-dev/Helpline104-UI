@@ -1,0 +1,139 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" class="alignCenter">
+  <label><h4>{{currentLanguageSet?.sioServicesHistory}}</h4></label>
+</div>
+<div class="panel-group m-t-15" id="accordion">
+  <div class="table-responsive" *ngIf="(sioHistory.t_bloodRequest | json) != '[]'">
+    <div class="panel-heading">
+      <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" data-target="#bloodrequests" class="accordion-toggle collapsed">{{currentLanguageSet?.bloodRequests}}</a></h4>
+    </div>
+    <div id="bloodrequests" class="panel-collapse collapse">
+      <div class="panel-body">
+        <table class="table" aria-describedby="sioServicesHistory">
+          <thead>
+            <tr>
+              <th id="sioServicesHistoryRecipientName">{{currentLanguageSet?.recipientName}}</th>
+              <th id="sioServicesHistoryRecipientAge">{{currentLanguageSet?.recipientAge}}</th>
+              <th id="sioServicesHistoryTypeOfRequest">{{currentLanguageSet?.typeOfRequest}}</th>
+              <th id="sioServicesHistoryHospitalAdmitted">{{currentLanguageSet?.hospitalAdmitted}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="cursor: pointer" *ngFor="let sio of sioHistory.t_bloodRequest  | paginate: {id:'bloodRequest', itemsPerPage: 2, currentPage: b}">
+              <td>{{sio.recipientName}}</td>
+              <td>{{sio.recipientAge}}</td>
+              <td>{{sio.typeOfRequest}}</td>
+              <td>{{sio.hospitalAdmitted}}</td>
+            </tr>
+            <pagination-controls (pageChange)="b = $event" id="bloodRequest"></pagination-controls>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive" *ngIf="(sioHistory.t_epidemicOutbreak | json) != '[]'">
+    <div class="panel-heading">
+      <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" data-target="#epidemicComplaints" class="accordion-toggle collapsed">{{currentLanguageSet?.epidemicOutbreakComplaints}}</a></h4>
+    </div>
+    <div id="epidemicComplaints" class="panel-collapse collapse">
+      <div class="panel-body">
+        <table class="table" aria-describedby="epidemicComplaintsList">
+          <thead>
+            <tr>
+              <th id="epidemicNatureOfComplaint">{{currentLanguageSet?.natureOfComplaint}}</th>
+              <th id="epidemicComplaintPeopleAffected">{{currentLanguageSet?.peopleAffected}}</th>
+              <th id="epidemicComplaintDistrict">{{currentLanguageSet?.district}}</th>
+              <th id="epidemicComplaintTaluk">{{currentLanguageSet?.taluk}}</th>
+              <th id="epidemicComplaintCity">{{currentLanguageSet?.city}}</th>
+              <th id="epidemicComplaintRemarks">{{currentLanguageSet?.remarks}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="cursor: pointer" *ngFor="let sio of sioHistory.t_epidemicOutbreak  | paginate: {id:'epidemic', itemsPerPage: 2, currentPage: e}">
+              <td>{{sio.natureOfComplaint}}</td>
+              <td>{{sio.totalPeopleAffected}}</td>
+              <td>{{sio.m_district.districtName}}</td>
+              <td>{{sio.m_districtblock.blockName}}</td>
+              <td>{{sio.m_city.cityName}}</td>
+              <td>{{sio.remarks}}</td>
+            </tr>
+            <pagination-controls (pageChange)="e = $event" id="epidemic"></pagination-controls>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive" *ngIf="(sioHistory.t_foodSafetyCopmlaint | json) != '[]'">
+    <div class="panel-heading">
+      <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" data-target="#foodSaftyComplaint" class="accordion-toggle collapsed">{{currentLanguageSet?.foodSafetyComplaints}}</a></h4>
+    </div>
+    <div id="foodSaftyComplaint" class="panel-collapse collapse">
+      <div class="panel-body">
+        <table class="table" aria-describedby="foodSaftyComplaints">
+          <thead>
+            <tr>
+              <th id="foodSaftyComplaintType">{{currentLanguageSet?.typeOfRequest}}</th>
+              <th id="foodSaftyComplaintIsDiarrhea">{{currentLanguageSet?.isDiarrhea}}</th>
+              <th id="foodSaftyComplaintIsVomiting">{{currentLanguageSet?.isVomiting}}</th>
+              <th id="foodSaftyComplaintIsAbdominalpain">{{currentLanguageSet?.isAbdominalPain}}</th>
+              <th id="foodSaftyComplaintIsChillsRigors">{{currentLanguageSet?.isChillsOrRigors}}</th>
+              <th id="foodSaftyComplaintisGiddiness">{{currentLanguageSet?.isGiddiness}}</th>
+              <th id="foodSaftyComplaintIsDehydration">{{currentLanguageSet?.isDehydration}}</th>
+              <th id="foodSaftyComplaintIsRashes">{{currentLanguageSet?.isRashes}}</th>
+              <th id="foodSaftyComplaintHistoryOfDiet">{{currentLanguageSet?.historyOfDiet}}</th>
+              <th id="foodSaftyComplaintisFoodConsumed">{{currentLanguageSet?.isFoodConsumed}}</th>
+              <th id="foodSaftyComplaintTypeofFood">{{currentLanguageSet?.typeOfFood}}</th>
+              <th id="foodSaftyComplaintfoodConsumedFrom">{{currentLanguageSet?.foodConsumedFrom}}</th>
+              <th id="foodSaftyComplaintAssociatedSymptoms">{{currentLanguageSet?.associatedSymptoms}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="cursor: pointer" *ngFor="let sio of sioHistory.t_foodSafetyCopmlaint | paginate: {id:'foodSafety', itemsPerPage: 2, currentPage: f }">
+              <td>{{sio.typeOfRequest}}</td>
+              <td>{{sio.isDiarrhea}}</td>
+              <td>{{sio.isVomiting? 'Yes' : 'No'}}</td>
+              <td>{{sio.isAbdominalPain? 'Yes' : 'No'}}</td>
+              <td>{{sio.isChillsOrRigors? 'Yes' : 'No'}}</td>
+              <td>{{sio.isGiddiness? 'Yes' : 'No'}}</td>
+              <td>{{sio.isDehydration? 'Yes' : 'No'}}</td>
+              <td>{{sio.isRashes? 'Yes' : 'No'}}</td>
+              <td>{{sio.historyOfDiet}}</td>
+              <td>{{sio.isFoodConsumed? 'Yes' : 'No'}}</td>
+              <td>{{sio.typeOfFood}}</td>
+              <td>{{sio.foodConsumedFrom}}</td>
+              <td>{{sio.associatedSymptoms}}</td>
+            </tr>
+          </tbody>
+          <pagination-controls (pageChange)="f = $event" id="foodSafety"></pagination-controls>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive" *ngIf="(sioHistory.t_organDonation | json) != '[]'">
+    <div class="panel-heading">
+      <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion" data-target="#organDonationRequests" class="accordion-toggle collapsed">{{currentLanguageSet?.organDonationRequestsMade}}</a></h4>
+    </div>
+    <div id="organDonationRequests" class="panel-collapse collapse">
+      <div class="panel-body">
+        <table class="table" aria-describedby="organDonationRequest">
+          <thead>
+            <tr>
+              <th id="organDonationType">{{currentLanguageSet?.donationType}}</th>
+              <th id="organDonationOrgans">{{currentLanguageSet?.donatedOrgans}}</th>
+              <th id="organDonationAcceptorHospitalID">{{currentLanguageSet?.acceptorHospitalID}}</th>
+              <th id="organDonationRemarks">{{currentLanguageSet?.remarks}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="cursor: pointer" *ngFor="let sio of sioHistory.t_organDonation | paginate: {id:'organDonation', itemsPerPage: 2, currentPage: o }">
+              <td>{{sio.m_donationType.donationType}}</td>
+              <td>{{sio.m_donatableOrgan.donatableOrgan}}</td>
+              <td>{{sio.acceptorHospitalID}}</td>
+              <td>{{sio.remarks}}</td>
+            </tr>
+            <pagination-controls (pageChange)="o = $event" id="organDonation"></pagination-controls>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

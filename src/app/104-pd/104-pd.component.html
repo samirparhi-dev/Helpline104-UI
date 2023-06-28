@@ -1,0 +1,243 @@
+<div *ngIf="current_campaign == 'INBOUND'">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 p-t-10 p-b-10">
+      <div class="bs-wizard animate-box" style="position: relative; z-index: 1">
+        <div id="two" class="col-xs-2 bs-wizard-step disabled">
+          <div class="text-center hidden-xs hidden-sm font-Light">
+            {{ assignSelectedLanguageValue?.provideService }}
+          </div>
+          <div
+            class="
+              text-center
+              hidden-md hidden-lg
+              visible-xs visible-sm
+              font-Light
+            "
+          >
+            A S
+          </div>
+          <div class="progress progress-bar-disabled progress-margin">
+            <div class="progress-bar"></div>
+          </div>
+          <a class="bs-wizard-dot cursorPointer active-tab"></a>
+        </div>
+        <div id="four" class="col-xs-2 bs-wizard-step disabled">
+          <div class="text-center hidden-xs hidden-sm font-Light">
+            {{ assignSelectedLanguageValue?.closure }}
+          </div>
+          <div
+            class="
+              text-center
+              hidden-md hidden-lg
+              visible-xs visible-sm
+              font-Light
+            "
+          >
+            R M M
+          </div>
+          <div class="progress progress-bar-disabled progress-margin">
+            <div class="progress-bar"></div>
+          </div>
+          <a class="bs-wizard-dot cursorPointer"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="">
+    <div class="panel-body card p-a-0 bg-white m-b-25">
+      <div class="container-fluid p-a-0 height-425 overflow-y">
+        <div class="">
+          <div
+            id="myCarousel"
+            class="carousel slide"
+            data-ride="carousel"
+            data-interval="false"
+            data-wrap="false"
+          >
+            <!-- Carousel indicators -->
+            <!-- Wrapper for carousel items -->
+            <div class="carousel-inner">
+              <div class="item active">
+                <app-case-sheet></app-case-sheet>
+              </div>
+              <div class="item">
+                <app-closure
+                  (callClosed)="closeCall()"
+                  #closure
+                  (callContinue)="continueCall()"
+                ></app-closure>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 m-b-8 m-t-8">
+        <button
+          type="button"
+          *ngIf="hasMOPrivilege"
+          class="btn btn-default cu-btn-default pull-right"
+          (click)="navigateToMO()"
+        >
+          {{ assignSelectedLanguageValue?.medicalService }}
+        </button>
+        <div class="div-center">
+          <button
+            [disabled]="true"
+            id="cancelLink"
+            type="button"
+            md-raised-button
+            color="primary"
+            class="f-s-18 m-r-5"
+            data-slide-to="1"
+            (click)="openDialog()"
+          >
+            {{ assignSelectedLanguageValue?.cancel }}
+          </button>
+          <button
+            [disabled]="false"
+            id="closureLink"
+            type="button"
+            md-raised-button
+            color="primary"
+            class="f-s-18"
+            data-slide-to="2"
+            (click)="openDialogClosure()"
+          >
+            {{
+              assignSelectedLanguageValue?.closure
+                ? assignSelectedLanguageValue?.closure
+                : "Close Call"
+            }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="current_campaign == 'OUTBOUND'">
+  <div class="">
+    <div class="col-xs-12 col-sm-12">
+      <div class="bs-wizard animate-box" style="position: relative; z-index: 1">
+        <div
+          id="two"
+          class="col-xs-2 bs-wizard-step disabled"
+          style="padding: 0px; margin: 0px"
+        >
+          <div class="text-center hidden-xs hidden-sm font-Light">
+            {{ assignSelectedLanguageValue?.advanceHistory }}
+          </div>
+          <div
+            class="
+              text-center
+              hidden-md hidden-lg
+              visible-xs visible-sm
+              font-Light
+            "
+          >
+            P D
+          </div>
+          <div class="progress progress-bar-disabled progress-margin">
+            <div class="progress-bar"></div>
+          </div>
+          <a class="bs-wizard-dot cursorPointer active-tab"></a>
+        </div>
+        <div id="four" class="col-xs-2 bs-wizard-step disabled">
+          <div class="text-center hidden-xs hidden-sm font-Light">
+            {{ assignSelectedLanguageValue?.closure }}
+          </div>
+          <div
+            class="
+              text-center
+              hidden-md hidden-lg
+              visible-xs visible-sm
+              font-Light
+            "
+          >
+            R M M
+          </div>
+          <div class="progress progress-bar-disabled progress-margin">
+            <div class="progress-bar"></div>
+          </div>
+          <a class="bs-wizard-dot cursorPointer"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="">
+    <div class="panel-body card p-a-0 bg-white m-b-25">
+      <div class="container-fluid p-a-0 height-425 overflow-y">
+        <div class="">
+          <div
+            id="myCarousel"
+            class="carousel slide"
+            data-ride="carousel"
+            data-interval="false"
+            data-wrap="false"
+          >
+            <!-- Carousel indicators -->
+            <!-- Wrapper for carousel items -->
+            <div class="carousel-inner">
+              <div class="item active">
+                <md-tab-group>
+                  <md-tab
+                    label="{{ assignSelectedLanguageValue?.counsellingSheet }}"
+                    *ngIf="screens.includes('Psychiatrist')"
+                  >
+                    <app-case-sheet
+                      [providerData]="dataInjection"
+                    ></app-case-sheet>
+                  </md-tab>
+                  <md-tab
+                    label="{{ assignSelectedLanguageValue?.bloodOnCall }}"
+                    *ngIf="screens.includes('Blood Request')"
+                  >
+                    <app-sio-blood-on-call-service></app-sio-blood-on-call-service>
+                  </md-tab>
+                </md-tab-group>
+              </div>
+
+              <div class="item">
+                <app-closure (callClosed)="closeCall()" #closure></app-closure>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 m-b-8 m-t-8">
+        <div class="div-center">
+          <button
+            [disabled]="true"
+            id="cancelLink"
+            type="button"
+            md-raised-button
+            color="primary"
+            class="f-s-18 m-r-5"
+            data-slide-to="1"
+            (click)="openDialog()"
+          >
+            {{ assignSelectedLanguageValue?.cancel }}
+          </button>
+          <button
+            [disabled]="false"
+            id="closureLink"
+            type="button"
+            md-raised-button
+            color="primary"
+            class="f-s-18"
+            data-slide-to="2"
+            (click)="openDialogClosure()"
+          >
+            {{
+              assignSelectedLanguageValue?.closure
+                ? assignSelectedLanguageValue?.closure
+                : "Close Call"
+            }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

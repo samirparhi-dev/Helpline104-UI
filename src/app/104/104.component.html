@@ -1,0 +1,29 @@
+<div *ngIf="loadComponent">
+  <app-104-ro
+    *ngIf="current_role === 'RO' && current_campaign == 'INBOUND'"
+    (roleChanged)="changeCurrentRole($event)"
+    (onBenRegDataSelect)="getSelectedBenDetails($event)"
+  ></app-104-ro>
+  <app-104-hao
+    *ngIf="current_role === 'RO' && current_campaign == 'OUTBOUND'"
+    (roleChanged)="changeCurrentRole($event)"
+  ></app-104-hao>
+  <app-104-co
+    *ngIf="current_role === 'CO'"
+    (roleChanged)="changeCurrentRole($event)"
+  ></app-104-co>
+  <app-104-sio *ngIf="current_role === 'SIO'"></app-104-sio>
+  <app-104-mo
+    *ngIf="current_role === 'MO'"
+    (roleChanged)="changeCurrentRole($event)"
+  ></app-104-mo>
+  <app-104-hao
+    *ngIf="current_role === 'HAO'"
+    (roleChanged)="changeCurrentRole($event)"
+  ></app-104-hao>
+  <app-104-pd *ngIf="current_role === 'PD'"></app-104-pd>
+  <app-104-supervisor
+    *ngIf="current_role === 'Supervisor'"
+  ></app-104-supervisor>
+  <app-104-surveyor *ngIf="current_role === 'Surveyor'"></app-104-surveyor>
+</div>

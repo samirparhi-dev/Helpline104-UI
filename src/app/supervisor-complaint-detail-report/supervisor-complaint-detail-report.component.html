@@ -1,0 +1,38 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-32">
+    <label>
+      <h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.complaintDetailReport}}</h4>
+    </label>
+  </div>
+</div>
+<div class="m-b-10">
+  <form [formGroup]='complaintDetailForm'>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+      <md2-datepicker [openOnFocus]="true" class="width100" restrictTyping placeholder='{{currentLanguageSet?.startDate}}' name='startDate' id='startDate'
+        formControlName='startDate' (change)='checkEndDate()' [max]='maxEndDate' ng-readonly="true" required></md2-datepicker>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+      <md2-datepicker [openOnFocus]="true" class="width100" restrictTyping placeholder='{{currentLanguageSet?.endDate}}' name='endDate' id='endDate' formControlName='endDate'
+        [min]='minEndDate' [max]='maxEndDate' ng-readonly="true" required></md2-datepicker>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf='endDate && endDate != null'>
+      <md-select class="width100" placeholder="{{currentLanguageSet?.feedbackType}}" name='feedbackType' id='feedbackType' formControlName='feedbackTypeID'
+            (change)='getFeedbackNatureTypes()'>
+            <md-option *ngFor='let feedbackType of feedbackTypes' [value]="feedbackType">{{feedbackType.feedbackTypeName}}</md-option>
+          </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf='endDate && endDate != null'>
+      <md-select class="width100" placeholder="{{currentLanguageSet?.feedbackNatureType}}" name='feedbackNatureType' id='feedbackNatureType' formControlName='feedbackNatureID'>
+        <md-option *ngFor='let feedbackNatureType of feedbackNatureTypes' [value]="feedbackNatureType.m_feedbackNature[0].feedbackNatureID">{{feedbackNatureType.m_feedbackNature[0].feedbackNature}}</md-option>
+      </md-select>
+    </div>
+  </form>
+</div>
+<div class='col-xs-12 col-sm-6 col-md- col-lg-12'>
+  <div class="m-t-20 col-xs-12 col-sm-12 col-md-3 col-lg-2 pull-right">
+    <button md-raised-button class="pull-right" color="accent" type="submit" [disabled]="!complaintDetailForm.valid" (click)='downloadReport(true)'>{{currentLanguageSet?.downloadReport}}</button>
+  </div>
+</div>

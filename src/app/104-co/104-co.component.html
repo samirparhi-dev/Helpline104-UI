@@ -1,0 +1,144 @@
+<div *ngIf="current_campaign == 'INBOUND'">
+  <div class="row  ">
+    <div class="col-xs-12 col-sm-12 p-t-10 p-b-10">
+      <div class=" bs-wizard animate-box" style=" position:relative; z-index:1">
+        <div id="two" class="col-xs-2 bs-wizard-step disabled">
+          <div class="text-center hidden-xs hidden-sm font-Light">{{assignSelectedLanguageValue?.provideService}}</div>
+          <div class="text-center hidden-md hidden-lg visible-xs visible-sm font-Light">A S</div>
+          <div class="progress progress-bar-disabled progress-margin">
+            <div class="progress-bar"></div>
+          </div>
+          <a class="bs-wizard-dot cursorPointer active-tab"></a>
+        </div>
+        <div id="four" class="col-xs-2 bs-wizard-step disabled">
+          <div class="text-center hidden-xs hidden-sm font-Light">{{assignSelectedLanguageValue?.closure}}</div>
+          <div class="text-center hidden-md hidden-lg visible-xs visible-sm font-Light">R M M</div>
+          <div class="progress progress-bar-disabled progress-margin">
+            <div class="progress-bar"></div>
+          </div>
+          <a class="bs-wizard-dot cursorPointer"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="">
+    <div class="panel-body card p-a-0 bg-white m-b-25">
+      <div class="container-fluid p-a-0 height-420 overflow-y">
+        <div class=" ">
+          <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false" data-wrap="false">
+            <!-- Carousel indicators -->
+            <!-- Wrapper for carousel items -->
+            <div class="carousel-inner">
+              <div class="item active">
+                <md-tab-group>
+                  <md-tab label="{{assignSelectedLanguageValue?.counsellingSheet}}" *ngIf="screens.includes('Counselling')">
+                    <app-case-sheet ></app-case-sheet>
+                  </md-tab>
+                  <md-tab label="Detailed HIHL CO case sheet " *ngIf="screens.includes('Counselling')">
+                    <app-104-counsellor></app-104-counsellor> 
+                  </md-tab>
+
+                  <md-tab label="{{assignSelectedLanguageValue?.bloodOnCall}}" *ngIf="screens.includes('Blood Request')">
+                    <app-sio-blood-on-call-service ></app-sio-blood-on-call-service>
+                  </md-tab>
+                  <md-tab label="{{assignSelectedLanguageValue?.directoryServices}}" *ngIf="screens.includes('Directory Information Service')">
+                    <app-directory-services ></app-directory-services>
+                  </md-tab>
+                  <md-tab label="{{assignSelectedLanguageValue?.epidemicOutbreak}}" *ngIf="screens.includes('Epidemic Outbreak Service')">
+                    <app-sio-epidemic-outbreak-service ></app-sio-epidemic-outbreak-service>
+                  </md-tab>
+                  <md-tab label="{{assignSelectedLanguageValue?.foodSafety}}" *ngIf="screens.includes('Food safety')">
+                    <app-sio-food-safety-service ></app-sio-food-safety-service>
+                  </md-tab>
+                  <md-tab label="{{assignSelectedLanguageValue?.grievance}}" *ngIf="screens.includes('Grievance')">
+                    <app-sio-grievience-service ></app-sio-grievience-service>
+                  </md-tab>
+                  <md-tab label="{{assignSelectedLanguageValue?.organDonation}}" *ngIf="screens.includes('Organ Donation')">
+                    <app-sio-organ-donation-service ></app-sio-organ-donation-service>
+                  </md-tab>
+                  <md-tab label="{{assignSelectedLanguageValue?.schemes}}" *ngIf="screens.includes('Health schemes')">
+                    <app-sio-scheme-service ></app-sio-scheme-service>
+                  </md-tab>
+                </md-tab-group>
+              </div>
+              <div class="item">
+                <app-closure  (callClosed)="closeCall();" #closure (callContinue)="continueCall()"></app-closure>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 m-b-8 m-t-8">
+        <div class="div-center">
+          <button md-raised-button color="primary" [disabled]="true" id="cancelLink" type="button" class="font-regular f-s-18 m-r-10" data-slide-to="1" (click)="openDialog()">{{assignSelectedLanguageValue?.cancel}}</button>
+          <button md-raised-button color="primary" [disabled]="false" id="closureLink" type="button" class="font-regular f-s-18" data-slide-to="2" (click)="openDialogClosure()">{{assignSelectedLanguageValue?.closure?assignSelectedLanguageValue?.closure:"Close Call"}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="current_campaign == 'OUTBOUND'">
+  <div class="row  ">
+    <div class="col-xs-12 col-sm-12 p-t-10 p-b-10">
+      <div class=" bs-wizard animate-box" style=" position:relative; z-index:1">
+        <div id="two" class="col-xs-2 bs-wizard-step disabled">
+          <div class="text-center hidden-xs hidden-sm font-Light">{{assignSelectedLanguageValue?.provideService}}</div>
+          <div class="text-center hidden-md hidden-lg visible-xs visible-sm font-Light">A S</div>
+          <div class="progress progress-bar-disabled progress-margin">
+            <div class="progress-bar"></div>
+          </div>
+          <a class="bs-wizard-dot cursorPointer active-tab"></a>
+        </div>
+        <div id="four" class="col-xs-2 bs-wizard-step disabled">
+          <div class="text-center hidden-xs hidden-sm font-Light">{{assignSelectedLanguageValue?.closure}}</div>
+          <div class="text-center hidden-md hidden-lg visible-xs visible-sm font-Light">R M M</div>
+          <div class="progress progress-bar-disabled progress-margin">
+            <div class="progress-bar"></div>
+          </div>
+          <a class="bs-wizard-dot cursorPointer"></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+  <div class="">
+    <div class="panel-body card p-a-0 bg-white m-b-25">
+      <div class="container-fluid p-a-0 height-420 overflow-y">
+        <div class="  p-t-20">
+          <div id="myOutCarousel" class="carousel slide" data-ride="app-case-sheetcarousel" data-interval="false" data-wrap="false">
+            <!-- Carousel indicators -->
+            <!-- Wrapper for carousel items -->
+            <div class="carousel-inner">
+              <div class="item active">
+                  <md-tab-group>
+                      <md-tab label="{{assignSelectedLanguageValue?.counsellingSheet}}" *ngIf="screens.includes('Counselling')">
+                          <app-case-sheet ></app-case-sheet>
+                        </md-tab>
+                        <md-tab label="{{assignSelectedLanguageValue?.counsellingSheet}}" *ngIf="screens.includes('Counselling')">
+                          <app-case-sheet ></app-case-sheet>
+                        </md-tab>
+                        <md-tab label="HIHL Counselling" >
+                          <app-104-counsellor ></app-104-counsellor>
+                        </md-tab>
+                    <md-tab label="{{assignSelectedLanguageValue?.bloodOnCall}}" *ngIf="screens.includes('Blood Request')">
+                        <app-sio-blood-on-call-service ></app-sio-blood-on-call-service>
+                      </md-tab>
+                  </md-tab-group>
+              </div>
+              <div class="item">
+                <app-closure  (callClosed)="closeCall();" #closure></app-closure>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-sm-12 m-b-8 m-t-8">
+        <div class="div-center">
+          <button md-raised-button color="primary" [disabled]="true" id="cancelLink" type="button" class="font-regular f-s-18 m-r-10" data-slide-to="1" (click)="openDialog()">{{assignSelectedLanguageValue?.cancel}}</button>
+          <button md-raised-button color="primary" [disabled]="false" id="closureLink" type="button" class="font-regular f-s-18" data-slide-to="2" (click)="openDialogClosure()">{{assignSelectedLanguageValue?.closure?assignSelectedLanguageValue?.closure:"Close Call"}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="title">
+  <md-dialog-header>
+  <div class="modal-header" style="border: none;">
+  <h4 style="color: black;">{{currentLanguageSet?.scheduleAppointment}}</h4>
+    <button style="color: black;" md-icon-button (click)="closePopup()" tooltip="{{currentLanguageSet?.common?.close}}" class="pull-right exit width-20px">
+      <md-icon>close</md-icon>
+    </button>
+  </div>
+  </md-dialog-header>
+  <md-dialog-content style="overflow: hidden;">
+  <form [formGroup]="faciltyAppointmentForm">
+  <div class="col-xs-12 col-sm-6 box" style="margin-top: 10px;">
+    
+    <md-select [style.width]="'100%'"  placeholder="{{currentLanguageSet?.block}}" required
+       formControlName="subDistrict" (change)="getFaciliyMaster()">
+      <md-option *ngFor="let item of blocks" [value]="item.blockName">{{item.blockName}}
+      </md-option>
+    </md-select>
+  
+   </div>
+
+   <div class="col-xs-12 col-sm-6 box" style="margin-top: 10px;">
+        
+          <md-select  required [style.width]="'100%'" placeholder="{{currentLanguageSet?.facility}}" mdInput formControlName="facilityName">
+            <md-option *ngFor="let item of facilityMasterblocks"  (click)="showFaciliyCodeAndCho(item)" [value]="item.facilityName">
+              {{item.facilityName}}
+            </md-option>
+          </md-select>
+    </div>
+  
+    <div class="col-xs-12 col-sm-6 box" style="margin-top: 10px;">
+    <md-input-container class="input-full-width" [style.width]="'100%'">
+      <input type="text" placeholder="{{currentLanguageSet?.facilityCode}}" mdInput id="facilityCode" formControlName="facilityCode" readonly> 
+    </md-input-container>
+    </div>
+   
+
+   
+   <div class="col-xs-12 col-sm-6 box" style="margin-top: 10px;">
+    <md-input-container [style.width]="'100%'">
+     <input type="text" placeholder="{{currentLanguageSet?.choName}}" mdInput id="choName" formControlName="choName" readonly>
+    </md-input-container>
+   </div>
+   
+
+   <!-- <div  class="col-xs-12 col-sm-6 col-md-4 col-lg-3  p-b-1-5">
+    <md2-datepicker
+      formControlName="startDate"
+      placeholder="{{currentLanguageSet?.appointmnetDate}}"
+      (keydown)="blockey($event)"
+      placeholder="{{ assignSelectedLanguageValue?.validFrom }}"
+      required
+      [min]="minDate"
+      [style.width]="'100%'"
+    ></md2-datepicker>
+    <span
+      class="error_text f-s-10 p-l-10"
+      *ngIf="faciltyAppointmentForm.controls.startDate.touched && faciltyAppointmentForm.controls.startDate.errors?.required"
+      >{{ assignSelectedLanguageValue?.startDateisRequired }}</span>
+  
+  </div> -->
+  
+  
+    <div class="col-xs-12 col-sm-6 box" style="margin-top: 10px;">
+      <!-- <select formControlName="appointmentDateTime" [min]="minDate" placeholder="{{currentLanguageSet?.appTime}}" mdInput  formControlName="appointmentDateTime" mdInput name="appointmentDateTime" id="appointmentDateTime">
+        <option value="">Select a time interval</option>
+        <option value="10:15-10:30">10:15 AM - 10:30 AM</option>
+        <option value="10:30-10:45">10:30 AM - 10:45 AM</option>
+        <option value="10:45-11:00">10:45 AM - 11:00 AM</option>
+      </select> -->
+          <!-- <input type="time" id="appTime" placeholder="{{currentLanguageSet?.appTime}}" formControlName="appTime"
+          min="10:00" max="13:00" required > -->
+          <md-input-container [style.width]="'100%'">
+            <input type="datetime-local" required formControlName="appointmentDateTime" [min]="minDate"  mdInput placeholder="{{currentLanguageSet?.appTime}}" name="appointmentDateTime" step="900" (change)="onDateChoose()">
+            </md-input-container>
+            <md-hint *ngIf="enableTimeValidation">{{currentLanguageSet?.pleaseSelectTimeSlotBetween}}</md-hint>
+      
+    </div>
+  <br>
+  
+    <div class="col-xs-12 col-sm-12" style="margin-top: 10px;">
+      <md-checkbox
+           formControlName="checkBox"  (change)="openMobileNumberFeild($event)">
+          <span>
+            {{currentLanguageSet?.altMobileNumber}}</span>
+        </md-checkbox>
+        <div *ngIf="shown">
+        <md-input-container [style.width]="'48%'">
+          <input type="text" maxlength="10" placeholder="{{currentLanguageSet?.entermobileNumber}}" minlength="10" appMobileNumber mdInput  formControlName="altMobileNumber" id="altMobileNumber"/>
+        </md-input-container>
+      </div>
+    </div> 
+  
+  </form>
+</md-dialog-content>
+ <div class="col-xs-12 col-sm-12 p-l-lg-1 p-r-lg-1 m-t-5">
+  <button  [disabled]="!faciltyAppointmentForm.valid || enableTimeValidation" md-raised-button color="accent" class="pull-right" (click)="setAppointmentValue()">{{currentLanguageSet?.submitButton}}</button>
+  <!-- <button  *ngIf="!flagCheckForBlock && !flagcheckForFacility" disabled md-raised-button color="accent" class="pull-right">{{currentLanguageSet?.submitButton}}</button> -->
+</div>
+
+</div>

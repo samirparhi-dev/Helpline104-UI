@@ -1,0 +1,433 @@
+<div class="container-fluid">
+  <div class="row col-xs-12">
+    <h2 class="text-center">{{currentLanguageSet?.examination}}</h2>
+    <hr/>
+  </div>
+  <!-- Symptoms -->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.symptom}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="cancercasesheetBeneficiarySymptoms">
+        <tbody>
+          <tr>
+            <th id ="cancercasesheetShortnessOfBreath"> {{currentLanguageSet?.shortnessOfBreath}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.shortnessOfBreath == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.shortnessOfBreath == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancercasesheetcough2Weeks"> {{currentLanguageSet?.coughTwoWeeks}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.coughgt2Weeks == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.coughgt2Weeks == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancercasesheetBloodInSputum"> {{currentLanguageSet?.bloodInSputum}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.bloodInSputum == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.bloodInSputum == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancercasesheetDifficultyInOpeningMouth"> {{currentLanguageSet?.difficultyInOpeningMouth}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.difficultyInOpeningMouth == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.difficultyInOpeningMouth == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancercasesheetChangeInTheToneOfVoice"> {{currentLanguageSet?.changeInTheToneOfVoice}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.changeInTheToneOfVoice == true ">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.changeInTheToneOfVoice == false ">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancercasesheetNonHealingUlcerOrPatchOrGrowth"> {{currentLanguageSet?.nonHealingUlcerPatchGrowth}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.nonHealingUlcerOrPatchOrGrowth == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.nonHealingUlcerOrPatchOrGrowth == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancercasesheetBreastEnlargement"> {{currentLanguageSet?.breastEnlargement}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.breastEnlargement == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.breastEnlargement == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancercasesheetBloodStainedDischargeFromNipple">{{currentLanguageSet?.bloodStainedDischargeFromNipple}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.bloodStainedDischargeFromNipple == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.bloodStainedDischargeFromNipple == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr *ngIf="beneficiaryDetails && beneficiaryDetails.genderName == 'Female'">
+            <th id ="cancercasesheetVaginalBleedingBetweenPeriods"> {{currentLanguageSet?.vaginalBleedingBetweenPeriods}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.vaginalBleedingBetweenPeriods == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.vaginalBleedingBetweenPeriods == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancercasesheetFoulSmellingVaginalDischarge"> {{currentLanguageSet?.foulSmellingVaginalDischarge}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.foulSmellingVaginalDischarge == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.foulSmellingVaginalDischarge == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancercasesheetChangeInShapeAndSizeOfBreasts"> {{currentLanguageSet?.changeInShapeAndSizeOfBreasts}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.changeInShapeAndSizeOfBreasts == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.changeInShapeAndSizeOfBreasts == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancercasesheetLumpInTheBreast"> {{currentLanguageSet?.lumpInBreast}}:</th>
+            <td>
+              <span *ngIf="signsAndSymptoms?.lumpInTheBreast == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="signsAndSymptoms?.lumpInTheBreast == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row m-t-10" *ngIf="signsAndSymptoms?.lymphNode_Enlarged == true">
+    <div class="col-xs-12 ">
+      <h5>{{currentLanguageSet?.lymphNodes}}</h5>
+      <div class="row m-t-10">
+        <div class="col-xs-12 ">
+          <table class="table table-striped table-bordered" aria-describedby="cancercasesheetLymphNodesEnlarged">
+            <thead>
+              <tr>
+                <th id ="cancerCasesheetLymphSizeRight">{{currentLanguageSet?.sizeRight}}</th>
+                <th id ="cancerCasesheetLymphMobilityRight">{{currentLanguageSet?.mobilityRight}}</th>
+                <th id ="cancerCasesheetLymphNodeName">{{currentLanguageSet?.lymphNodeName}}</th>
+                <th id ="cancerCasesheetLymphMobilityLeft">{{currentLanguageSet?.mobilityLeft}}</th>
+                <th id ="cancerCasesheetLymphSizeLeft">{{currentLanguageSet?.sizeLeft}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let lymphNodes of BenCancerLymphNodeDetails">
+                <td>{{lymphNodes.size_Right}}</td>
+                <td>{{ (lymphNodes.mobility_Right == undefined) ? null : (lymphNodes.mobility_Right ? '+' : '-') }}</td>
+                <td>{{lymphNodes.lymphNodeName}}</td>
+                <td>{{(lymphNodes.mobility_Left == undefined) ? null : (lymphNodes.mobility_Left ? '+' : '-')}}</td>
+                <td>{{lymphNodes.size_Left}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Oral Examination -->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.oralExamination}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="cancerCasesheetOralExamination">
+        <tbody>
+          <tr>
+            <th id ="cancerCasesheetLimitedMouthOpening">{{currentLanguageSet?.limitedMouthOpeningTrismus}}:</th>
+            <td>
+              {{oralExamination?.limitedMouthOpening}}
+            </td>
+            <th id ="cancerCasesheetPremalignantLesions">{{currentLanguageSet?.premalignantLesions}}:</th>
+            <td>
+              <span *ngIf="oralExamination?.premalignantLesions == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="oralExamination?.premalignantLesions == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetPreMalignantLesionType">{{currentLanguageSet?.typeOfPremalignantLesions}}:</th>
+            <td>
+              {{oralExamination?.preMalignantLesionType}}
+            </td>
+            <th id ="cancerCasesheetProlongedIrritation">{{currentLanguageSet?.prolongedIrritationDueToSharpDenturesFillingsOrTeeth}}:</th>
+            <td>
+              <span *ngIf="oralExamination?.prolongedIrritation == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="oralExamination?.prolongedIrritation == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetChronicBurningSensation">{{currentLanguageSet?.chronicBurningSensationInTheTongueCheek}}:</th>
+            <td>
+              <span *ngIf="oralExamination?.chronicBurningSensation == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="oralExamination?.chronicBurningSensation == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancerCasesheetOralExaminationSpace">&nbsp;</th>
+            <td>&nbsp;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-xs-12">
+      <image-to-canvas [imgUrl]="oralImageUrl" [annotatedMarker]="imageAnnotatedData && getImageAnnotation(3)"></image-to-canvas>
+    </div>
+  </div>
+
+  <!-- Breast Examination -->
+  <div class="row m-t-10" *ngIf="(beneficiaryDetails && beneficiaryDetails.genderName == 'Female') || (signsAndSymptoms?.breastEnlargement == true)">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.breastExamination}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="cancerCasesheetBreastExamination">
+        <tbody>
+          <tr *ngIf="beneficiaryDetails && beneficiaryDetails.genderName == 'Female'">
+            <th id ="cancerCasesheetEverBreastFed">{{currentLanguageSet?.everBreastFedAChild}}:</th>
+            <td>
+              <span *ngIf="breastExamination?.everBreastFed == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="breastExamination?.everBreastFed == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancerCasesheetBreastFeedingDurationGTE6months">{{currentLanguageSet?.durationOfBreastFeeding}}:</th>
+            <td>
+              <span *ngIf="breastExamination?.breastFeedingDurationGTE6months == true">Less than 6 months</span>
+              <span *ngIf="breastExamination?.breastFeedingDurationGTE6months == false">More than 6 months</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetBreastsAppearNormal">{{currentLanguageSet?.doTheBreastsAppearNormal}}:</th>
+            <td>
+              <span *ngIf="breastExamination?.breastsAppear_Normal == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="breastExamination?.breastsAppear_Normal == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancerCasesheetRashOnBreast">{{currentLanguageSet?.anyRashOnTheBreast}}:</th>
+            <td>
+              <span *ngIf="breastExamination?.rashOnBreast == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="breastExamination?.rashOnBreast == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetDimplingSkinOnBreast">{{currentLanguageSet?.anyDimplingOfSkinOnTheBreast}}:</th>
+            <td>
+              <span *ngIf="breastExamination?.dimplingSkinOnBreast == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="breastExamination?.dimplingSkinOnBreast == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancerCasesheetDischargeFromNipple">{{currentLanguageSet?.anyDischargeFromTheNipple}}:</th>
+            <td>
+              <span *ngIf="breastExamination?.dischargeFromNipple == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="breastExamination?.dischargeFromNipple == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetPeaudOrange">{{currentLanguageSet?.peaudOrange}}:</th>
+            <td>
+              <span *ngIf="breastExamination?.peaudOrange == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="breastExamination?.peaudOrange == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancerCasesheetLumpInBreast">{{currentLanguageSet?.anyLumpInBreast}}:</th>
+            <td>
+              <span *ngIf="breastExamination?.lumpInBreast == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="breastExamination?.lumpInBreast == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetLumpSize">{{currentLanguageSet?.lumpSize}}:</th>
+            <td>{{ breastExamination?.lumpSize }}</td>
+            <th id ="cancerCasesheetLumpTexture">{{currentLanguageSet?.lumpTexture}}:</th>
+            <td>{{breastExamination?.lumpTexture}}</td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetLumpShape">{{currentLanguageSet?.lumpShape}}:</th>
+            <td>{{ breastExamination?.lumpShape }}</td>
+            <th id ="cancerCasesheetlumpShapeSpace">&nbsp;</th>
+            <td>&nbsp;</td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetReferredToMammogram">{{currentLanguageSet?.referredToMammogram}}:</th>
+            <td>
+              <span *ngIf="breastExamination?.referredToMammogram == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="breastExamination?.referredToMammogram == false">{{currentLanguageSet?.no}}</span>
+            </td>
+            <th id ="cancerCasesheetcancerCasesheetReferredToMammogramSpace">&nbsp;</th>
+            <td>&nbsp;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-xs-12">
+      <image-to-canvas [imgUrl]="breastImageUrl" [annotatedMarker]="imageAnnotatedData && getImageAnnotation(2)"></image-to-canvas>
+    </div>
+  </div>
+
+
+  <!-- Abdominal Examination -->
+  <div class="row m-t-10">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.abdominalExamination}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="cancerCasesheetAbdominalExamination">
+        <tbody>
+          <tr>
+            <th id ="cancerCasesheetAbdominalInspection">{{currentLanguageSet?.abdominalInspection}}:</th>
+            <td>
+              <span *ngIf="abdominalExamination?.abdominalInspection_Normal == true ">{{currentLanguageSet?.normal}}</span>
+              <span *ngIf="abdominalExamination?.abdominalInspection_Normal == false">{{currentLanguageSet?.abnormal}}</span>
+            </td>
+            <th id ="cancerCasesheetLiver">{{currentLanguageSet?.liver}}:</th>
+            <td>
+              {{abdominalExamination?.liver}}
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetAscites">{{currentLanguageSet?.ascites}}:</th>
+            <td>
+              <span *ngIf="abdominalExamination?.ascites_Present == true ">{{currentLanguageSet?.present}}</span>
+              <span *ngIf="abdominalExamination?.ascites_Present == false">{{currentLanguageSet?.absent}}</span>
+            </td>
+            <th id ="cancerCasesheetAnyOtherMassPresent">{{currentLanguageSet?.anyOtherMass}}:</th>
+            <td>
+              <span *ngIf="abdominalExamination?.anyOtherMass_Present == true ">{{currentLanguageSet?.present}}</span>
+              <span *ngIf="abdominalExamination?.anyOtherMass_Present == false ">{{currentLanguageSet?.absent}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetLymphNodes">{{currentLanguageSet?.lymphNodes}}:</th>
+            <td>
+              <span *ngIf="abdominalExamination?.lymphNodes_Enlarged == true ">{{currentLanguageSet?.enlarged}}</span>
+              <span *ngIf="abdominalExamination?.lymphNodes_Enlarged == false ">{{currentLanguageSet?.notEnlarged}}</span>
+            </td>
+            <th id ="cancerCasesheetLymphNodesSpace">&nbsp;</th>
+            <td>&nbsp;</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-striped table-bordered" aria-describedby="cancerScreeningCasesheetLymphNode">
+        <thead>
+          <tr>
+            <th id ="cancerCasesheetRightPalpable">{{currentLanguageSet?.rightPalpable}}</th>
+            <th id ="cancerCasesheetLymphNode">{{currentLanguageSet?.lymphNode}}</th>
+            <th id ="cancerCasesheetLeftPalpable">{{currentLanguageSet?.leftPalpable}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              {{((abdominalExamination?.lymphNode_Inguinal_Right == undefined)? null : (abdominalExamination?.lymphNode_Inguinal_Right
+              ? '+' : '-'))}}
+            </td>
+            <td>{{currentLanguageSet?.inguinal}}</td>
+            <td>
+              {{(abdominalExamination?.lymphNode_Inguinal_Left == undefined)? null :(abdominalExamination?.lymphNode_Inguinal_Left ? '+'
+              : '-')}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {{(abdominalExamination?.lymphNode_ExternalIliac_Right == undefined)? null:(abdominalExamination?.lymphNode_ExternalIliac_Right
+              ? '+' : '-')}}
+            </td>
+            <td>{{currentLanguageSet?.externalIliac}}</td>
+            <td>
+              {{(abdominalExamination?.lymphNode_ExternalIliac_Left == undefined)? null :(abdominalExamination?.lymphNode_ExternalIliac_Left
+              ? '+' : '-')}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              {{(abdominalExamination?.lymphNode_ParaAortic_Right == undefined)? null:(abdominalExamination?.lymphNode_ParaAortic_Right
+              ? '+' : '-')}}
+            </td>
+            <td>{{currentLanguageSet?.paraAortic}}</td>
+            <td>
+              {{(abdominalExamination?.lymphNode_ParaAortic_Left == undefined)? null:(abdominalExamination?.lymphNode_ParaAortic_Left ?
+              '+' : '-')}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="col-xs-12">
+      <image-to-canvas [imgUrl]="abdominalImageUrl" [annotatedMarker]="imageAnnotatedData && getImageAnnotation(1)"></image-to-canvas>
+    </div>
+  </div>
+
+
+  <!-- Gynecological Examination -->
+  <div class="row m-t-10" *ngIf="beneficiaryDetails && beneficiaryDetails.genderName == 'Female'">
+    <div class="col-xs-12">
+      <h4>{{currentLanguageSet?.gynecologicalExamination}}</h4>
+    </div>
+    <div class="col-xs-12">
+      <table class="table table-no-border casesheet-table" aria-describedby="cancerCasesheetGynecologicalExamination">
+        <tbody>
+          <tr>
+            <th id ="cancerCasesheetAppearanceOfCervix">{{currentLanguageSet?.appearanceOfTheCervixUnderAceticAcid}}:</th>
+            <td>
+              {{gynecologicalExamination?.appearanceOfCervix}}
+            </td>
+            <th id ="cancerCasesheetTypeOfLesion">{{currentLanguageSet?.typeOfLesionIfAny}}:</th>
+            <td>
+              {{gynecologicalExamination?.typeOfLesion}}
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetVulvalInvolvement">{{currentLanguageSet?.vulvalInvolvement}}:</th>
+            <td>
+              <span *ngIf="gynecologicalExamination?.vulvalInvolvement == true">{{currentLanguageSet?.involved}}</span>
+              <span *ngIf="gynecologicalExamination?.vulvalInvolvement == false"> {{currentLanguageSet?.notInvolved}}</span>
+            </td>
+            <th id ="cancerCasesheetVaginalInvolvement">{{currentLanguageSet?.vaginalInvolvement}}:</th>
+            <td>
+              <span *ngIf="gynecologicalExamination?.vaginalInvolvement == true">{{currentLanguageSet?.involved}}</span>
+              <span *ngIf="gynecologicalExamination?.vaginalInvolvement == false"> {{currentLanguageSet?.notInvolved}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetUterus">{{currentLanguageSet?.uterus}}:</th>
+            <td>
+              <span *ngIf="gynecologicalExamination?.uterus_Normal == true">{{currentLanguageSet?.normal}}</span>
+              <span *ngIf="gynecologicalExamination?.uterus_Normal == false">{{currentLanguageSet?.enlarged}}</span>
+            </td>
+            <th id ="cancerCasesheetSufferedFromRTIOrSTI">{{currentLanguageSet?.sufferedFromAnyRtiSti}}:</th>
+            <td>
+              <span *ngIf="gynecologicalExamination?.sufferedFromRTIOrSTI == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="gynecologicalExamination?.sufferedFromRTIOrSTI == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+
+          <tr>
+            <th id ="cancerCasesheetSpecify">{{currentLanguageSet?.specify}}:</th>
+            <td>{{gynecologicalExamination?.rTIOrSTIDetail}}</td>
+            <th id ="cancerCasesheetExperiencedPostCoitalBleeding">{{currentLanguageSet?.experiencedPostCoitalBleeding}}:</th>
+            <td>
+              <span *ngIf="gynecologicalExamination?.experiencedPostCoitalBleeding == true">{{currentLanguageSet?.yes}}</span>
+              <span *ngIf="gynecologicalExamination?.experiencedPostCoitalBleeding == false">{{currentLanguageSet?.no}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-xs-12">
+      <image-to-canvas [imgUrl]="gynecologicalImageUrl" [annotatedMarker]="imageAnnotatedData && getImageAnnotation(4)"></image-to-canvas>
+    </div>
+  </div>
+</div>

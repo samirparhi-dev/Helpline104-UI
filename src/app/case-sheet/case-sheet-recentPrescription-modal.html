@@ -1,0 +1,70 @@
+<div class="headerDiv">
+    <md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="{{currentLanguageSet?.close}}" role="img" aria-hidden="true"
+      (click)="dialogReff.close()">
+      clear
+    </md-icon>
+    <h4 class="popupHeader">{{currentLanguageSet?.recentPrescriptionHistoryLastFiveDays}}</h4>
+  
+  </div>
+<md-dialog-content>
+<div class="table-responsive">
+<table class="table table-striped" [md2Data]="data.prescription" #md2="md2DataTable" [rowsPerPage]="6" aria-describedby="beneficiaryPrescriptionCasesheet">
+    <thead>
+        <tr>
+            <th id ="casesheetBeneficiaryPrescriptionID">{{currentLanguageSet?.prescriptionId}}</th>
+            <th id ="casesheetBeneficiaryResend">{{currentLanguageSet?.resend}}</th>
+            <th id ="casesheetBeneficiaryPrescriptionGivenInformation">{{currentLanguageSet?.provisionalDiagnosis}}/{{currentLanguageSet?.informationGiven}}</th>
+            <th id ="casesheetBeneficiaryPrescriptionDrug">{{currentLanguageSet?.drug}}</th>
+            <th id ="casesheetBeneficiaryPrescriptionStrength">{{currentLanguageSet?.strength}}</th>
+            <th id ="casesheetBeneficiaryPrescriptionFrequency">{{currentLanguageSet?.frequency}}</th>
+            <th id ="casesheetBeneficiaryPrescriptionNoOfDays">{{currentLanguageSet?.numberofDays}}</th>
+            <th id ="casesheetBeneficiaryPrescriptionRemarks">{{currentLanguageSet?.remarks}}</th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let prescription of md2.data let i = index ">
+        <tr *ngFor="let p of prescription.prescribedDrugs">
+            <td>
+                {{prescription.prescriptionID}}
+            </td>
+            <td>
+                <md-checkbox color="primary" name={{prescription.prescriptionID}}  (change)="toggleSms($event,p.prescribedDrugID,p)">
+                </md-checkbox>
+            </td>
+            <td>{{prescription.diagnosisProvided}}</td>
+            <td>{{p.drugName}}</td>
+            <td>{{p.dosage}}</td>
+            <td>{{p.frequency}}</td>
+            <td>{{p.noOfDays}}</td>
+            <td>{{prescription.remarks}}</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="7">
+                <md2-pagination></md2-pagination>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="1">
+                <md-checkbox color="primary" class="m-t-5" name="altNum" [(ngModel)]="altNum">
+                    {{currentLanguageSet?.alternateNumber}} :
+                </md-checkbox>
+            </td>
+            <td colspan="1">
+                <md-input-container *ngIf="altNum" appMobileNumber class="m-t--15">
+                    <input mdInput class="pull-right" autocomplete="off" type="text" required minlength="10" maxlength="10" placeholder="{{currentLanguageSet?.mobileNumber}}"
+                        name="mobileNumber" (keyup)="mobileNum(mobileNumber)" [(ngModel)]="mobileNumber" #phnNum="ngModel">
+                    <md-hint *ngIf="phnNum.invalid && phnNum.touched">
+                        <span class="error_text">{{currentLanguageSet?.enterTenDigitMobileNumber}}</span>
+                    </md-hint>
+                </md-input-container>
+
+            </td>
+            <td colspan="1">
+                <button [disabled]="(altNum && !validNumber) || !smsFlag" md-raised-button color="accent" type="button" class="pull-right" (click)="sendSMS(mobileNumber)">{{currentLanguageSet?.sendSms}}</button>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+</div>
+</md-dialog-content>

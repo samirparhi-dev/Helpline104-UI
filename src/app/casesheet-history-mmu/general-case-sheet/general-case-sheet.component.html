@@ -1,0 +1,29 @@
+<div class="headerDiv">
+        <md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="Close" role="img" aria-hidden="true"
+          (click)="dialogReff.close()">
+          clear
+        </md-icon>
+        <h4 class="popupHeader">{{assignSelectedLanguageValue?.history}}</h4>
+      
+      </div>
+      <md-dialog-content>
+<div class="p-t-10 p-b-10">
+    <app-doctor-diagnosis-case-sheet [data]="caseSheetData" [visitCate]="visitCategory"></app-doctor-diagnosis-case-sheet>
+    <div class="page-break" *ngIf="visitCategory != 'General OPD (QC)'"></div>
+    <ng-container *ngIf="printPagePreviewSelect?.caseSheetANC">
+        <app-anc-case-sheet *ngIf="visitCategory == 'ANC'" [data]="caseSheetData"></app-anc-case-sheet>
+        <div class="page-break"></div>
+    </ng-container>
+    <ng-container *ngIf="printPagePreviewSelect?.caseSheetPNC">
+        <app-pnc-case-sheet *ngIf="visitCategory == 'PNC'" [data]="caseSheetData"></app-pnc-case-sheet>
+        <div class="page-break"></div>
+    </ng-container>
+    <ng-container *ngIf="printPagePreviewSelect?.caseSheetHistory">
+        <app-history-case-sheet *ngIf="visitCategory != 'General OPD (QC)'" [data]="caseSheetData"></app-history-case-sheet>
+        <div class="page-break"></div>
+    </ng-container>
+    <ng-container *ngIf="printPagePreviewSelect?.caseSheetExamination">
+        <app-examination-case-sheet *ngIf="visitCategory != 'NCD care' && visitCategory != 'General OPD (QC)'" [data]="caseSheetData" [visitCate]="visitCategory"></app-examination-case-sheet>
+    </ng-container>
+</div>
+</md-dialog-content>

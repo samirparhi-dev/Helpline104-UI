@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <label>
+      <h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.updateBloodUrl}}</h4>
+    </label>
+  </div>
+  <form #bloodUrl="ngForm" autocomplete="off">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="!show">
+      <h5>{{currentLanguageSet?.currentUrl}}:
+        <a class="m-l-10 m-r-15" href="{{existing_bloodBankUrl}}" target="_blank"> {{existing_bloodBankUrl}} </a>
+
+        <md-icon mdTooltip="{{currentLanguageSet?.edit}}" class="mdicon mat-icon material-icons icon" role="img" aria-hidden="true" style="cursor: pointer" (click)="showDiv(true)">edit</md-icon>
+      </h5>
+    </div>
+    <div *ngIf="show">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md-input-container class="width100">
+          <input  bloodBankUrlValidator  type="text" [pattern]="website_expression" required mdInput placeholder="{{currentLanguageSet?.bloodBankURL}}" #url="ngModel" name="bloodBankUrl"
+            [(ngModel)]="bloodBankUrl" minlength="">
+          <md-hint *ngIf="url.hasError('pattern') && url.touched" class="error_text">
+            {{currentLanguageSet?.invalidUrl}}
+          </md-hint>
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-10">
+        <button [disabled]="url.hasError('pattern')" md-raised-button color="accent" class="pull-right" (click)="updateURL(bloodUrl.value)">{{currentLanguageSet?.update}}</button>
+        <button md-raised-button color="primary" class="pull-right m-r-10" (click)="showDiv(false)">{{currentLanguageSet?.cancel}}</button>
+      </div>
+    </div>
+  </form>
+</div>

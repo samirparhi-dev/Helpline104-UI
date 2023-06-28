@@ -1,0 +1,210 @@
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <h4 *ngIf="showFormCondition" class="pull-left"><strong>{{currentLanguageSet?.grievanceService}}</strong></h4>
+      <button md-raised-button color="accent" *ngIf="showFormCondition" type="button" class="pull-right m-t-5 p-l-r-38 font-regular f-s-18 "
+        (click)="showTable()">{{currentLanguageSet?.history}}</button>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="showFormCondition">
+        <label class="f-s-n-b m-r-15 f-s-16" for="calledEarlier">{{currentLanguageSet?.grievanceRaisedBy}}</label>
+        <md-radio-group name="generalPublic" [(ngModel)]="is_a_healthcare_worker" (change)="checkHealthCareWorker(is_a_healthcare_worker)">
+          <md-radio-button color="primary" value="Yes">{{currentLanguageSet?.healthcareWorker}}</md-radio-button>
+          <md-radio-button class="m-l-10" color="primary" value="No" >{{currentLanguageSet?.generalPublic}}</md-radio-button>
+        </md-radio-group>
+    </div>
+    <div class="col-xs-12 col-sm-12 p-a-0" *ngIf="showFormCondition">
+      <form #feedbackForm="ngForm" id="feedbckForm" autocomplete="off">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.natureOfComplaint}}" [style.width]="'100%'" [(ngModel)]="feedbackType"
+              name="feedbackType" (change)="getCategory(feedbackType)" required #natureComplaint="ngModel">
+              <md-option *ngFor="let feedbackType of feedbackTypes" [value]="feedbackType.m_feedbackNature[0].feedbackNatureID">
+                {{feedbackType.m_feedbackNature[0].feedbackNature}}
+              </md-option>
+            </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.selectCategory}}" [disabled]="categoryDisableFlag"  [style.width]="'100%'" [(ngModel)]="category"
+              name="category" (change)="getSubCategory(category)">
+              <md-option *ngFor="let cat of categories" [value]="cat.categoryID">
+                {{cat.categoryName}}
+              </md-option>
+            </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.subcategory}}" [disabled]="categoryDisableFlag"  [style.width]="'100%'" [(ngModel)]="subcategory"
+              name="subcategory">
+              <md-option *ngFor="let subcat of subcategories" [value]="subcat.subCategoryID">
+                {{subcat.subCategoryName}}
+              </md-option>
+            </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.state}}" required [style.width]="'100%'" [(ngModel)]="state"
+              name="state" (change)="GetDistricts(state);GetInstitutes()" #stateSelected="ngModel">
+              <md-option *ngFor="let state of states" [value]="state.stateID">
+                {{state.stateName}}
+              </md-option>
+            </md-select>
+        </div>
+
+
+         <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.district}}" required [style.width]="'100%'" [(ngModel)]="district"
+              name="district" (change)="GetTaluks(district)" #districtSelected="ngModel">
+              <md-option *ngFor="let district of districts" [value]="district.districtID">{{district.districtName}}
+              </md-option>
+            </md-select>
+        </div>
+
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.subDistrict}}" required [style.width]="'100%'" [(ngModel)]="taluk"
+              name="taluk" (change)="GetBlocks(taluk)">
+              <md-option *ngFor="let taluk of taluks" [value]="taluk.blockID">{{taluk.blockName}}
+              </md-option>
+            </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.village}}" required [style.width]="'100%'" [(ngModel)]="sdtb" name="sdtb"
+             >
+              <md-option *ngFor="let block of blocks" [value]="block.districtBranchID">{{block.villageName}}
+              </md-option>
+            </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select required placeholder="{{currentLanguageSet?.institutionType}}" [style.width]="'100%'" [(ngModel)]="institutionId"
+              name="institutionId" (change)="GetInstitutesName(institutionId)">
+              <md-option *ngFor="let institute of institutes" [value]="institute.institutionTypeID">{{institute.institutionType}}
+              </md-option>
+            </md-select>
+          
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.institutionName}}" [style.width]="'100%'" [(ngModel)]="institutionName"
+              name="institutionName">
+              <md-option *ngFor="let instituteName of institutesName" [value]="instituteName">{{instituteName.institutionName}}
+              </md-option>
+            </md-select>
+        </div>
+       
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.designation}}" [style.width]="'100%'" [(ngModel)]="designation"
+              name="designation">
+              <md-option *ngFor="let designation_item of designations | OrderBy : 'designationName'" value="{{designation_item.designationID}}">{{designation_item.designationName}}
+              </md-option>
+            </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.severity}}" [style.width]="'100%'" [(ngModel)]="severity"
+              name="severity">
+              <md-option *ngFor="let feedbackSeverity of feedbackSeverities" value="{{feedbackSeverity.severityID}}">{{feedbackSeverity.severityTypeName}}
+              </md-option>
+            </md-select>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md2-datepicker name="doi" [style.width]="'100%'" [max]="maxDate" placeholder="{{currentLanguageSet?.dateOfIncidence}}"
+            [(ngModel)]="doi" [mode]='auto' [format]="dd/MM/yyyy" #minDateControl="ngModel" (keydown)="preventTyping($event)"></md2-datepicker>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          
+          
+                    <md-input-container appNameSpace [style.width]="'100%'">
+                      <input required mdInput maxlength="25" placeholder="{{currentLanguageSet?.grievanceAgainst}}" name="grievanceAgainst" [(ngModel)]="grievanceAgainst">
+                    </md-input-container>
+          
+                  </div>
+                  <div class="clearfix"></div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+          <md-input-container [style.width]="'100%'">
+            <textarea mdInput textAreaValidator  placeholder="{{currentLanguageSet?.grievienceDescription}}" rows="2" name="feedbackDescription"
+              maxlength="300" [(ngModel)]="feedbackDescription" (keyup)="updateCount()" #feedback="ngModel"></textarea>
+            <md-hint align="end">
+              <span>{{count}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div class="col-xs-6 col-sm-6">
+          <button md-raised-button color="accent" [disabled]="feedbackForm.invalid"
+            type="button " class="pull-right p-l-r-38 font-regular f-s-18 m-t-23 m-b-3" (click)="submitFeedback(feedbackForm.value)">{{currentLanguageSet?.register}}</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-xs-12 col-sm-12" *ngIf="showTableCondition ">
+      <div class="row" *ngIf="current_role === 'HAO'">
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-30 m-l-10">
+          <md-radio-group class="" [(ngModel)]="searchType" (change)="filterTerm = '';onSearchChange(searchType);">
+            <md-radio-button color="primary" value="GrievanceId" checked="checked" name="GrievanceId"><strong>{{currentLanguageSet?.grievanceId}}</strong>
+            </md-radio-button>
+            <md-radio-button class="m-l-10" color="primary" value="MobileNumber" name="MobileNumber"><strong>{{currentLanguageSet?.mobileNumber}}</strong>
+            </md-radio-button>
+          </md-radio-group>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4 ">
+          <form #GrievanceSearch="ngForm">         
+            <md-input-container class="m-t-10" style="width: 60%;" *ngIf="searchType === 'GrievanceId'">
+              <input mdInput searchIdValidator placeholder="{{currentLanguageSet?.grievanceId}}" name="search" [(ngModel)]="filterTerm" [minlength]="minLength" [maxlength]="maxLength" #search="ngModel" autocomplete="off">
+            </md-input-container>        
+            <md-input-container class="m-t-10" style="width: 60%;" *ngIf="searchType === 'MobileNumber'" appMobileNumber>
+              <input mdInput pattern="^[0-9]*$" placeholder="{{currentLanguageSet?.mobileNumber}}" name="search" [(ngModel)]="filterTerm" [minlength]="minLength" [maxlength]="maxLength" #search="ngModel" autocomplete="off">
+            </md-input-container>     
+          <button md-mini-fab color="primary" class="m-r-5 m-l-5" (click)="filterFeedbackList(filterTerm)" [disabled]="GrievanceSearch.invalid">
+            <md-icon mdSuffix class="mat-icon material-icons" mdTooltip="{{currentLanguageSet?.search}}" role="img" aria-hidden="true"
+              style="cursor: pointer">search</md-icon>
+          </button>
+          <button md-raised-button color="accent" [disabled]="viewALL" type="button" class="m-l-10"
+            (click)="revertFullTable()">{{currentLanguageSet?.clear}}</button>
+          </form>
+        </div>
+      </div>
+      <h4><strong>{{currentLanguageSet?.grievanceRecord}}</strong></h4>
+      <div class="table-responsive ">
+
+        <table class="table table-striped" [md2Data]="filteredFeedbackList" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="sioGrievience">
+          <thead>
+            <tr>
+              <th id="sioGrievienceFeedbackID" md2SortBy="feedbackID">{{currentLanguageSet?.grievanceId}}</th>
+              <th id="sioGrievienceDescription">{{currentLanguageSet?.description}}</th>
+              <th id="sioGrievienceSeverity">{{currentLanguageSet?.severity}}</th>
+              <th id="sioGrievienceFeedbackTypeName" md2SortBy="feedbackTypeName">{{currentLanguageSet?.feedbackType}}</th>
+              <th id="sioGrievienceFeedback_nature">{{currentLanguageSet?.feedbackNature}}</th>
+              <th id="sioGrievienceCreatedBy" md2SortBy="createdBy">{{currentLanguageSet?.agent}}</th>
+              <th id="sioGrievienceFeedbackStatusName" md2SortBy="feedbackStatusName">{{currentLanguageSet?.status}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="md2.data.length == 0">
+              <td class="record-not-found" colspan="7">{{currentLanguageSet?.noRecordsFound}}</td>
+            </tr>
+            <tr *ngFor="let i of md2.data">
+              <td>{{i?.requestID ? i.requestID : i?.feedbackID}}</td>
+              <td>{{i?.feedback}}</td>
+              <td>{{i?.severity?.severityTypeName}}</td>
+              <td>{{i.feedbackType.feedbackTypeName}}</td>
+              <td>{{i.feedbackNatureDetail?.feedbackNature}}</td>
+              <td>{{i.createdBy}}</td>
+              <td>{{i.feedbackStatus.feedbackStatus}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">
+                <md2-pagination></md2-pagination>
+              </td>
+              <td colspan="3" class="p-r-0">
+                <button md-raised-button color="primary" class="pull-right" (click)="showForm() ">{{currentLanguageSet?.addGrievance}}</button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

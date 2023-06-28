@@ -1,0 +1,62 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+<div class="container-fluid">
+<div class="dashboard-m-t-45">
+    <div class="row" (click)="minimizeBar()">
+        <div class="leftMenu pull-left width-5" (mouseleave)="hamburgerHoverOut()">
+            <ul class="leftMenuList">
+                <li class="p-t-15" *ngIf="current_role=='Supervisor' || current_role=='Surveyor'" routerLink="/MultiRoleScreenComponent/InnerpageComponent" >
+                    <a class="p-l-m-t-22">
+                        <div data-placement="right" data-toggle="tooltip" class="mdicon material-icons" (click)="hamburgerClick()" aria-hidden="true"  mdTooltip="{{assignSelectedLanguageValue?.activityArea}}">dashboard</div>
+  
+                      </a>
+                </li>
+                <li class="p-t-15" (click)="routeToRoleSelection()">
+                    <a class="p-l-m-t-22">
+                        <div data-placement="right"  data-toggle="tooltip" mdTooltip="{{assignSelectedLanguageValue?.switchRole}}" class="mdicon material-icons" (click)="hamburgerClick()" aria-hidden="true" >compare_arrows</div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="dashboard-content-area" class="col-xs-12 col-sm-12 pull-left width-95 p-b-lg-30 p-b-sm-30">
+
+            <div class="p-t-5">
+              <div class="pull-left ">
+                <dashboard-user-id (click)="testEvent()" *ngIf="current_role!='Supervisor'"></dashboard-user-id>
+              </div>
+              <div class="pull-right p-t-10 p-b-10" *ngIf="current_role=='MO' || current_role=='CO' || current_role=='SIO' || current_role=='HAO' || hasHAOPrivilege || current_role == 'PD'">
+                <md-radio-group name=" inOutBound" (change)="campaign(inOutBound)" [(ngModel)]="inOutBound">
+                  <md-radio-button color="primary" value='1'>{{assignSelectedLanguageValue?.inbound}}</md-radio-button>
+                  <md-radio-button color="primary" value='0'>{{assignSelectedLanguageValue?.outbound}}</md-radio-button>
+                </md-radio-group>
+              </div>
+              <span class="clearfix"></span> 
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12">
+                  <app-call-statistics></app-call-statistics>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-3 p-r-lg-0">
+                  <alerts-notifications [alertRefresh]="alertRefresh"></alerts-notifications>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-9">
+                  <app-dashboard-reports></app-dashboard-reports>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 p-r-lg-0">
+                  <activity-this-week></activity-this-week>
+                </div>
+                <div class="col-xs-12 col-sm-6 ">
+                  <rating></rating>
+                </div>
+            </div>
+              
+        </div>
+    </div>
+</div>

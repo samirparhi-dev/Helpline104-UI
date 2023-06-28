@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <label>
+      <h4 class="f-s-b m-t-20 m-b-10">{{assignSelectedLanguageValue?.outboundCallAllocation}}</h4>
+    </label>
+  </div>
+</div>
+  <form #searchForm="ngForm" autocomplete="off">
+    <div class="row m-b-30">
+      <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
+          <md2-datepicker class="width100" name="startDate" placeholder="{{assignSelectedLanguageValue?.startDate}}" (keydown)="blockKey($event)" [(ngModel)]="start_date" #startDate [max]="maxStartDate" (change)="getMinValueForEndDate(start_date)" required></md2-datepicker>
+          <span class="error_text f-s-10 p-l-10" *ngIf="startDate.touched && startDate.errors?.required">{{assignSelectedLanguageValue?.dateIsRequired}}</span>
+          <span class="error_text f-s-10 p-l-10" *ngIf="startDate.touched && startDate.errors?.min">{{assignSelectedLanguageValue?.minStartDateIsEndDate30days}}</span>
+        </div>
+        <div class="col-xs-10 col-sm-5 col-md-4 col-lg-3">
+          <md2-datepicker class="width100" name="endDate" placeholder="{{assignSelectedLanguageValue?.endDate}}" (keydown)="blockKey($event)" [(ngModel)]="end_date" (change)="setEndDate(end_date)"
+            #endDate [min]="startDate.value" [max]="maxEndDate" required></md2-datepicker>
+          <span class="error_text f-s-10 p-l-10" *ngIf="endDate.value < startDate.value">{{assignSelectedLanguageValue?.endDateShouldBeGreatorThanOrEqualToStartDate}}</span>
+        </div>
+      <div class="col-xs-2 col-sm-2 col-md-4 col-lg-3">
+        <button md-mini-fab color="accent" (click)="onSearchDate(searchForm.value)" [disabled]="searchForm.invalid || ((endDate.value < startDate.value))">
+            <md-icon mdSuffix class="mat-icon material-icons" mdTooltip="{{assignSelectedLanguageValue?.search}}" role="img" aria-hidden="true" style="cursor: pointer">search</md-icon>
+          </button>
+      </div>
+    </div>
+  </form>
+
+<div class="row">
+  <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+    <div class="table-responsive">
+      <table id="outbondListTable" class="table table-bordered table-hover" aria-describedby="outboundCallAllocation">
+        <tbody>
+          <tr>
+            <th id="outboundCallAllocationHAO">{{assignSelectedLanguageValue?.healthAdvisoryOutbound}}</th>
+            <td>{{haoOutbondWorklist?.length}}
+              <button type="button" md-raised-button color="primary" [disabled]="haoOutbondWorklist?.length==0" (click)="allocateCalls(haoOutbondWorklist,'Health_Advice', $event)"
+                class="md-small pull-right">{{assignSelectedLanguageValue?.allocate}}</button>
+            </td>
+          </tr>
+          <tr>
+            <th id="outboundCallAllocationSIO">{{assignSelectedLanguageValue?.sioOutbound}}</th>
+            <td>{{sioOutbondWorklist?.length}}
+              <button type="button" md-raised-button color="primary" [disabled]="sioOutbondWorklist?.length==0" (click)="allocateCalls(sioOutbondWorklist,'Blood Request', $event)"
+                class="md-small pull-right">{{assignSelectedLanguageValue?.allocate}}</button>
+            </td>
+          </tr>
+          <tr>
+            <th id="outboundCallAllocationMO">{{assignSelectedLanguageValue?.medicalOfficerOutbound}}</th>
+            <td>{{moOutbondWorklist?.length}}
+              <button type="button" md-raised-button color="primary" [disabled]="moOutbondWorklist?.length==0" (click)="allocateCalls(moOutbondWorklist,'Medical_Advice', $event)"
+                class="md-small pull-right">{{assignSelectedLanguageValue?.allocate}}</button>
+            </td>
+          </tr>
+          <tr>
+            <th id="outboundCallAllocationCO">{{assignSelectedLanguageValue?.counsellingOutbound}}</th>
+            <td>{{coOutbondWorklist?.length}}
+              <button type="button" md-raised-button color="primary" [disabled]="coOutbondWorklist?.length==0" (click)="allocateCalls(coOutbondWorklist,'Counselling', $event)"
+                class="md-small pull-right">{{assignSelectedLanguageValue?.allocate}}</button>
+            </td>
+          </tr>
+          <tr>
+            <th id="outboundCallAllocationPD">{{assignSelectedLanguageValue?.psychiatristOutbound}}</th>
+            <td>{{pdOutboundWorklist?.length}}
+              <button type="button" md-raised-button color="primary" [disabled]="pdOutboundWorklist?.length==0" (click)="allocateCalls(pdOutboundWorklist,'Psychiatrist', $event)"
+                class="md-small pull-right">{{assignSelectedLanguageValue?.allocate}}</button>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12 col-sm-12" *ngIf="showFlage">
+    <app-outbound-allocate-records [outboundCallRequests]="records" [allocateRoleID]="roleID" (refreshScreen)="allocationDone()"></app-outbound-allocate-records>
+  </div>
+</div>
+<div class="clearfix"></div>

@@ -1,0 +1,9 @@
+/*
+resolving sonarqube error- Unexpected empty source
+*/
+#bufferSmsTemplateSNo, #bufferSmsTemplateParameter, #bufferSmsTemplateType, #bufferSmsTemplateValue, #bufferSmsTemplateAction{
+    width: 20%;
+}
+#viewSMSTemplateSNo, #viewSMSTemplateParameter, #viewSMSTemplateType, #viewSMSTemplateValue{
+    width: 25%;
+}

@@ -1,0 +1,31 @@
+<md-icon class="mdicon mat-icon material-icons close-icon pull-right cursorPointer" mdTooltip="{{currentLanguageSet?.close}}" role="img" aria-hidden="true"
+  (click)="dialogReff.close()">clear</md-icon>
+<div class="col-xs-12 col-sm-12">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+      <h4>{{currentLanguageSet?.foodComplaintRaisedIdIs}} : {{data}}</h4>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <md-checkbox color="primary" name="altNum" [(ngModel)]="altNum">
+        {{currentLanguageSet?.alternateNumber}}
+      </md-checkbox>
+      <div *ngIf="altNum">
+        <div appMobileNumber>
+          <label>{{currentLanguageSet?.mobileNumber}}: </label><input class="form-control" type="text" required minlength="10" maxlength="10" placeholder="{{currentLanguageSet?.enterMobileNumber}}"
+            name="mobileNumber" (keyup)="mobileNum(mobileNumber)" [(ngModel)]="mobileNumber" #phnNum="ngModel">
+        </div>
+        <div *ngIf=" phnNum.errors && ( phnNum.dirty || phnNum.touched)" class="errorText">
+          <div [hidden]="!phnNum.errors.minlength">
+            {{currentLanguageSet?.enterTenDigitMobileNumber}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <button md-raised-button color="accent" [disabled]="altNum && !validNumber" class="pull-right font-regular f-s-18  m-t-8"
+        (click)="dialogReff.close(mobileNumber)">{{currentLanguageSet?.sendSms}}
+                    </button>
+    </div>
+  </div>
+</div>

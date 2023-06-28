@@ -1,0 +1,163 @@
+<div class="row" *ngIf="showTable">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.emergencyContactList}}</h4>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 table-responsive">
+    <table class="table table-striped table-hover" [md2Data]="emergencyList" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="emergencyContactList">
+      <thead>
+        <tr>
+          <th id="emergencyContactSNo">{{currentLanguageSet?.sno}}</th>
+          <th id="emergencyContactName">{{currentLanguageSet?.contactName}} </th>
+          <th id="emergencyContactDesignation">{{currentLanguageSet?.designation}}</th>
+          <th id="emergencyContactLocation">{{currentLanguageSet?.location}}</th>
+          <th id="emergencyContactNumber">{{currentLanguageSet?.contactNumber}}</th>
+          <th id="emergencyContactAction">{{currentLanguageSet?.action}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="md2.data?.length==0">
+          <td colspan="6" class="record-not-found">
+            {{currentLanguageSet?.noRecordFound}}
+          </td>
+
+        </tr>
+        <tr *ngFor="let item of md2.data; let i = index ">
+          <td>
+            <strong>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}}</strong>
+          </td>
+          <td>{{item.emergContactName}}</td>
+          <td>{{item?.designation?.designationName}}</td>
+          <td>{{item.location}}</td>
+          <td>{{item.emergContactNo}}</td>
+          <td>
+            <md-icon mdTooltip="{{currentLanguageSet?.edit}}" *ngIf="!(item?.deleted)" class="mdicon mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
+              (click)="edit(item)">edit</md-icon>
+            <a style="cursor:pointer" *ngIf="item?.deleted" (click)="activate(item,false)">{{currentLanguageSet?.activate}}</a>
+            <a style="cursor:pointer" *ngIf="!(item?.deleted)" (click)="deactivate(item,true)">{{currentLanguageSet?.deactivate}}</a>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <td colspan="3">
+          <md2-pagination></md2-pagination>
+        </td>
+        <td colspan="3">
+          <button md-raised-button color="primary" class="pull-right" type="button" (click)="formMode()">{{currentLanguageSet?.createEmergencyContact}}</button>
+        </td>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<div class="row" *ngIf="showForm">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.createEmergencyContact}}</h4>
+  </div>
+  <form #emergencyContact="ngForm" autocomplete="off">
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" appNameSpace>
+      <md-input-container [style.width]="'100%'">
+        <input mdInput class="" placeholder="{{currentLanguageSet?.name}}" name="name" [(ngModel)]="name" required #contactName="ngModel" maxlength="15"
+          minlength="3">
+        <md-hint class="error_text" *ngIf="contactName.invalid && contactName.touched">{{currentLanguageSet?.enterAtleastThreeCharacters}}</md-hint>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select placeholder="{{currentLanguageSet?.designation}}" [style.width]="'100%'" required [(ngModel)]="designation" name="designation">
+          <md-option *ngFor="let item of designations" [value]="item">
+            {{item.designationName}}
+          </md-option>
+        </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput addressValidator placeholder="{{currentLanguageSet?.location}}" name="location" [(ngModel)]="location" required #Location="ngModel" maxlength="90"
+          minlength="3">
+        <md-hint class="error_text" *ngIf="Location.invalid && Location.touched">{{currentLanguageSet?.enterAtleastThreeCharacters}}</md-hint>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput appMobileNumber [(ngModel)]="contactNumber" placeholder="{{currentLanguageSet?.mobileNumber}}" required minlength="10" name="contactNumber" maxlength="10"
+          #mobileNum="ngModel" [pattern]="numberRegex">
+        <md-hint class="error_text" *ngIf="mobileNum.invalid && mobileNum.touched">{{currentLanguageSet?.enterTenDigitsValidNumber}}</md-hint>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <button md-raised-button color="primary" class="pull-left" (click)="tableMode()">{{currentLanguageSet?.back}}</button>
+      <button md-raised-button color="primary" [disabled]="emergencyContact.invalid" class="pull-right" (click)="push2buffer(emergencyContact.value)">{{currentLanguageSet?.add}}</button>
+    </div>
+  </form>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-10 table-responsive" *ngIf="bufferArray.length>0">
+    <table class="table table-hover table-striped" [md2Data]="bufferArray" #md2="md2DataTable" [rowsPerPage]="3" aria-describedby="bufferEmergencyContactList">
+      <thead>
+        <tr>
+          <th id="bufferEmergencyContactSNo">{{currentLanguageSet?.sno}}</th>
+          <th id="bufferEmergencyContactName">{{currentLanguageSet?.contactName}} </th>
+          <th id="bufferEmergencyContactDesignation">{{currentLanguageSet?.designation}}</th>
+          <th id="bufferEmergencyContactLocation">{{currentLanguageSet?.location}}</th>
+          <th id="bufferEmergencyContactNumber" md2SortBy="emergContactNo">{{currentLanguageSet?.contactNumber}}</th>
+          <th id="bufferEmergencyContactAction">{{currentLanguageSet?.action}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of md2.data; let i = index ">
+          <td>
+            <strong>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}}</strong>
+          </td>
+          <td>{{item.emergContactName}}</td>
+          <td>{{item.designationName}}</td>
+          <td>{{item.location}}</td>
+          <td>{{item.emergContactNo}}</td>
+          <td>
+            <md-icon mdTooltip="{{currentLanguageSet?.remove}}" class="mdicon mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer" (click)="remove(i)">clear</md-icon>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <td colspan="3">
+          <md2-pagination></md2-pagination>
+        </td>
+        <td colspan="3">
+          <button md-raised-button color="accent" class="pull-right" type="button" (click)="createEmergencyContact(bufferArray)">{{currentLanguageSet?.createEmergencyContact}}</button>
+        </td>
+      </tfoot>
+    </table>
+  </div>
+</div>
+<div class="row" *ngIf="showEditForm">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.editEmergencyContact}}</h4>
+  </div>
+  <form #editEmergencyContact="ngForm" autocomplete="off">
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'">
+        <input mdInput appName placeholder="{{currentLanguageSet?.name}}" name="name" [(ngModel)]="name" required #contactName="ngModel" maxlength="15" minlength="3">
+        <md-hint class="error_text" *ngIf="contactName.invalid && contactName.touched">{{currentLanguageSet?.enterAtleastThreeCharacters}}</md-hint>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select placeholder="{{currentLanguageSet?.designation}}" [style.width]="'100%'" required [(ngModel)]="designation" name="designation">
+          <md-option *ngFor="let item of designations" [value]="item.designationID">
+            {{item.designationName}}
+          </md-option>
+        </md-select>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'" >
+        <input mdInput addressValidator  placeholder="{{currentLanguageSet?.location}}" name="location" [(ngModel)]="location" required #Location="ngModel" maxlength="90"
+          minlength="3">
+        <md-hint class="error_text" *ngIf="Location.invalid && Location.touched">{{currentLanguageSet?.enterAtleastThreeCharacters}}</md-hint>
+      </md-input-container>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+      <md-input-container [style.width]="'100%'" >
+        <input mdInput appMobileNumber [(ngModel)]="contactNumber" placeholder="{{currentLanguageSet?.mobileNumber}}" required minlength="10" name="contactNumber" maxlength="10"
+          #mobileNum="ngModel">
+        <md-hint class="error_text" *ngIf="mobileNum.invalid && mobileNum.touched">{{currentLanguageSet?.enterTenDigitsMobileNumber}}</md-hint>
+      </md-input-container>
+    </div>
+  </form>
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <button md-raised-button color="primary" class="pull-left" (click)="tableMode()">{{currentLanguageSet?.back}}</button>
+    <button [disabled]="editEmergencyContact.invalid" md-raised-button color="accent" class="pull-right" (click)="update(editEmergencyContact.value)">{{currentLanguageSet?.update}}</button>
+  </div>
+</div>

@@ -1,0 +1,84 @@
+/* [name="alternateMobileNumber"] + .mobileText {
+    display: none;
+  }
+  
+  [name="alternateMobileNumber"]:checked + .mobileText {
+    display: block;
+  } */
+
+  /* .title {
+    margin: 0px 0px 10px;
+    padding: 15px 24px 15px;
+    color: #336CFB;
+    font-size: 18px;
+    line-height: 32px;
+    font-weight: 400;
+    background: white !important;
+  } */
+  .title {
+    margin: 0px 0px 10px;
+    padding: 10px 20px 10px;
+    color: black;
+    font-size: 12px;
+    line-height: 25px;
+    font-weight: 400;
+    background: white !important;
+  }
+  
+  .title h4 {
+    display: inline-block;
+    
+
+  }
+  
+  .title .exit {
+    cursor: pointer;
+  }
+
+  .modal-header{
+    background-color: white;
+  }
+
+  /* form input {
+    border: none;
+    background: transparent;
+    border-bottom: 1px solid #fff;
+    outline: none;
+  } */
+
+ 
+/* .form__group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+  width: 50%;
+}
+
+.form__field {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid gray;
+  outline: 0;
+  font-size: 1.3rem;
+  color: white;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+
+  
+
+  
+}
+
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color: gray;
+} */
+
+
+  

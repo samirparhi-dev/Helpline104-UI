@@ -1,0 +1,132 @@
+<div class="clearfix"></div>
+<div class="col-xs-12 col-sm-12 b-t-2-w">
+  <div class="panel-body card p-a-0 bg-white m-b-25">
+    <div class="container-fluid p-a-0 height-450">
+      <div class=" b-t-2-w">
+        <div class="col-xs-12 col-sm-12">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 ">
+              <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                  <div>
+                    <label>
+                      <h4 class="m-t-15"><strong>{{currentLanguageSet?.callTypeReports}}</strong></h4>
+                    </label>
+                    <button md-raised-button color="primary" class="pull-right m-t-6" (click)="dashboard()">{{currentLanguageSet?.backToDashboard}}</button>
+                  </div>
+                </div>
+              </nav>
+            </div>
+          </div>
+
+          <div class="row">
+            <form #surveyorForm="ngForm" autocomplete="off">
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                <md2-datepicker class="width100" #startDate="ngModel" [md2DatepickerToggle]="startDate" placeholder="{{currentLanguageSet?.startDate}}" name="startDate"
+                  [(ngModel)]="start_date" (keydown)="blockey($event)" [max]="maxDate" required (change)="sdChange(start_date)"></md2-datepicker>
+                <span class="error_text f-s-10 p-l-10" *ngIf="startDate.touched && startDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                <md2-datepicker class="width100" #endDate="ngModel" [md2DatepickerToggle]="endDate" placeholder="{{currentLanguageSet?.endDate}}" name="endDate"
+                  [(ngModel)]="end_date" (keydown)="blockey($event)" [max]="maxDate" required (change)="edChange(end_date)"></md2-datepicker>
+                <span class="error_text f-s-10 p-l-10" *ngIf="endDate.touched && endDate.errors?.required">{{currentLanguageSet?.dateIsRequired}}</span>
+                <span class="error_text f-s-10 p-l-10" *ngIf="(endDate.value < startDate.value) && endDate.dirty">{{currentLanguageSet?.endDateCannotBeBeforeStartDates}}</span>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-15">
+                  <button md-mini-fab color="accent" (click)="setTableFlag(true, 1, rowsPerPage, filter)" [disabled]="!(surveyorForm.valid) || (endDate.value < startDate.value) && endDate.dirty">
+                      <md-icon mdSuffix class="mat-icon material-icons" mdTooltip="{{currentLanguageSet?.search}}" role="img" aria-hidden="true" style="cursor: pointer">search</md-icon>
+                    </button>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                  <md-select name="query" ngModel #query="ngModel" [(ngModel)]="filter" placeholder="{{currentLanguageSet?.filterOnCallStatus}}" class="width100"
+                    (change)="filterList(pager.currentPage == 0 ? 1 : pager.currentPage, rowsPerPage, filter)">
+                    <md-option *ngFor="let item of statusArray | OrderBy : 'name'" value="{{item.value}}">{{item.name}}</md-option>
+                  </md-select>
+              </div>
+
+            </form>
+          </div>
+
+
+          <div class="m-t-10" *ngIf="tableFlag">
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 table-responsive">
+                <table [md2Data]="filterCallListArray" #md2="md2DataTable" class="table table-striped" aria-describedby="surveyorCallTypeDetails">
+                  <thead>
+                    <tr>
+                      <th id ="surveyorCallBeneficiaryID">{{currentLanguageSet?.beneficiaryId}}</th>
+                      <th id ="surveyorCallBeneficiaryName" >{{currentLanguageSet?.beneficiaryName}}</th>
+                      <th id ="surveyorCallType" >{{currentLanguageSet?.callType}}</th>
+                      <th id ="surveyorCallTypeRemarks" >{{currentLanguageSet?.remarks}}</th>
+                      <th id ="surveyorCallTypeStatus" >{{currentLanguageSet?.status}}
+                      </th>
+                      <th id ="surveyorDateOfCall" md2SortBy="callTime" >{{currentLanguageSet?.dateOfCall}}</th>
+                      <th id ="surveyorLastCalledOn" md2SortBy="lastCalledOn">{{currentLanguageSet?.lastCalledOn}}</th> 
+                      <th id ="surveyorCallTypeAction">{{currentLanguageSet?.action}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="filterCallListArray?.length==0">
+                      <td class="record-not-found" colspan="8">
+                        {{currentLanguageSet?.noRecordFound}}
+                      </td>
+                    </tr>
+                    <tr *ngFor="let item of md2.data">
+                      <td>{{item.beneficiaryID}}</td>
+                      <td>{{item.name}}</td>
+                      <td>{{item.callType}}</td>
+                      <td>{{item.remarks}}</td>
+                      <td>{{item.cDICallStatus}}</td>
+                      <td>{{item.callTime| utcDate | date: 'dd/MM/yyyy HH:mm'}}</td>
+                      <td><span *ngIf="item.cDICallStatus != 'New' ">{{item.lastCalledOn| utcDate | date: 'dd/MM/yyyy HH:mm'}}</span></td>  
+                      <td>
+                        <button class="md-small" md-raised-button color="accent" (click)="getReports(item)" *ngIf="item.cDICallStatus == 'Closed'">{{currentLanguageSet?.report}}</button>
+                        <button class="md-small"  md-raised-button color="accent" (click)="getFeedback(item, pager.currentPage, rowsPerPage, filter)" *ngIf="item.cDICallStatus != 'Closed'">{{currentLanguageSet?.dial}}</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="1" *ngIf="filterCallListArray?.length > 0 || this.pageCount">
+                        <label class="pageName"> {{currentLanguageSet?.pageSize}}</label>
+                      </td>
+                      <td colspan="1" *ngIf="filterCallListArray?.length > 0 || this.pageCount">
+                         <md-select [(ngModel)]="rowsPerPage" (change)="setTableFlag(true, pager.currentPage, rowsPerPage, filter)" style="margin-left: -30px">
+                              <md-option value="5" >5</md-option>
+                              <md-option value="10">10</md-option>
+                              <md-option value="15">15</md-option>
+                              <md-option value="20">20</md-option>
+                          </md-select>
+                      </td>
+                      <td colspan="6">
+                         <ul *ngIf="pager.pages && pager.pages.length" class="pagination pull-right" >
+                          <li [ngClass]="{disabled:pager.currentPage <= 1}">
+                            <a (click)="checkPager(pager, 1, rowsPerPage, filter)">
+                              <<</a>
+                          </li>
+                          <li [ngClass]="{disabled:pager.currentPage <= 1}">
+                            <a (click)="setPage(pager.currentPage - 1, rowsPerPage, filter)">
+                              <</a>
+                          </li>
+                          <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page, rowsPerPage, filter)">{{page}}</a>
+                          </li>
+                          <li [ngClass]="{disabled:pager.currentPage >= pager.totalPages }">
+                            <a (click)="setPage(pager.currentPage + 1, rowsPerPage, filter)">></a>
+                          </li>
+                          <li [ngClass]="{disabled:pager.currentPage >= pager.totalPages }">
+                            <a (click)="checkPager(pager, pager.totalPages, rowsPerPage, filter)">>></a>
+                          </li>
+                         </ul>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

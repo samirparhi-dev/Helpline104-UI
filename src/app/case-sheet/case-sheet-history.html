@@ -1,0 +1,59 @@
+<div class="table-responsive">
+  <table class="table table-striped" [md2Data]="data.caseSheetData" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="beneficiaryHistoryCasesheet">
+    <thead>
+      <tr>
+        <th id ="casesheetBeneficiaryHistoryID" class="max-width-300 min-width-50">{{currentLanguageSet?.id}}</th>
+        <th id ="casesheetBeneficiaryName" class="max-width-300 min-width-80">{{currentLanguageSet?.name}}</th>
+        <th id ="casesheetBeneficiaryAge" class="max-width-300 min-width-80">{{currentLanguageSet?.age}}</th>
+        <th id ="beneficiaryHistoryCreatedDate" class="max-width-300 min-width-160">{{currentLanguageSet?.date}}</th>
+
+        <th id ="casesheetBeneficiaryPresentChiefComplaint" class="max-width-300 min-width-300">{{currentLanguageSet?.presentChiefComplaint}}</th>
+        <th id ="casesheetBeneficiaryDiseaseSummary" class="max-width-300 min-width-300">{{currentLanguageSet?.diseaseSummary}}</th>
+        <th id ="casesheetBeneficiarySymptoms" class="max-width-300 min-width-300">{{currentLanguageSet?.symptoms}}</th>
+        <th id ="casesheetBeneficiaryProvisionalDiagnosis" class="max-width-300 min-width-300">{{currentLanguageSet?.provisionalSelectedDiagnosis}}</th>
+        <th id ="casesheetBeneficiaryRiskLevel" class="max-width-300 min-width-300">{{currentLanguageSet?.riskLevel}}</th>
+        <th id ="casesheetBeneficiaryHistoryGivenInformation" class="max-width-300 min-width-300">{{currentLanguageSet?.informationGiven}}</th>
+        <th id ="casesheetBeneficiaryRecommendedAction" class="max-width-300 min-width-300">{{currentLanguageSet?.recommendedAction}}</th>
+        <th id ="casesheetBeneficiaryActionByHao" class="max-width-300 min-width-300">{{currentLanguageSet?.actionByHao}}</th>
+        <th id ="casesheetBeneficiaryActionByMO" class="max-width-300 min-width-300">{{currentLanguageSet?.actionByMo}}</th>
+        <!-- <th id ="casesheetBeneficiaryActionByMO" class="max-width-300 min-width-300">{{currentLanguageSet?.actionByMo}}</th> -->
+        <th id ="casesheetBeneficiaryTreatmentRecommened" class="max-width-300 min-width-300">{{currentLanguageSet?.treatmentRecommendation}}</th>
+        <th id ="casesheetBeneficiaryActionByPD" class="max-width-300 min-width-100">{{currentLanguageSet?.actionByPd}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngIf="md2.data?.length==0">
+        <td class="record-not-found" colspan="14">
+          {{currentLanguageSet?.noRecordFound}}
+        </td>
+      </tr>
+      <tr *ngFor="let case of md2.data">
+        <td>{{case?.requestID ? case.requestID : case?.benHistoryID}}</td>
+        <td>{{case?.patientName}}</td>
+        <td>{{case?.patientAge}}</td>
+        <td>{{case?.createdDate|utcDate |date: 'dd/MM/yyyy hh:mm a'}}</td>
+
+        <td class="cursorPointer" mdTooltip={{case?.diseaseSummaryID}}>{{case?.diseaseSummary}}</td>
+        <td class="cursorPointer" mdTooltip={{case?.selecteDiagnosisID}}>{{case?.isChiefComplaint ? "" : case?.selecteDiagnosis}}</td>
+        <td>{{case?.algorithm}}</td>
+        <td class="cursorPointer" mdTooltip={{case?.selecteDiagnosisID}}>{{case?.isChiefComplaint ? case?.selecteDiagnosis : ""}}</td>
+        <td id="casesheetBeneficiaryRiskLevel">{{case?.riskLevel}}</td>
+        <td class="cursorPointer" mdTooltip={{case?.selecteDiagnosisID}}>{{case?.isChiefComplaint ? "" :case?.selecteDiagnosis}}</td>
+        <!-- <td id="casesheetBeneficiaryRiskLevel">{{case?.riskLevel}}</td> -->
+        <td>{{case?.addedAdvice}}</td>
+        <td>{{case?.actionByHAO}}</td>
+        <td>{{case?.actionByMO}}</td>
+        <td id="casesheetBeneficiaryTreatmentRecommened">{{case?.treatmentRecommendation}}</td>
+        <!-- <td>{{case?.actionByCO}}</td> -->
+        <td>{{case?.actionByPD}}</td>
+      </tr>
+    </tbody>
+    <tfoot >
+      <tr>
+        <td colspan="14">
+          <md2-pagination></md2-pagination>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

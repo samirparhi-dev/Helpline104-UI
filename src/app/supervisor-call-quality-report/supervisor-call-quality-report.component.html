@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-32">
+    <label>
+      <h4 class="f-s-b m-t-20 m-b-20">{{currentLanguageSet?.callQualityReport}}</h4>
+    </label>
+  </div>
+</div>
+<div class="m-b-10">
+  <form [formGroup]='callQualityForm'>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+      <md2-datepicker [openOnFocus]="true" class="width100" restrictTyping placeholder='{{currentLanguageSet?.startDate}}' name='startDate' id='startDate'
+        formControlName='startDate' (change)='setEndDate()' [max]='today' ng-readonly="true" required></md2-datepicker>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+      <md2-datepicker [openOnFocus]="true" class="width100" restrictTyping placeholder='{{currentLanguageSet?.endDate}}' name='endDate' id='endDate'
+        formControlName='endDate' [min]='callQualityForm.value.startDate' [max]='maxEndDate' ng-readonly="true" required></md2-datepicker>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf='endDate && endDate != null'>
+      <md-select class="width100" placeholder="{{currentLanguageSet?.searchCriteria}}" name='searchCriteria' id='searchCriteria'
+        formControlName='searchCriteria' (change)='getSearchValues(searchCriteria)' required>
+        <md-option *ngFor='let searchCriteria of searchCriterias' [value]="searchCriteria.sendValue">{{searchCriteria.showValue}}</md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="endDate && endDate != null && searchCriteria == 'callTypeWise'">
+      <md-select class="width100" placeholder="{{currentLanguageSet?.callType}}" name='callType' id='callType' formControlName='callType'>
+        <md-option *ngFor='let callType of callTypes' [value]="callType.callTypeID">{{callType.callType}}</md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="endDate && endDate != null && searchCriteria == 'AgentWiseReport'">
+      <md-select class="width100" placeholder="{{currentLanguageSet?.userID}}" name='userID' id='userID' formControlName='userID'>
+        <md-option *ngFor='let user of users' [value]="user.agentID">{{user.agentID}}</md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="endDate && endDate != null && searchCriteria == 'LocationWiseReport'">
+      <md-select class="width100" placeholder="{{currentLanguageSet?.selectOffice}}" name='workLocationID' id='workLocationID' formControlName='workLocationID'>
+        <md-option *ngFor='let workLocation of workLocations' [value]="workLocation.pSAddMapID">{{workLocation.locationName}}</md-option>
+      </md-select>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" *ngIf="endDate && endDate != null && searchCriteria == 'SkillsetWiseReport'">
+      <md-select class="width100" placeholder="{{currentLanguageSet?.selectRole}}" name='roleID' id='roleID' formControlName='roleID'>
+        <md-option *ngFor='let role of roles' [value]="role.roleID">{{role.roleName}}</md-option>
+      </md-select>
+    </div>
+
+  </form>
+</div>
+<div class='col-xs-12 col-sm-6 col-md- col-lg-12'>
+  <div class="m-t-20 col-xs-12 col-sm-12 col-md-3 col-lg-2 pull-right">
+    <button md-raised-button class="pull-right" color="accent" type="submit" [disabled]="!callQualityForm.valid"
+      (click)='downloadReport(true)'>{{currentLanguageSet?.downloadReport}}</button>
+  </div>
+</div>

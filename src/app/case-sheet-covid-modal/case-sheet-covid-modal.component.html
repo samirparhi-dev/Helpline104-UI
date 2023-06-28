@@ -1,0 +1,35 @@
+<div class="successHeaderDiv">
+    <h4 class="popupHeader">{{data.Title}}</h4>
+  </div>
+  <div class="col-xs-12 col-sm-12" id="foo">
+      <!-- <md-card >
+          <md-card-content > -->
+      <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <h4>{{currentLanguageSet?.caseSheetSavedSuccessfully}}</h4>
+          </div>
+          <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <md-checkbox color="accent" name="altNum" [(ngModel)]="altNum">
+                  {{currentLanguageSet?.alternateNumber}}
+              </md-checkbox>
+              <div *ngIf="altNum">
+                  <md-input-container appMobileNumber>
+                      <input mdInput autocomplete="off" minlength="10" maxlength="10" (keyup)="mobileNum(mobileNumber)" placeholder="{{currentLanguageSet?.mobileNumber}}"
+                          required name="mobileNumber" [(ngModel)]="mobileNumber" #phnNum="ngModel">
+                      <md-hint *ngIf=" phnNum.errors && (  phnNum.touched)" class="errorText">
+                          <span>
+                              {{currentLanguageSet?.enterTenDigitMobileNumber}}
+                          </span>
+                      </md-hint>
+                  </md-input-container>
+              </div>
+          </div>     
+          <div class="col-xs-12 col-sm-12">
+              <button md-raised-button class="pull-right font-regular f-s-18  m-t-8" (click)="dialogReff.close('close')">{{currentLanguageSet?.close}}</button>
+              <button  md-raised-button color="accent" [disabled]="altNum && !validNumber" class="pull-right font-regular f-s-18  m-t-8 m-r-5"
+                  (click)="dialogReff.close(mobileNumber)">{{currentLanguageSet?.sendSms}}
+              </button>        
+          </div>
+      </div>
+  </div>

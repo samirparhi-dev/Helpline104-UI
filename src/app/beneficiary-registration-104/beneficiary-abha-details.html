@@ -1,0 +1,42 @@
+<div class="headerDiv">
+    <md-icon class="mdicon mat-icon material-icons pull-right cursorPointer p-t-2 f-c-w closeIcon" mdTooltip="{{currentLanguageSet?.close}}" role="img"
+        aria-hidden="true" (click)="dialogReff.close()">
+        clear
+    </md-icon>
+    <h4 class="popupHeader">{{currentLanguageSet?.abhaDetails}}</h4>
+</div>
+<md-dialog-content>
+        <div class="table-responsive">
+            <table class="table table-striped" [md2Data]="benAbhaDetails" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="beneficiaryAbhaDetails">
+                <thead>
+                    <tr>
+                        <th id ="sno">{{currentLanguageSet?.sno}}</th>
+                        <th id ="abhaNo">{{currentLanguageSet?.abhaNumber}}</th>
+                        <th id ="abhaAddress">{{currentLanguageSet?.abhaAddress}}</th>
+                        <th id ="createdDate">{{currentLanguageSet?.dateOfCreation}}</th>
+                        <th id ="abhaMode">{{currentLanguageSet?.abhaGenerationMode}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="md2.data.length == 0">
+                        <td colspan="5" class="record-not-found">
+                            {{currentLanguageSet?.noRecordFound}}
+                        </td>
+                    </tr>
+                    <tr *ngFor="let data of md2.data;let i = index">
+                        <td >{{benAbhaDetails.indexOf(data)+1}} </td>
+                        <td >{{ data?.HealthIDNumber ? data?.HealthIDNumber : NA}} </td>
+                        <td >{{ data?.HealthID ? data?.HealthID : NA}} </td>
+                        <td >{{ data?.CreatedDate | date : 'yyyy-MM-dd hh:mm:ss a'}} </td>
+                        <td >{{ data?.AuthenticationMode}} </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <md2-pagination></md2-pagination>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>

@@ -1,0 +1,394 @@
+<form #covidForm="ngForm" id="covidForm" autocomplete="off">
+  <div class="col-xs-12 col-sm-12">
+    <div>
+      <h4 class="pull-left f-s-b m-t-20 m-b-20">
+        <strong>{{ assignSelectedLanguageValue?.covid19 }}</strong>
+      </h4>
+    </div>
+  </div>
+  <div class="col-xs-12 col-sm-12">
+    <div class="clearfix"></div>
+    <div class="row p-b-1-5">
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <md-select [style.width]="'100%'" placeholder="{{ assignSelectedLanguageValue?.category }}"
+          [(ngModel)]="category" name="category" #categorySelected="ngModel" (change)="getSubCategory(category);" required>
+          <md-option *ngFor="let category of categoryList" [value]="category">
+            {{ category.Value }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <md-select [style.width]="'100%'" placeholder="{{ assignSelectedLanguageValue?.subcategory }}"
+          [(ngModel)]="subCategory" name="subCategory" required (change)="onSubCategoryChange(subCategory)">
+          <md-option *ngFor="let subCat of subCategorydata" [value]="subCat">
+            {{ subCat.Value }}
+          </md-option>
+        </md-select>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <div *ngIf="isCovidform">
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div>
+          <h4 class="pull-left f-s-b m-t-20 m-b-20">
+            <strong>{{ assignSelectedLanguageValue?.beneficiaryDetails }}</strong>
+          </h4>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-b-1-5">
+        <md-select [style.width]="'100%'" required
+          placeholder="{{ assignSelectedLanguageValue?.forWhomAreYouTakingThisTest }}" [(ngModel)]="forwhomthistest"
+          name="forwhomthistest" #forwhomtest="ngModel" (change)="patientDetailsFields(forwhomthistest)">
+          <md-option *ngFor="let test of testForList" [value]="test">
+            {{test.Value}}
+          </md-option>
+        </md-select>
+
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <md-input-container appMobileNumber [style.width]="'100%'">
+          <input mdInput placeholder="{{ assignSelectedLanguageValue?.ageInYears}}" required #ageRef name="age"
+            maxlength="3" [(ngModel)]="age" (change)="calculateDOB(ageRef.value)" #ageEvent="ngModel"
+            disabled={{disableFlag}}>
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-b-1-5">
+        <md-select [style.width]="'100%'" required
+          placeholder="{{assignSelectedLanguageValue?.gender}}" [(ngModel)]="gender"
+          name="gender" #genderSelected="ngModel" disabled={{disableFlag}} (change)="onGenderChange(gender);">
+          <md-option *ngFor="let gen of commonData.m_genders" [value]="gen.genderID">
+            {{gen.genderName}}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-b-1-5" *ngIf="gender === 2">
+        <md-select [style.width]="'100%'" required placeholder="{{ assignSelectedLanguageValue?.areYouPregnant}}"
+          [(ngModel)]="ispregnant" name="pregnant" #pregnant="ngModel" (change)="populateRisk();">
+          <md-option value='YES'>YES</md-option>
+          <md-option value='NO'>NO</md-option>
+        </md-select>
+      </div>
+      <div class="clearfix" *ngIf="gender === 2"></div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div>
+          <h4 class="pull-left f-s-b m-t-20 m-b-20">
+            <strong>{{ assignSelectedLanguageValue?.travelHistory}}</strong>
+          </h4>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-b-1-5">
+        <md-select [style.width]="'100%'" required
+          placeholder="{{ assignSelectedLanguageValue?.haveYouTravelledLast14Days }}" [(ngModel)]="travelledLast14Days"
+          name="travelledLast14Days" #travellast14days="ngModel"
+          (change)="clearDomTraveldata();clearInterTraveldata();clearTravelType();populateRisk();">
+          <md-option value='YES'>YES</md-option>
+          <md-option value='NO'>NO</md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-b-1-5" *ngIf="travelledLast14Days === 'YES'"
+        style="padding-top: 2%;">
+        <span style="font-size: small;color: dimgrey;"><strong>{{ assignSelectedLanguageValue?.travelType}} :
+          </strong></span>
+
+        <md-checkbox color="primary" class="font-weight-normal" name="domestic" value="domestic" [(ngModel)]="domest"
+          (change)="travelTypechange($event,'Domestic');clearDomTraveldata();">{{assignSelectedLanguageValue?.domestic}}</md-checkbox>
+        <md-checkbox color="primary" class="font-weight-normal" name="international" value="international"
+          [(ngModel)]="international" (change)="travelTypechange($event,'International');clearInterTraveldata();">
+          {{assignSelectedLanguageValue?.international}}</md-checkbox>
+      </div>
+      <div class="clearfix m-t-10"></div>
+      <md-card style="background-color: #dadfe00d;" *ngIf="domest && travelledLast14Days === 'YES'">
+        <md-card-header>
+          <md-card-title>
+            <h4><strong>{{assignSelectedLanguageValue?.domestic}}</strong></h4>
+          </md-card-title>
+        </md-card-header>
+        <md-card-content>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" *ngIf="travelledLast14Days === 'YES'">
+            <md-select [style.width]="'100%'" required
+              placeholder="{{assignSelectedLanguageValue?.modeOfTravel}}" [(ngModel)]="modeoftravel"
+              name="modeoftravel" #modeoftravelsel="ngModel">
+              <md-option value='Bus'>Bus</md-option>
+              <md-option value='Flight'>Flight</md-option>
+              <md-option value='Train'>Train</md-option>
+              <md-option value='Ship'>Ship</md-option>
+            </md-select>
+          </div>
+          <div class="clearfix m-b-10"></div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div>
+              <h5 class="pull-left f-s-b">
+                <strong>{{ assignSelectedLanguageValue?.locationTravelledFrom }}</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select [style.width]="'100%'" required
+              placeholder="{{assignSelectedLanguageValue?.state}}"
+              [(ngModel)]="fromstateID" name="fromstateID" #stateSelected="ngModel"
+              (change)="GetDistrictsFromDom(fromstateID)">
+              <md-option *ngFor="let state of states" [value]="state.stateID">
+                {{state.stateName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select [style.width]="'100%'" required
+              placeholder="{{assignSelectedLanguageValue?.district}}"
+              [(ngModel)]="fromcityID" name="fromcityID" #citySelected="ngModel"
+              (change)="getSubDistrictFromDom(fromcityID)">
+              <md-option *ngFor="let district of districts" [value]="district.districtID">
+                {{district.districtName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select [style.width]="'100%'"
+              placeholder="{{assignSelectedLanguageValue?.subDistrict}}" required
+              [(ngModel)]="fromsubDistrict" name="fromsubDistrict">
+              <md-option *ngFor="let item of subDistricts" [value]="item.blockID">{{item.blockName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="clearfix m-t-10"></div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div>
+              <h5 class="pull-left f-s-b">
+                <strong>{{ assignSelectedLanguageValue?.locationTravelledTo }}</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select [style.width]="'100%'" required
+              placeholder="{{assignSelectedLanguageValue?.state}}"
+              [(ngModel)]="tostateID" name="tostateID" #stateSelected="ngModel" (change)="GetDistrictsToDom(tostateID)">
+              <md-option *ngFor="let state of states" [value]="state.stateID">
+                {{state.stateName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select [style.width]="'100%'" required
+              placeholder="{{assignSelectedLanguageValue?.district}}"
+              [(ngModel)]="tocityID" name="tocityID" #citySelected="ngModel"
+              (change)="getSubDistrictToDom(citySelected.value)">
+              <md-option *ngFor="let district of districtsToDom" [value]="district.districtID">
+                {{district.districtName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select [style.width]="'100%'"
+              placeholder="{{assignSelectedLanguageValue?.subDistrict}}" required
+              [(ngModel)]="tosubDistrict" name="tosubDistrict">
+              <md-option *ngFor="let item of subDistrictsToDom" [value]="item.blockID">{{item.blockName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="clearfix"></div>
+        </md-card-content>
+      </md-card>
+      <div class="clearfix m-b-10"></div>
+      <md-card style="background-color: #dadfe00d;" *ngIf="international && travelledLast14Days === 'YES'">
+        <md-card-header>
+          <md-card-title>
+            <h4><strong>{{assignSelectedLanguageValue?.international}}</strong></h4>
+          </md-card-title>
+        </md-card-header>
+        <md-card-content>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" *ngIf="travelledLast14Days === 'YES'">
+            <md-select [style.width]="'100%'" required
+              placeholder="{{assignSelectedLanguageValue?.modeOfTravel}}" [(ngModel)]="modeoftravelInter"
+              name="modeoftravelInter" #modeoftravelIntsel="ngModel">
+              <md-option value='Bus'>Bus</md-option>
+              <md-option value='Flight'>Flight</md-option>
+              <md-option value='Train'>Train</md-option>
+              <md-option value='Ship'>Ship</md-option>
+            </md-select>
+          </div>
+          <div class="clearfix m-b-10"></div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div>
+              <h5 class="pull-left f-s-b">
+                <strong>{{ assignSelectedLanguageValue?.locationTravelledFrom }}</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select placeholder="{{ assignSelectedLanguageValue?.country }}" [style.width]="'100%'" [(ngModel)]="InterFromCountry"
+              name="FromCountryInter" (change)="getCitiesFromInter(InterFromCountry)" #FromstateSelectedInter="ngModel" required>
+              <md-option *ngFor="let country of countries" [value]="country.countryID">
+                {{country.countryName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select [style.width]="'100%'" placeholder="{{ assignSelectedLanguageValue?.city }}" [(ngModel)]="InterFromcity" name="FromcityInter"
+              #FromcitySelectedInter="ngModel" required>
+              <md-option *ngFor="let city of citiesFromInter" [value]="city.cityID">
+                {{city.cityName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="clearfix"></div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <div>
+              <h5 class="pull-left f-s-b">
+                <strong>{{ assignSelectedLanguageValue?.locationTravelledTo }}</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="clearfix m-t-10"></div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select placeholder="{{ assignSelectedLanguageValue?.country }}" [style.width]="'100%'" [(ngModel)]="InterToCountry" name="ToCountryInter"
+              (change)="getCitiesToInter(InterToCountry)" #FromstateSelectedInter="ngModel" required>
+              <md-option *ngFor="let country of countries" [value]="country.countryID">
+                {{country.countryName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+            <md-select [style.width]="'100%'" placeholder="{{ assignSelectedLanguageValue?.city }}" [(ngModel)]="InterTocity" name="TocityInter"
+              #FromcitySelectedInter="ngModel" required>
+              <md-option *ngFor="let city of citiesToInter" [value]="city.cityID">
+                {{city.cityName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="clearfix"></div>
+        </md-card-content>
+      </md-card>
+
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div>
+          <h4 class="pull-left f-s-b m-t-20 m-b-20">
+            <strong>{{ assignSelectedLanguageValue?.symptom }}</strong>
+          </h4>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-b-1-5">
+        <h5>{{ assignSelectedLanguageValue?.doYouCurrentlyHaveAnyOfTheseHealthConditions }}</h5>
+        <div *ngFor="let healthCondition of healthConditionsList; let i = index">
+          <md-checkbox color="primary" class="font-weight-normal" name="healthCondition{{i}}" id="healthCondition{{i}}"
+            [(ngModel)]="healthCondition.checked" [disabled]="healthCondition.disable"
+            (change)="onhealthconditionsCheckboxChage($event, healthCondition);populateRisk();">
+            {{healthCondition.Value}}
+          </md-checkbox>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-b-1-5">
+        <md-select [style.width]="'100%'" required
+          placeholder="{{ assignSelectedLanguageValue?.haveYouOrSomeoneInYourFamilySatyingWithYouCameInCloseContactWithALaboratoryConfirmedCovid19PatientInTheLast14Days}}" [(ngModel)]="laboratoryconfirmed"
+          name="laboratoryconfirmed" #labconfirmed="ngModel" (change)="populateRisk()">
+          <md-option value='YES'>YES</md-option>
+          <md-option value='NO'>NO</md-option>
+        </md-select>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-b-1-5">
+        <md-select [style.width]="'100%'" required placeholder="{{ assignSelectedLanguageValue?.haveYouOrSomeoneInYourFamilyStayingWithYouAttendedALargeGatheringinAMigrationCenterInTheLast14Days}}"
+          [(ngModel)]="largegathering" name="largegathering" #largegather="ngModel" (change)="populateRisk()">
+          <md-option value='YES'>YES</md-option>
+          <md-option value='NO'>NO</md-option>
+        </md-select>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-b-1-5">
+        <md-select [style.width]="'100%'" required
+          placeholder="{{assignSelectedLanguageValue?.areYouCurrentlyWorkingForEssentialServicesInPublicExposedPlaces}}" [(ngModel)]="publicexposedplaces"
+          name="publicexposedplaces" #publicexposed="ngModel" (change)="populateRisk()">
+          <md-option value='YES'>YES</md-option>
+          <md-option value='NO'>NO</md-option>
+        </md-select>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-b-1-5">
+        <md-select [style.width]="'100%'" required
+          placeholder="{{ assignSelectedLanguageValue?.inSomeoneInYourFamliySatyingwithYouCurrentlyWorkingForEssentialServicesInPublicExposedPlaces}}"
+          [(ngModel)]="famliypublicexposedplaces" name="famliypublicexposedplaces" #famliypublicexposed="ngModel"
+          (change)="populateRisk()">
+          <md-option value='YES'>YES</md-option>
+          <md-option value='NO'>NO</md-option>
+        </md-select>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-b-1-5">
+        <h5>{{ assignSelectedLanguageValue?.areYouHavingOneOrMoreOfTheFollowingSymptoms }}</h5>
+        <div *ngFor="let symptoms of symptomsList; let i = index">
+          <md-checkbox color="primary" class="font-weight-normal" name="symptoms{{i}}" id="symptoms{{i}}"
+            [(ngModel)]="symptoms.checked" [disabled]="symptoms.disable"
+            (change)="onsymptomsCheckboxChange($event, symptoms);populateRisk();">{{symptoms.Value}}
+          </md-checkbox>
+        </div><br />
+      </div>
+      <div class="clearfix"></div>
+      <div *ngIf="isSymptomsNone">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-b-1-5">
+          <h5>{{ assignSelectedLanguageValue?.doYouHaveAnyOfTheFollowingSymptoms }}</h5>
+          <div *ngFor="let symptoms11 of symptomsList11; let i = index">
+            <md-checkbox color="primary" class="font-weight-normal" name="symptoms11{{i}}" id="symptoms11{{i}}"
+              [(ngModel)]="symptoms11.checked" [value]="symptoms11" [disabled]="symptoms11.disable"
+              (change)="onSymptoms11CheckboxChagen($event, symptoms11)">{{symptoms11.Value}}
+            </md-checkbox>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+        <div *ngIf="isShowFever">
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-b-1-5">
+            <md-select [style.width]="'100%'" required
+              placeholder="{{ assignSelectedLanguageValue?.sinceHowLongYouHaveFever}}" [(ngModel)]="howlonghavefever"
+              name="howlonghavefever" #havefever="ngModel">
+              <md-option *ngFor="let feverDuration of feverDurationList" [value]="feverDuration">
+                {{feverDuration.Value}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-b-1-5">
+            <md-select [style.width]="'100%'" required
+              placeholder="{{ assignSelectedLanguageValue?.pleaseSelectHighestRecordedFever}}"
+              [(ngModel)]="highhestrecordedfever" name="highhestrecordedfever" #higsetfever="ngModel">
+              <md-option *ngFor="let feverStatus of feverStatsList" [value]="feverStatus">
+                {{feverStatus.Value}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 p-b-1-5">
+            <md-select [style.width]="'100%'" required
+              placeholder="{{ assignSelectedLanguageValue?.whatIsTheFeverPattern}}" [(ngModel)]="feverpattern"
+              name="feverpattern" #isfeverpattern="ngModel">
+              <md-option *ngFor="let feverPattern of feverPatternList" [value]="feverPattern">
+                {{feverPattern.Value}}
+              </md-option>
+            </md-select>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8 p-b-1-5">
+        <md-card style="background-color: #dadfe00d;">
+          <md-card-header>
+            <md-card-title><strong>{{assignSelectedLanguageValue?.riskOfCovid19}}</strong></md-card-title>
+          </md-card-header>
+          <md-card-content>
+            <h4 style="color: green; padding-left: 1%;font-weight: 600;">{{RiskOfCovid19}}</h4>
+            <span style="padding-left: 1%;color: grey;font-size: 75%;">* {{assignSelectedLanguageValue?.riskOfCovidMessage}}</span>
+          </md-card-content>
+        </md-card>
+      </div>
+      <div class="col-xs-12 col-sm-12 p-l-lg-1 p-r-lg-1 m-t-5">
+        <button md-raised-button color="accent" [disabled]="covidForm.invalid" type="button" class="pull-right p-l-r-25"
+          (click)="saveCovidData(covidForm.value)">{{assignSelectedLanguageValue?.save}}</button>
+        <button md-raised-button color="primary" type="button" class="pull-right p-l-r-25 m-r-10"
+          (click)="onClearButton()">{{assignSelectedLanguageValue?.clear}}</button>
+      </div>
+    </div>
+  </div>
+</form>

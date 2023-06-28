@@ -1,0 +1,33 @@
+<section id="searchDialog" class="container-fluid box">
+  <div class="row title info">
+    <h4>{{ assignSelectedLanguageValue?.beneficaryConsent }}</h4>
+  </div>
+  <md-dialog-content>
+    <section class="row m-t-20">
+      <div class="col-xs-12">
+        "Namaskar, I am your Counselor (Name). Thank you for seeking counselling
+        services from 104 Helpline, (State). Our conversations throughout the
+        course of Counselling will be confidential. However, call recordings may
+        be utilized for internal training & research purposes Our team may
+        follow up with you at periodic intervals to monitor progress.You are
+        free to withdraw from the counselling service at any point of time.Do
+        you agree to these terms of service?”
+      </div>
+    </section>
+  </md-dialog-content>
+  <md-dialog-actions class="pull-right">
+    <button
+      class=""
+      color="primary"
+      (click)="closeConsent('yes')"
+      type="button"
+      style="margin: 5px; padding: 10px;"
+    >
+      {{ assignSelectedLanguageValue?.yes }}
+    </button>
+    <button class="" style="margin: 5px; padding: 10px;" color="primary" (click)="closeConsent('no')" type="button">
+      {{ assignSelectedLanguageValue?.no }}
+    </button>
+  </md-dialog-actions>
+  <div class="clearfix"></div>
+</section>

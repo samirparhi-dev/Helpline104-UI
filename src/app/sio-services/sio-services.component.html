@@ -1,0 +1,47 @@
+<div class="col-xs-12 col-sm-12" *ngIf="current_campaign == 'INBOUND'">
+  <div class="row">
+      <md-tab-group>
+        <md-tab label="{{currentLanguageSet?.grievance}}" *ngIf="screens.includes('Grievance')">
+          <app-sio-grievience-service></app-sio-grievience-service>
+        </md-tab>
+        <md-tab label="{{currentLanguageSet?.bloodOnCall}}" *ngIf="screens.includes('Blood Request')">
+          <app-sio-blood-on-call-service></app-sio-blood-on-call-service>
+        </md-tab>
+        <md-tab label="{{currentLanguageSet?.directoryServices}}" *ngIf="screens.includes('Directory Information Service')">
+          <app-directory-services [current_language]="current_language_set"></app-directory-services>
+        </md-tab>
+        <md-tab label="{{currentLanguageSet?.epidemicOutbreak}}" *ngIf="screens.includes('Epidemic Outbreak Service')">
+          <app-sio-epidemic-outbreak-service></app-sio-epidemic-outbreak-service>
+        </md-tab>
+        <md-tab label="{{currentLanguageSet?.foodSafety}}" *ngIf="screens.includes('Food safety')">
+          <app-sio-food-safety-service></app-sio-food-safety-service>
+        </md-tab>
+        <md-tab label="{{currentLanguageSet?.organDonation}}" *ngIf="screens.includes('Organ Donation')">
+          <app-sio-organ-donation-service></app-sio-organ-donation-service>
+        </md-tab>
+        <md-tab label="{{currentLanguageSet?.schemes}}" *ngIf="screens.includes('Health schemes')">
+          <app-sio-scheme-service></app-sio-scheme-service>
+        </md-tab>
+      </md-tab-group>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-12" *ngIf="current_campaign == 'OUTBOUND'">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12">
+      <md-tab-group>
+        <md-tab label="{{currentLanguageSet?.bloodOnCall}}" *ngIf="screens.includes('Blood Request') && outboundFor == 'Blood Request'">
+          <app-sio-blood-on-call-service  (outBoundOnCall)="callStatus($event)"></app-sio-blood-on-call-service>
+        </md-tab>
+        <md-tab label="{{currentLanguageSet?.epidemicOutbreak}}" *ngIf="screens.includes('Epidemic Outbreak Service') && outboundFor == 'Epidemic Outbreak Service'">
+          <app-sio-epidemic-outbreak-service></app-sio-epidemic-outbreak-service>
+        </md-tab>
+        <md-tab label="{{currentLanguageSet?.foodSafety}}" *ngIf="screens.includes('Food safety') && outboundFor == 'Food safety'">
+          <app-sio-food-safety-service></app-sio-food-safety-service>
+          </md-tab>
+          <md-tab label="{{currentLanguageSet?.organDonation}}" *ngIf="screens.includes('Organ Donation') && outboundFor == 'Organ Donation'">
+            <app-sio-organ-donation-service></app-sio-organ-donation-service>
+            </md-tab>
+      </md-tab-group>
+    </div>
+  </div>
+</div>

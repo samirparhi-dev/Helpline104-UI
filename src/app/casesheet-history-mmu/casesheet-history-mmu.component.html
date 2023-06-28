@@ -1,0 +1,35 @@
+  <div class="table-responsive">
+    <table class="table table-striped" [md2Data]="historyOfMMU" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="mmuCasesheetHistory">
+      <thead>
+        <tr>
+          <th id ="mmuCasesheetDate" style="width: 20%;">{{currentLanguageSet.date}}</th>
+          <th id ="mmuCasesheetVisitReason" style="width: 20%;">{{currentLanguageSet.visitReason}} </th>
+          <th id ="mmuCasesheetVisitCategory" style="width: 20%;">{{currentLanguageSet.visitCategory}}</th>
+          <th id ="mmuCasesheetVisitCode" style="width: 10%;">{{currentLanguageSet.visitCode}}</th>
+          <th id ="mmuCasesheetAction" style="width: 15%">{{currentLanguageSet.action}}</th>
+        </tr>
+      </thead>
+      <tbody >
+          <tr *ngIf="historyOfMMU?.length==0">
+              <td colspan="5" class="record-not-found">
+                {{currentLanguageSet.noRecordFound}}
+              </td>
+            </tr>
+        <tr>
+            <tr  *ngFor="let visit of md2.data; let i = index">
+              <td class="max-width-200 min-width-50">{{visit?.benVisitDate | utcDate |date: 'dd/MM/yyyy hh:mm a'}}</td>
+              <td class="max-width-300 min-width-300">{{visit?.VisitReason}}</td>
+              <td class="max-width-300 min-width-300">{{visit?.VisitCategory}}</td>
+              <td class="max-width-300 min-width-100">{{visit?.visitCode}}</td>
+              <td><button md-raised-button color="accent" class="md-small" (click)="openDialog(visit)">{{currentLanguageSet.history}}</button></td>
+            </tr>
+        </tbody>
+        <tfoot>
+          <tr >
+            <td colspan="5">
+              <md2-pagination></md2-pagination>
+              </td>
+          </tr>
+        </tfoot>
+    </table>
+    </div>

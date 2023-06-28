@@ -1,0 +1,62 @@
+<md-grid-list class = "gridListHeight" cols="1" rowHeight="650px" (mouseup)="hidePWD()">
+    <md-grid-tile>
+      <md-card class="mdCard">
+        <md-card-title class="mdCardTitle">
+          <div class="btn-center"><img class="m-l--30" src="assets/images/Swasthya.png" alt="Logo"></div>
+        </md-card-title>
+        <md-card-content> 
+          <form class="form-horizontal cu-form-horizontal-label-left" name="loginForm" (ngSubmit)="f.form.valid && login(false)"
+            #f="ngForm" autocomplete="off">
+            <div class="row" >
+              <div class="col-xs-1 col-md-1 col-sm-1">
+                <em class="material-icons formIcons">account_box</em>
+              </div>
+              <div class="col-xs-11 col-md-11 col-sm-11">
+                <md-input-container class="full-width">
+                  <input mdInput usernameValidator  type="text" autofocus="autofocus" id="userID" placeholder="Enter User Name" [(ngModel)]="userID" name="userID" />
+                </md-input-container>
+              </div>
+            </div>
+            <div class="row" fxLayoutAlign="start end">
+              <div class="col-xs-1 col-md-1 col-sm-1">
+                <em class="material-icons formIcons">lock</em>
+              </div>
+              <div class="col-xs-11 col-md-11 col-sm-11">
+                <md-input-container class="full-width">
+                 <input mdInput type="{{dynamictype}}" id="password" placeholder="Enter Password" [(ngModel)]="password" name="password" />
+                 <md-icon  mdSuffix class="mdicon mat-icon material-icons cursorPointer" role="img" aria-hidden="true" mdTooltip="Show Password" (mousedown)='showPWD()' style="color:gray">visibility</md-icon>
+                </md-input-container>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-md-12 col-sm-12">
+                <button md-raised-button color="primary" type="submit" class="full-width largeBtn">Login</button>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 t-a-c"><span class="error_text" name="message">{{loginResult}}</span></div>
+            <div class="row m-t-25">
+              <div class="col-xs-12 col-sm-3"></div>
+              <div class="col-xs-12 col-sm-9">
+                <ul class="list-unstyled list-inline pull-right">
+                  <li class="p-r-0"><a class="cursorPointer f-c-54 f-s-13 font-regular" routerLink="/resetPassword">Forgot Password?</a></li>
+                </ul>
+              </div>
+            </div>
+          </form>
+        </md-card-content>
+      </md-card>
+      </md-grid-tile>
+  </md-grid-list>
+<footer class="footer">
+    <div class="row">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <span class="footer-text">Powered by: WIPRO</span>
+      </div>
+      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+        <p class="footer-text t-a-c">2018 <md-icon color="" class="copyright_icon">copyright</md-icon> PSMRI</p>
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+          <span class="footer-text pull-right"> Version 1.01</span>
+      </div>
+    </div>
+</footer>

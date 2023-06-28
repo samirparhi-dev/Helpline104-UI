@@ -1,0 +1,351 @@
+<div class="col-xs-12 col-sm-12">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="!showTable">
+      <div class="m-t-5">
+        <h4 class="f-s-b pull-left" *ngIf="donerDetailsSection">{{currentLanguageSet?.donorDetails}}</h4>
+        <h4 class="f-s-b pull-left" *ngIf="hospitalForm">{{currentLanguageSet?.searchHospital}}</h4>
+        <button *ngIf="currentCampaign == 'INBOUND'" md-raised-button color="accent" type="button" class="font-regular pull-right p-l-r-38 f-s-18"
+          (click)="showHistory()">{{currentLanguageSet?.history}}</button>
+      </div>
+    </div>
+    <div *ngIf="donerDetailsSection">
+      <div class="col-xs-12 col-sm-12 col-md-12" *ngIf="currentCampaign == 'INBOUND'">
+        <div class="form-group ">
+          <label for="calledEarlier">{{currentLanguageSet?.donationRequestIsFor}}</label>
+          <md-radio-group  name="donationReq" (change)="populateForm(requestFor)" [(ngModel)]="requestFor">
+            <md-radio-button class="m-l-15" color="primary" value="self">{{currentLanguageSet?.self}}</md-radio-button>
+            <md-radio-button class="m-l-15" color="primary" value="other">{{currentLanguageSet?.other}}</md-radio-button>
+          </md-radio-group>
+        </div>
+      </div>
+      <form #doner_Details_Form="ngForm" autocomplete="off">
+
+        <div class="clearfix visible-md visible-lg"></div>
+        <div class="col-xs-12 col-sm-12 col-md-12 p-a-0">
+
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+
+            <md-input-container appName [style.width]="'100%'">
+              <input mdInput autofocus="autofocus" placeholder="{{currentLanguageSet?.firstName}}" required disabled={{disableFlag}}
+                minlength="3" maxlength="25" name="firstName" [(ngModel)]="firstName" #first="ngModel" (keyup)="nameInput(first.value)">
+              <md-hint *ngIf="!first.valid && requestFor == 'other'">
+
+                <span class="error_text" *ngIf="!first.required  && ( first.dirty || first.touched)">{{currentLanguageSet?.enterAtleastThreeCharacters}}</span>
+              </md-hint>
+            </md-input-container>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+
+            <md-input-container appName [style.width]="'100%'">
+              <input mdInput disabled={{disableFlag}} placeholder="{{currentLanguageSet?.lastName}}" maxlength="25"
+                name="lastName" [(ngModel)]="lastName">
+            </md-input-container>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+            <md-select [style.width]="'100%'" disabled={{disableFlag}} required placeholder="{{currentLanguageSet?.gender}}"
+              [(ngModel)]="gender" name="gender" #genderSelected="ngModel" (change)="genderchange(genderSelected.value)" (blur)="genderchange(genderSelected.value)">
+              <md-option *ngFor="let gen of genders" [value]="gen.genderID">
+                {{gen.genderName}}
+              </md-option>
+            </md-select>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-9">
+
+            <md-input-container appMobileNumber [style.width]="'100%'">
+              <input mdInput placeholder="{{currentLanguageSet?.age}}" max="120" disabled={{disableFlag}} required name="age"
+                [(ngModel)]="age" (keyup)="ageInput(age)" #ageEvent="ngModel" minlength="1" maxlength="3">
+              <md-hint *ngIf=" ageFlag  && requestFor == 'other'">
+                <span class="error_text" *ngIf="ageFlag  && ( ageEvent.dirty || ageEvent.touched)">{{currentLanguageSet?.entervalidAgeMax120}}</span>
+              </md-hint>
+            </md-input-container>
+          </div>
+          <div class="clearfix"></div>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5" *ngIf="currentCampaign == 'INBOUND'">
+
+            <md-select [disabled]="currentCampaign == 'OUTBOUND'" [style.width]="'100%'" required placeholder="{{currentLanguageSet?.donationType}}"
+              [(ngModel)]="donationType" name="donationType" #donatedOrg="ngModel" (change)="typeOfDonation(donationType,null)">
+              <md-option *ngFor="let donationType of donationTypes | OrderBy: 'donationType'" [value]="donationType.donationTypeID">{{donationType.donationType}}</md-option>
+            </md-select>
+
+          </div>
+
+
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5" *ngIf="organDonation && currentCampaign == 'INBOUND'">
+
+            <md-select required [disabled]="currentCampaign == 'OUTBOUND'" multiple [style.width]="'100%'" name="organ" placeholder="{{currentLanguageSet?.organ}}"
+              [(ngModel)]="organ" #organsType="ngModel" (change)="organType(organsType.value)">
+              <md-option *ngFor="let organ of donatableOrgans | OrderBy: 'donatableOrgan'" [value]="organ.donatableOrganID">{{organ.donatableOrgan}}</md-option>
+            </md-select>
+
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-20" *ngIf="currentCampaign == 'INBOUND'">
+
+            <md-checkbox color="primary" name="outboundReq" [(ngModel)]="outboundReq">
+              {{currentLanguageSet?.outboundRequired}}
+            </md-checkbox>
+
+          </div>
+          <div *ngIf="outboundReq && organDonation" class="clearfix"></div>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 " *ngIf="outboundReq && currentCampaign == 'INBOUND'">
+            <md2-datepicker name="dateOfOutbound" placeholder="{{currentLanguageSet?.dateOfOutbound}}" [(ngModel)]="dateOfOutbound"
+              [mode]="mode" [min]="minDate" required [style.width]="'100%'" (keydown)="preventTyping($event)">
+
+            </md2-datepicker>
+
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" *ngIf="currentCampaign == 'INBOUND'">
+            <md-input-container style="width: 100%">
+              <textarea mdInput textAreaValidator  rows="2" placeholder="{{currentLanguageSet?.remarks}}" name="remarks" [(ngModel)]="remarks"
+                maxlength="500" #remarks1></textarea>
+              <md-hint align="end" *ngIf="remarks1.dirty">{{remarks1.value.length?remarks1.value.length:0}}/500</md-hint>
+            </md-input-container>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-t-10" *ngIf="currentCampaign == 'INBOUND'">
+            <button *ngIf="currentCampaign == 'INBOUND'" md-raised-button color="accent" [disabled]="nameFlag || ageFlag || genderFlag || doner_Details_Form.invalid || (organDonation && organ?.length == '0')"
+              type="button" class="f-s-18 m-l-5 pull-right" (click)="showHospitalForm(doner_Details_Form.value)">{{currentLanguageSet?.saveDetails}}</button>
+          </div>
+        </div>
+      </form>
+      <form [formGroup]="organDonationForm" autocomplete="off" *ngIf="currentCampaign == 'OUTBOUND'">
+        <ng-container formArrayName="organDonationArray">
+
+          <div *ngFor="let org of organDonationForm.get('organDonationArray')['controls']; let i = index; let last = last" class="csss clearfix ">
+
+            <ng-container [formGroupName]="i">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <strong>
+                  <label>{{currentLanguageSet?.requestID}}: {{organDonationForm.value.organDonationArray[i].requestID }}</label>
+                </strong>
+              </div>
+
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5 ">
+
+
+                <md-select [style.width]="'100%'" required placeholder="{{currentLanguageSet?.donationType}}" formControlName="donationTypeID"
+                  (change)="typeOfDonation(organDonationForm.value.organDonationArray[i].donationTypeID,i)">
+                  <md-option *ngFor="let donationType of donationTypes | OrderBy: 'donationType'" [value]="donationType.donationTypeID">{{donationType.donationType}}</md-option>
+                </md-select>
+              </div>
+
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5" *ngIf="organDonationForm.value.organDonationArray[i].donatableOrganID != 'null' ">
+                <md-select required [style.width]="'100%'" name="organ" placeholder="{{currentLanguageSet?.organ}}"
+                   formControlName="donatableOrganID">
+                  <md-option *ngFor="let organ of donatableOrgans | OrderBy: 'donatableOrgan'" [value]="organ.donatableOrganID">{{organ.donatableOrgan}}</md-option>
+                </md-select>
+
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                <md-input-container [style.width]="'100%'">
+                  <input disabled mdInput textAreaValidator  placeholder="{{currentLanguageSet?.remarks}}" formControlName="remarks">
+                </md-input-container>
+              </div>
+              <!--{{organDonationForm.controls.organDonationArray.controls[i].invalid}}-->
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                  <button [disabled]="organDonationForm.controls.organDonationArray.controls[i].invalid" md-raised-button color="accent" type="button" class="f-s-18  m-t-5 pull-left" (click)="updateOrganOutbound(organDonationForm.value.organDonationArray[i])">{{currentLanguageSet?.update}}</button>
+                  <button *ngIf="organDonationForm.value.organDonationArray[i].requestedInstitution != null" md-raised-button color="primary"
+                  type="button" class="f-s-18 m-l-5 m-t-5 pull-left" (click)="outboundHospitals(organDonationForm.value.organDonationArray[i].requestedInstitution)">{{currentLanguageSet?.next}}</button>
+              </div>
+            </ng-container>
+            <hr *ngIf="!last">
+          </div>
+        </ng-container>
+      </form>
+    </div>
+    <div class="col-xs-12 col-sm-12 p-a-0" *ngIf="hospitalForm">
+      <form #searchHospitalForm="ngForm" autocomplete="off">
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+          <md-select class="width100" placeholder="{{currentLanguageSet?.state}}" name="state" (change)="GetDistricts(selected_state)"
+            [(ngModel)]="selected_state" #state="ngModel" required>
+            <md-option *ngFor="let state of states" [value]="state.stateID">{{state.stateName}}</md-option>
+          </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+          <md-select class="width100" placeholder="{{currentLanguageSet?.district}}" name="district" (change)="GetTaluks(selected_district)"
+            [(ngModel)]="selected_district" #district="ngModel" required>
+            <md-option *ngFor="let district of districts" [value]="district.districtID">{{district.districtName}}</md-option>
+          </md-select>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+          <md-select class="width100" placeholder="{{currentLanguageSet?.subDistrict}}" name="taluk" (change)="GetSDTB(selected_taluk)"
+            [(ngModel)]="selected_taluk">
+            <md-option *ngFor="let taluk of taluks" [value]="taluk.blockID">{{taluk.blockName}}</md-option>
+          </md-select>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+          <md-select class="width100" placeholder="{{currentLanguageSet?.village}}" name="sdtb" [(ngModel)]="selected_branch">
+            <md-option *ngFor="let sdtb of blocks" [value]="sdtb.districtBranchID">{{sdtb.villageName}}</md-option>
+          </md-select>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+          <md-select class="width100" placeholder="{{currentLanguageSet?.informationRequired}}" name="whatInformation"
+            (change)="GetSubDirectory(selected_directory)" [(ngModel)]="selected_directory" #directoryInfo="ngModel" required>
+            <md-option *ngFor="let directoryItem of directory" [value]="directoryItem.instituteDirectoryID">{{directoryItem.instituteDirectoryName}}</md-option>
+          </md-select>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+
+          <md-select class="width100" placeholder="{{currentLanguageSet?.subDirectory}}" name="subDirectory"
+            [(ngModel)]="selected_sub_directory" #subDirectory="ngModel" required>
+            <md-option *ngFor="let sub_directoryItem of sub_directory" [value]="sub_directoryItem.instituteSubDirectoryID">{{sub_directoryItem.instituteSubDirectoryName}}</md-option>
+          </md-select>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-t-10">
+
+          <button *ngIf="currentCampaign == 'OUTBOUND'" md-raised-button color="primary" type="button" class="f-s-18  m-t-5 pull-left"
+            (click)="jumpTo(1)">{{currentLanguageSet?.back}}</button>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-t-10">
+          <button md-raised-button color="accent" type="button" class="f-s-18 p-l-r-38 m-t-5 pull-right" [disabled]="searchHospitalForm.invalid"
+            (click)="GetReferralDetails(); jumpTo(3)">{{currentLanguageSet?.search}}</button>
+        </div>
+
+      </form>
+    </div>
+    <!-- searchTable-->
+    <div class="col-sm-12 col-md-12">
+      <h4 class="f-s-b pull-left" *ngIf="hospitalSearchResults">{{currentLanguageSet?.hospitalResults}}</h4>
+    </div>
+    <div class="col-xs-12 col-sm-12" *ngIf="hospitalSearchResults && currentCampaign == 'INBOUND'">
+
+      <div class="table-responsive">
+        <table class="table table-striped" [md2Data]="detailsList" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="sioOrganDonation">
+          <thead>
+            <tr>
+              <th id="sioOrganDonationHospital">{{currentLanguageSet?.hospital}}</th>
+              <th id="sioOrganDonationAddress">{{currentLanguageSet?.address}}</th>
+              <th id="sioOrganDonationState">{{currentLanguageSet?.state}}</th>
+              <th id="sioOrganDonationDistrict">{{currentLanguageSet?.district}}</th>
+              <th id="sioOrganDonationContactNo">{{currentLanguageSet?.contactNumber}}</th>
+              <th id="sioOrganDonationSelected">{{currentLanguageSet?.selected}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="md2.data.length == 0">
+              <td class="record-not-found" colspan="6">{{currentLanguageSet?.noRecordsFound}}</td>
+            </tr>
+            <tr style="cursor: pointer" *ngFor="let details of md2.data; let i=index ">
+              <td>{{details.institute?.institutionName}}</td>
+              <td>{{details.institute?.address}}</td>
+              <td>{{details.institute?.states?.stateName}}</td>
+              <td>{{details.institute?.district?.districtName}}</td>
+              <td>{{details.institute?.contactNo1}}</td>
+              <td>
+                <input type="checkbox" name="selected" (change)="onCheck($event,details,i)">
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <td colspan="6">
+              <md2-pagination></md2-pagination>
+            </td>
+          </tfoot>
+        </table>
+
+      </div>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" *ngIf="hospitalSearchResults && currentCampaign == 'INBOUND'">
+      <button [disabled]="(altNum && !validNumber) || (selectedHospitals.length==0)" md-raised-button color="accent" type="button"
+        class="f-s-18 m-r-5 pull-right" id="" *ngIf="detailsList.length > 0" (click)="sendSMS(mobileNumber)">{{currentLanguageSet?.sendHospitalDetails}}</button>
+      <md-input-container appMobileNumber *ngIf="altNum" class="pull-right">
+        <input mdInput class="pull-right" autocomplete="off" type="text" required minlength="10" maxlength="10" placeholder="{{currentLanguageSet?.mobileNumber}}"
+          name="mobileNumber" (keyup)="mobileNum(mobileNumber)" [(ngModel)]="mobileNumber" #phnNum="ngModel">
+        <md-hint *ngIf="!phnNum.valid && phnNum.touched" class="errorText">
+          {{currentLanguageSet?.tenDigitNumberRequired}}
+        </md-hint>
+      </md-input-container>
+
+
+      <md-checkbox color="primary" class="pull-right m-t-10 m-l-5" name="altNum" [(ngModel)]="altNum">
+        {{currentLanguageSet?.alternateNumber}} &nbsp;&nbsp;
+      </md-checkbox>
+    </div>
+    <div class="col-xs-12 col-sm-12" *ngIf="hospitalSearchResults && currentCampaign == 'OUTBOUND'">
+
+      <div class="table-responsive">
+        <table class="table table-striped" [md2Data]="institutes[0]" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="bufferSioOrganDonation">
+          <thead>
+            <tr>
+              <th id="bufferSioOrganDonationHospital">{{currentLanguageSet?.hospital}}</th>
+              <th id="bufferSioOrganDonationAddress">{{currentLanguageSet?.address}}</th>
+              <th id="bufferSioOrganDonationDistrict">{{currentLanguageSet?.district}}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="cursor: pointer" *ngFor="let details of md2.data; let i=index ">
+              <td>{{details.institute?.institutionName}}</td>
+              <td>{{details.institute?.address}}</td>
+              <td>{{details.institute?.district?.districtName}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <td colspan="6">
+              <md2-pagination></md2-pagination>
+            </td>
+          </tfoot>
+        </table>
+
+      </div>
+        <button md-raised-button color="primary" type="button" class="f-s-18 m-r-5 pull-left" id="" (click)="jumpTo(1)">{{currentLanguageSet?.back}}</button>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+
+  <div class="table-responsive" *ngIf="showTable">
+    <h4>
+      <strong>{{currentLanguageSet?.organDonationHistory}}</strong>
+    </h4>
+
+    <div class="table-responsive">
+
+      <table class="table table-striped" [md2Data]="data" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="sioOrganDonationHistory">
+        <thead>
+          <tr>
+            <th id="sioOrganDonationHistoryOrganID" md2SortBy="requestID">{{currentLanguageSet?.organDonationID}}</th>
+            <th id="sioOrganDonationHistoryBenName">{{currentLanguageSet?.beneficiaryName}}</th>
+            <th id="sioOrganDonationHistoryGender">{{currentLanguageSet?.gender}}</th>
+            <th id="sioOrganDonationHistoryAge" md2SortBy="donarAge">{{currentLanguageSet?.age}}</th>
+            <th id="sioOrganDonationHistoryDonationType">{{currentLanguageSet?.donationType}}</th>
+            <th id="sioOrganDonationHistoryDonatedOrgans">{{currentLanguageSet?.donatedOrgans}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="md2.data.length == 0">
+            <td class="record-not-found" colspan="7"> {{currentLanguageSet?.noRecordFound}}
+            </td>
+          </tr>
+          <tr *ngFor="let organ_history_data of md2.data">
+            <td>{{organ_history_data.requestID}}</td>
+            <td>{{organ_history_data.donarName}}</td>
+            <td>{{organ_history_data.m_gender.genderName}}</td>
+            <td>{{organ_history_data.donarAge}}</td>
+            <td>{{organ_history_data.m_donationType.donationType}}</td>
+            <td>{{organ_history_data.m_donatableOrgan.donatableOrgan}}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <md2-pagination></md2-pagination>
+            </td>
+            <td colspan="3" class="p-r-0">
+              <button md-raised-button color="primary" class="pull-right" (click)="showForm()">{{currentLanguageSet?.addOrganDonationRequest}}</button>
+
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

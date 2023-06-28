@@ -1,0 +1,35 @@
+<div class="row">
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+    <h4 class="modal-title">{{currentLanguageSet?.versionDetails}}</h4>
+  </div>
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+    <button md-button class="pull-right p-r-0" [md-dialog-close]="true">
+      <md-icon mdTooltip="close" class="mat-icon material-icons pull-right" role="img" aria-hidden="true" style="cursor: pointer">clear</md-icon>
+    </button>
+  </div>
+</div>
+<md-dialog-content>
+  <div class="table-responsive">
+    <table class="table table-striped" aria-describedby="versionDetails">
+      <thead>
+        <tr>
+          <th id ="emptyVersionDetails" ></th>
+          <th id ="api">{{currentLanguageSet?.api}}</th>
+          <th id ="ui">{{currentLanguageSet?.ui}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="table-hover">
+          <th id ="version">{{currentLanguageSet?.version}}</th>
+          <td> {{input.api_versionDetails.Version}}</td>
+          <td >{{input.uiversionDetails.Version}} </td>
+        </tr>
+        <tr class="table-hover">
+            <th id ="commit">{{currentLanguageSet?.commit}}</th>
+            <td> {{input.api_versionDetails.Commit}}</td>
+            <td >{{input.uiversionDetails.Commit}} </td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</md-dialog-content>

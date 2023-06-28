@@ -1,0 +1,327 @@
+<div class="clearfix"></div>
+<div class="col-xs-12 col-sm-12 b-t-2-w dashboard-m-t-45">
+  <div class="panel-body card p-a-0 bg-white ">
+    <div class="container-fluid p-a-0 height-450">
+      <div class=" b-t-2-w">
+        <div class="col-xs-12 col-sm-12">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 ">
+              <nav class="navbar navbar-default m-b-0">
+                <div class="container-fluid">
+                  <div>
+                    <label>
+                      <h4 class="f-s-b m-t-15">{{currentLanguageSet?.outboundWorklist}}</h4>
+                    </label>
+                    <button [disabled]="disableDialingWorklist" md-raised-button color="primary" class="pull-right m-t-6" (click)="dashboard()">{{currentLanguageSet?.backToDashboard}}</button>
+                  </div>
+                </div>
+              </nav>
+            </div>
+          </div>
+          <div class="row" *ngIf="!displayHistory">
+            <div class="col-xs-12 col-sm-12">
+
+
+
+
+
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div *ngIf="current_role==='MO'" class="table-responsive">
+                  <table id="outbondListTable" class="table table-striped" [md2Data]="moOutbondWorklist" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="outboundWorklist">
+                    <thead>
+                      <tr>
+
+                        <th id="outboundWorklistSNo">{{currentLanguageSet?.sno}}</th>
+                        <th id="outboundWorklistPhoneNumber">{{currentLanguageSet?.phoneNumber}}</th>
+                        <th id="outboundWorklistBeneficiaryID">{{currentLanguageSet?.beneficiaryId}}</th>
+                        <th id="outboundWorklistBeneficiaryName">{{currentLanguageSet?.beneficiaryName}}</th>
+                        <th id="outboundWorklistRemarks">{{currentLanguageSet?.remarks}}</th>
+                        <th id="outboundWorklistPreferredDate">{{currentLanguageSet?.preferredDate}}</th>
+                        <th id="outboundWorklistNoOfAttempts">{{currentLanguageSet?.noOfAttempts}}</th>
+                        <th id="outboundWorklistAction" class="min-width-90">{{currentLanguageSet?.action}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="md2.data.length == 0">
+                        <td class="t-a-c record-not-found" colspan="8">{{currentLanguageSet?.noOutboundCallExists}}</td>
+                      </tr>
+                      <tr class="cursorPointer" *ngFor="let listItem of md2.data; let i= index">
+
+                        <td>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}} </td>
+                        <td>{{listItem?.beneficiary?.benPhoneMaps[0]?.phoneNo}}</td>
+                        <td>{{listItem?.beneficiary?.beneficiaryID}}</td>
+                        <td>{{listItem?.beneficiary?.firstName}} {{listItem?.beneficiary?.lastName}}</td>
+                        <td>{{listItem?.requestedFor}}</td>
+                        <td>{{listItem?.prefferedDateTime| utcDate | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{listItem?.noOfTrials ? listItem?.noOfTrials : '0'}}</td>
+                        <td class="p5-0-5-0">
+                          <button md-mini-fab color="primary" [disabled]="disableDialingWorklist" (click)="history(listItem,i)"  mdTooltip="{{currentLanguageSet?.view}}">
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">history</md-icon>
+                          </button>
+                          <button class="m-l-10" [disabled]="disableDialingWorklist" md-mini-fab color="accent" (click)="viewHistory(listItem,i)"
+                            mdTooltip="{{currentLanguageSet?.dial}}" >
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call</md-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="8">
+                          <md2-pagination></md2-pagination>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <div *ngIf="current_role==='CO'" class="table-responsive">
+                  <table id="outbondListTable" class="table table-striped" [md2Data]="coOutbondWorklist" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="coOutbondWorklistDetails">
+                    <thead>
+                      <tr>
+
+                        <th id="coOutbondWorklistSNo">{{currentLanguageSet?.sno}}</th>
+                        <th id="coOutbondWorklistPhoneNumber">{{currentLanguageSet?.phoneNumber}}</th>
+                        <th id="coOutbondWorklistBeneficiaryID">{{currentLanguageSet?.beneficiaryId}}</th>
+                        <th id="coOutbondWorklistBeneficiaryName">{{currentLanguageSet?.beneficiaryName}}</th>
+                        <th id="coOutbondWorklistRemarks">{{currentLanguageSet?.remarks}}</th>
+                        <th id="coOutbondWorklistPreferredDate">{{currentLanguageSet?.preferredDate}}</th>
+                        <th id="coOutbondWorklistNoOfAttempts">{{currentLanguageSet?.noOfAttempts}}</th>
+                        <th id="coOutbondWorklistAction" class="min-width-90">{{currentLanguageSet?.action}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="md2.data.length == 0">
+                        <td class="t-a-c record-not-found" colspan="8">{{currentLanguageSet?.noOutboundCallExists}}</td>
+                      </tr>
+                      <tr class="cursorPointer" *ngFor="let listItem of md2.data; let i= index">
+                        <td>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}} </td>
+                        <td>{{listItem?.beneficiary?.benPhoneMaps[0]?.phoneNo}}</td>
+                        <td>{{listItem?.beneficiary?.beneficiaryID}}</td>
+                        <td>{{listItem?.beneficiary?.firstName}} {{listItem?.beneficiary?.lastName}}</td>
+                        <td>{{listItem?.requestedFor}}</td>
+                        <td>{{listItem?.prefferedDateTime| utcDate | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{listItem?.noOfTrials ? listItem?.noOfTrials : '0'}}</td>
+                        <td class="p5-0-5-0">
+                          <button md-mini-fab color="primary" [disabled]="disableDialingWorklist" (click)="history(listItem,i)"  mdTooltip="{{currentLanguageSet?.view}}">
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">history</md-icon>
+                          </button>
+                          <button class="m-l-10" [disabled]="disableDialingWorklist" md-mini-fab color="accent" (click)="viewHistory(listItem,i)"
+                            mdTooltip="{{currentLanguageSet?.dial}}" >
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call</md-icon>
+                          </button>
+                        </td>
+
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="8">
+                          <md2-pagination></md2-pagination>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <div *ngIf="current_role==='SIO'" class="table-responsive">
+                  <table id="outbondListTable" class="table table-striped" [md2Data]="sioOutbondWorklist" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="sioOutbondWorklistDetails">
+                    <thead>
+                      <tr>
+                        <th id="sioOutbondWorklistSNo">{{currentLanguageSet?.sno}}</th>
+                        <th id="sioOutbondWorklistPhoneNumber">{{currentLanguageSet?.phoneNumber}}</th>
+                        <th id="sioOutbondWorklistBeneficiaryID">{{currentLanguageSet?.beneficiaryId}}</th>
+                        <th id="sioOutbondWorklistBeneficiaryName">{{currentLanguageSet?.beneficiaryName}}</th>
+                        <th id="sioOutbondWorklistRemarks">{{currentLanguageSet?.remarks}}</th>
+                        <th id="sioOutbondWorklistPreferredDate">{{currentLanguageSet?.preferredDate}}</th>
+                        <th id="sioOutbondWorklistAttempts">{{currentLanguageSet?.attempts}}</th>
+                        <th id="sioOutbondWorklistService">{{currentLanguageSet?.service}}</th>
+                        <th id="sioOutbondWorklistAction" class="min-width-90">{{currentLanguageSet?.action}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngIf="md2.data.length == 0">
+                        <td class="t-a-c record-not-found" colspan="9">{{currentLanguageSet?.noOutboundCallExists}}</td>
+                      </tr>
+                      <tr *ngFor="let listItem of md2.data; let i= index">
+                        <td>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}} </td>
+                        <td>{{listItem?.beneficiary?.benPhoneMaps[0]?.phoneNo}}</td>
+                        <td>{{listItem?.beneficiary?.beneficiaryID}}</td>
+                        <td>{{listItem?.beneficiary?.firstName}} {{listItem?.beneficiary?.lastName}}</td>
+                        <td>{{listItem?.requestedFor}}</td>
+                        <td>{{listItem?.prefferedDateTime| utcDate | date: 'dd/MM/yyyy'}}</td>
+
+                        <td>{{listItem?.noOfTrials ? listItem?.noOfTrials : '0'}}</td>
+                        <td>{{listItem?.requestedFeature}}</td>
+                        <td class="p5-0-5-0">
+                          <button *ngIf="listItem.requestedFeature == 'Blood Request'" md-mini-fab color="primary" (click)="viewDetails(listItem,i)"
+                            mdTooltip="{{currentLanguageSet?.view}}" [disabled]="disableDialingWorklist">
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">history</md-icon>
+                          </button>
+                          <button *ngIf="listItem.requestedFeature != 'Blood Request'" md-mini-fab color="primary" (click)="viewSioHistory(listItem)"
+                            mdTooltip="{{currentLanguageSet?.view}}" [disabled]="disableDialingWorklist">
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">history</md-icon>
+                          </button>
+                          <button class="m-l-10" *ngIf="listItem.requestedFeature != 'Blood Request'" md-mini-fab color="accent" (click)="viewHistory(listItem,i)"
+                            mdTooltip="{{currentLanguageSet?.dial}}" [disabled]="disableDialingWorklist">
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call</md-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="9">
+                          <md2-pagination></md2-pagination>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+                <div *ngIf="current_role==='HAO' || current_role==='RO'" class="table-responsive">
+                  <table id="outbondListTable" class="table table-striped" [md2Data]="haoOutbondWorklist" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="roOutbondWorklistDetails">
+                    <thead>
+                      <tr>
+
+                        <th id="roOutbondWorklistSNo">{{currentLanguageSet?.sno}}</th>
+                        <th id="roOutbondWorklistPhoneNumber">{{currentLanguageSet?.phoneNumber}}</th>
+                        <th id="roOutbondWorklistBeneficiaryID">{{currentLanguageSet?.beneficiaryId}}</th>
+                        <th id="roOutbondWorklistBeneficiaryName">{{currentLanguageSet?.beneficiaryName}}</th>
+                        <th id="roOutbondWorklistRemarks">{{currentLanguageSet?.remarks}}</th>
+                        <th id="roOutbondWorklistPreferredDate">{{currentLanguageSet?.preferredDate}}</th>
+                        <th id="roOutbondWorklistNoOfAttempts">{{currentLanguageSet?.noOfAttempts}}</th>
+                        <th id="roOutbondWorklist" class="min-width-90">{{currentLanguageSet?.action}}</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr *ngIf="md2.data.length == 0">
+                        <td class="t-a-c record-not-found" colspan="8">{{currentLanguageSet?.noOutboundCallExists}}</td>
+                      </tr>
+                      <tr class="cursorPointer" *ngFor="let listItem of md2.data; let i= index">
+                        <td>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}} </td>
+                        <td>{{listItem?.beneficiary?.benPhoneMaps[0]?.phoneNo}}</td>
+                        <td>{{listItem?.beneficiary?.beneficiaryID}}</td>
+                        <td>{{listItem?.beneficiary?.firstName}} {{listItem?.beneficiary?.lastName}}</td>
+                        <td>{{listItem?.requestedFor}}</td>
+                        <td>{{listItem?.prefferedDateTime| utcDate | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{listItem?.noOfTrials ? listItem?.noOfTrials : '0'}}</td>
+                        <td class="p5-0-5-0">
+                          <button md-mini-fab color="primary" [disabled]="disableDialingWorklist" (click)="history(listItem,i)"  mdTooltip="{{currentLanguageSet?.view}}">
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">history</md-icon>
+                          </button>
+                          <button class="m-l-10" [disabled]="disableDialingWorklist" md-mini-fab color="accent" (click)="viewHistory(listItem,i)"
+                            mdTooltip="{{currentLanguageSet?.dial}}" >
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call</md-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="8">
+                          <md2-pagination></md2-pagination>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+
+                </div>
+
+                <div *ngIf="current_role==='PD'" class="table-responsive">
+                  <table id="outbondListTable" class="table table-striped" [md2Data]="pdOutboundWorklist" #md2="md2DataTable" [rowsPerPage]="5" aria-describedby="pdOutbondWorklistDetails">
+                    <thead>
+                      <tr>
+
+                        <th id="pdOutbondWorklistSNo">{{currentLanguageSet?.sno}}</th>
+                        <th id="pdOutbondWorklistPhoneNumber">{{currentLanguageSet?.phoneNumber}}</th>
+                        <th id="pdOutbondWorklistBeneficiaryID">{{currentLanguageSet?.beneficiaryId}}</th>
+                        <th id="pdOutbondWorklistBeneficiaryName">{{currentLanguageSet?.beneficiaryName}}</th>
+                        <th id="pdOutbondWorklistRemarks">{{currentLanguageSet?.remarks}}</th>
+                        <th id="pdOutbondWorklistPreferredDate">{{currentLanguageSet?.preferredDate}}</th>
+                        <th id="pdOutbondWorklistNoOfAttempts">{{currentLanguageSet?.noOfAttempts}}</th>
+                        <th id="pdOutbondWorklistAction" class="min-width-90">{{currentLanguageSet?.action}}</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr *ngIf="md2.data.length == 0">
+                        <td class="t-a-c record-not-found" colspan="8">{{currentLanguageSet?.noOutboundCallExists}}</td>
+                      </tr>
+                      <tr class="cursorPointer" *ngFor="let listItem of md2.data; let i= index">
+                        <td>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}} </td>
+                        <td>{{listItem?.beneficiary?.benPhoneMaps[0]?.phoneNo}}</td>
+                        <td>{{listItem?.beneficiary?.beneficiaryID}}</td>
+                        <td>{{listItem?.beneficiary?.firstName}} {{listItem?.beneficiary?.lastName}}</td>
+                        <td>{{listItem?.requestedFor}}</td>
+                        <td>{{listItem?.prefferedDateTime| utcDate | date: 'dd/MM/yyyy'}}</td>
+                        <td>{{listItem?.noOfTrials ? listItem?.noOfTrials : '0'}}</td>
+                        <td class="p5-0-5-0">
+                          <button md-mini-fab color="primary" [disabled]="disableDialingWorklist" (click)="history(listItem,i)"  mdTooltip="{{currentLanguageSet?.view}}">
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">history</md-icon>
+                          </button>
+                          <button class="m-l-10" [disabled]="disableDialingWorklist" md-mini-fab color="accent" (click)="viewHistory(listItem,i)"
+                            mdTooltip="{{currentLanguageSet?.dial}}" >
+                            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call</md-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan="8">
+                          <md2-pagination></md2-pagination>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="row" *ngIf="!displayHistory">
+            <div class="col-md-12 col-lg-12">
+              <label class="m-l-5">
+                <h4>{{currentLanguageSet?.manualDial}}</h4>
+              </label>
+
+              <form autocomplete="off">
+                <div class="col-xs-8 col-sm-4 col-md-3 col-lg-2 " appMobileNumberWithCopyPaste>
+                  <md-input-container [style.width]="'100%'" >
+                    <input [disabled]="disableDialingWorklist" required minlength="10" maxlength={{maxlength}} mdInput placeholder="{{currentLanguageSet?.phoneNumber}}" [(ngModel)]="phoneNumber"
+                      name="phoneNumber" #number="ngModel" (keyup)="checkMobNumberLength(phoneNumber)">
+                    <md-hint class="error_text" *ngIf="number.invalid && number.touched">
+                      {{currentLanguageSet?.pleaseEnterDigits}} {{maxlength}}
+                    </md-hint>
+                  </md-input-container>
+                </div>
+                <div *ngIf="disableDialingWorklist" class="col-xs-4 col-sm-3 col-md-1 col-lg-1 ">
+                  <button  md-mini-fab color="warn" (click)="closeCall()"
+                  mdTooltip="{{currentLanguageSet?.closeCall}}" >
+                  <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call_end</md-icon>
+                </button>
+                </div>
+                <div *ngIf="!disableDialingWorklist" class="col-xs-6 col-sm-3 col-md-1 col-lg-1 ">
+                  <button [disabled]="number.invalid" md-mini-fab color="accent" (click)="manualDial(number.value)"
+                  mdTooltip="{{currentLanguageSet?.dial}}" >
+                  <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call</md-icon>
+                </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-12" *ngIf="displayHistory">
+            <h4 class="pull-left f-s-b ">
+              <strong>{{currentLanguageSet?.history}}</strong>
+            </h4>
+            <em class="mdicon material-icons pull-left m-a-6 f-s-27 cursorPointer" mdTooltip="{{currentLanguageSet?.hideHistory}}" (click)="displayHistory = !displayHistory">
+              backspace
+            </em>
+            <div class="clearfix"></div>
+            <app-case-sheet-history [medHistory]="caseSheetData"></app-case-sheet-history>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

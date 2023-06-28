@@ -1,0 +1,13 @@
+<div class="title">
+  <h4>{{currentLanguageSet?.contents}}</h4>
+  <button md-icon-button mdDialogClose tooltip="{{currentLanguageSet?.close}}" class="pull-right exit width-20px" (click) = "closeDialog()">
+    <md-icon>close</md-icon>
+  </button>
+</div>
+<div class="container-fluid">
+  <md-chip-list *ngIf="showData && showData.length > 0">
+    <md-chip class = "diseaseSummaryAlignment" *ngFor="let data of showData;">{{data}}
+      <md-icon mdChipRemove (click)="remove(data)">cancel</md-icon>
+    </md-chip>
+  </md-chip-list>
+</div>

@@ -1,0 +1,713 @@
+<div class="col-xs-12 col-sm-12">
+  <div class="row" *ngIf="!showTable">
+    <div class="col-xs-12 col-sm-12 col-lg-12 col-md-12">
+      <h4 class="pull-left">
+        <strong>{{currentLanguageSet?.foodSafetyDetails}}</strong>
+      </h4>
+      <button
+        *ngIf="currentCampaign == 'INBOUND'"
+        type="button"
+        md-raised-button
+        color="accent"
+        class="pull-right m-t-5 p-l-r-38 font-regular f-s-18"
+        (click)="showHistory()"
+      >
+      {{currentLanguageSet?.history}}
+      </button>
+    </div>
+
+    <form #foodSafetyComplaintForm="ngForm" autocomplete="off">
+      <div class="col-xs-12 col-sm-12 p-a-0" *ngIf="page1">
+        <div *ngIf="currentCampaign == 'INBOUND'" class="form-group m-l-15">
+          <label class="m-r-10" for="calledEarlier"
+            >{{currentLanguageSet?.patientIs}}
+          </label>
+
+          <md-radio-group
+            
+            name="foodreq"
+            (change)="patientDetails(patientIs)"
+            [(ngModel)]="patientIs"
+          >
+            <md-radio-button color="primary" value="self">{{currentLanguageSet?.self}}</md-radio-button>
+            <md-radio-button class="m-l-15" color="primary" value="other">{{currentLanguageSet?.other}}</md-radio-button>
+          </md-radio-group>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container appName [style.width]="'100%'">
+            <input
+              mdInput
+              autofocus="autofocus"
+              placeholder="{{currentLanguageSet?.firstName}}"
+              required
+              disabled="{{ disableFlag }}"
+              minlength="3"
+              maxlength="25"
+              name="firstName"
+              [(ngModel)]="firstName"
+              #first="ngModel"
+              (keyup)="nameInput(first.value)"
+            />
+            <md-hint *ngIf="!first.valid && patientIs == 'other'">
+              <span
+                class="error_text"
+                *ngIf="!first.required && (first.dirty || first.touched)"
+                >{{currentLanguageSet?.enterAtleastThreeCharacters}}</span
+              >
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container appName [style.width]="'100%'">
+            <input
+              mdInput
+              disabled="{{ disableFlag }}"
+              placeholder="{{currentLanguageSet?.lastName}}"
+              maxlength="25"
+              name="lastName"
+              [(ngModel)]="lastName"
+            />
+          </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select
+            [style.width]="'100%'"
+            disabled="{{ disableFlag }}"
+            required
+            placeholder="{{currentLanguageSet?.gender}}"
+            [(ngModel)]="gender"
+            name="gender"
+            #genderSelected="ngModel"
+            (change)="genderchange(genderSelected.value)"
+            (blur)="genderchange(genderSelected.value)"
+          >
+            <md-option
+              *ngFor="let gen of commonData.m_genders"
+              [value]="gen.genderID"
+            >
+              {{ gen.genderName }}
+            </md-option>
+          </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container appMobileNumber [style.width]="'100%'">
+            <input
+              mdInput
+              maxlength="3"
+              placeholder="{{currentLanguageSet?.age}}"
+              disabled="{{ disableFlag }}"
+              required
+              name="age"
+              [(ngModel)]="age"
+              (keyup)="ageInput(age)"
+              #ageEvent="ngModel"
+            />
+            <md-hint *ngIf="ageFlag && patientIs == 'other'">
+              <span
+                class="error_text"
+                *ngIf="ageEvent.dirty || ageEvent.touched"
+                >{{currentLanguageSet?.entervalidAgeMax120}}</span
+              >
+            </md-hint>
+          </md-input-container>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="col-xs-12">
+          <h5 class="f-s-b m-b-20">
+            {{currentLanguageSet?.symptoms}}
+          </h5>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-4">
+          <div class="col-xs-12 col-sm-6 p-l-lg-1">
+            <label class="control-label pull-left" for="diarrhea"
+              >{{currentLanguageSet?.diarrhea}}
+              <em>*</em>
+            </label>
+          </div>
+          <div class="col-xs-12 col-sm-6 p-l-lg-1">
+            <div class="pull-left">
+              <div class="form-group">
+                <md-radio-group name="diarrhea" [(ngModel)]="diarrhea">
+                  <md-radio-button color="primary" value="1">{{currentLanguageSet?.yes}}</md-radio-button>
+                  <md-radio-button class="m-l-5" color="primary" value="0">{{currentLanguageSet?.no}}</md-radio-button>
+                </md-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-4">
+          <div class="col-xs-12 col-sm-6">
+            <label class="control-label pull-left" for="abdominalPain"
+              >{{currentLanguageSet?.abdominalPain}}
+              <em>*</em>
+            </label>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <div class="pull-left">
+              <div class="form-group">
+                <md-radio-group
+                  name="abdominalPain"
+                  [(ngModel)]="abdominalPain"
+                >
+                  <md-radio-button color="primary" value="1">{{currentLanguageSet?.yes}}</md-radio-button>
+                  <md-radio-button class="m-l-5" color="primary" value="0">{{currentLanguageSet?.no}}</md-radio-button>
+                </md-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-4">
+          <div class="col-xs-12 col-sm-6">
+            <label class="control-label pull-left" for="chillsRigors"
+              >{{currentLanguageSet?.chillsRigors}}
+              <em>*</em>
+            </label>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <div class="pull-left">
+              <div class="form-group">
+                <md-radio-group name="chillsRigors" [(ngModel)]="chillsRigors">
+                  <md-radio-button color="primary" value="1">{{currentLanguageSet?.yes}}</md-radio-button>
+                  <md-radio-button class="m-l-5" color="primary" value="0">{{currentLanguageSet?.no}}</md-radio-button>
+                </md-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-4">
+          <div class="col-xs-12 col-sm-6 p-l-lg-1">
+            <label class="control-label pull-left" for="giddiness"
+              >{{currentLanguageSet?.giddiness}}
+              <em>*</em>
+            </label>
+          </div>
+          <div class="col-xs-12 col-sm-6 p-l-lg-1">
+            <div class="pull-left">
+              <div class="form-group">
+                <md-radio-group name="giddiness" [(ngModel)]="giddiness">
+                  <md-radio-button color="primary" value="1">{{currentLanguageSet?.yes}}</md-radio-button>
+                  <md-radio-button class="m-l-5" color="primary" value="0">{{currentLanguageSet?.no}}</md-radio-button>
+                </md-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-4">
+          <div class="col-xs-12 col-sm-6">
+            <label class="control-label pull-left" for="dehydration"
+              >{{currentLanguageSet?.dehydration}}
+              <em>*</em>
+            </label>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <div class="pull-left">
+              <div class="form-group">
+                <md-radio-group name="dehydration" [(ngModel)]="dehydration">
+                  <md-radio-button color="primary" value="1">{{currentLanguageSet?.yes}}</md-radio-button>
+                  <md-radio-button class="m-l-5" color="primary" value="0">{{currentLanguageSet?.no}}</md-radio-button>
+                </md-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-4">
+          <div class="col-xs-12 col-sm-6">
+            <label class="control-label pull-left" for="isVomiting"
+              >{{currentLanguageSet?.vomiting}}
+              <em>*</em>
+            </label>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <div class="pull-left">
+              <div class="form-group">
+                <md-radio-group name="isVomiting" [(ngModel)]="vomiting">
+                  <md-radio-button color="primary" value="1">{{currentLanguageSet?.yes}}</md-radio-button>
+                  <md-radio-button class="m-l-5" color="primary" value="0">{{currentLanguageSet?.no}}</md-radio-button>
+                </md-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-4">
+          <div class="col-xs-12 col-sm-6 p-l-lg-1">
+            <label class="control-label pull-left" for="rashes"
+              >{{currentLanguageSet?.rashes}}
+              <em>*</em>
+            </label>
+          </div>
+          <div class="col-xs-12 col-sm-6 p-l-lg-1">
+            <div class="pull-left">
+              <div class="form-group">
+                <md-radio-group name="rashes" [(ngModel)]="rashes">
+                  <md-radio-button color="primary" value="1">{{currentLanguageSet?.yes}}</md-radio-button>
+                  <md-radio-button class="m-l-5" color="primary" value="0">{{currentLanguageSet?.no}}</md-radio-button>
+                </md-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-4">
+          <div class="col-xs-12 col-sm-6">
+            <label class="control-label pull-left" for="rashes"
+              >{{currentLanguageSet?.consumedFood}}
+              <em>*</em>
+            </label>
+          </div>
+          <div class="col-xs-12 col-sm-6">
+            <div class="pull-left">
+              <div class="form-group">
+                <md-radio-group name="consumedFood" [(ngModel)]="consumedFood">
+                  <md-radio-button color="primary" value="1">{{currentLanguageSet?.yes}}</md-radio-button>
+                  <md-radio-button class="m-l-5" color="primary" value="0">{{currentLanguageSet?.no}}</md-radio-button>
+                </md-radio-group>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 m-b-10">
+          <button
+            md-raised-button
+            color="primary"
+            [disabled]="nameFlag || genderFlag || ageFlag"
+            class="pull-right p-l-r-38 font-regular f-s-18"
+            (click)="captureOtherInfo()"
+          >
+          {{currentLanguageSet?.next}}
+          </button>
+        </div>
+      </div>
+
+      <div *ngIf="!page1">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md2-datepicker
+            name="fromWhen"
+            [style.width]="'100%'"
+            [max]="maxDate"
+            (change)="calculateDays($event.value)"
+            placeholder="{{currentLanguageSet?.incidentDate}}"
+            [(ngModel)]="fromWhen"
+            [mode]="mode"
+            [max]="maxDate"
+            [format]="DD / MM / YYYY"
+            #minDateControl="ngModel"
+            (keydown)="preventTyping($event)"
+          ></md2-datepicker>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container appNameSpace [style.width]="'100%'">
+            <input
+              mdInput
+              placeholder="{{currentLanguageSet?.historyOfDiet}}"
+              required
+              minlength="3"
+              maxlength="150"
+              name="historyOfDiet"
+              [(ngModel)]="historyOfDiet"
+              #history="ngModel"
+            />
+            <md-hint align="end" *ngIf="history.dirty">
+              {{ history.value.length }}/150
+            </md-hint>
+            <md-hint
+              *ngIf="history.errors && (history.touched || history.dirty)"
+            >
+              <span class="error_text">{{currentLanguageSet?.enterAtleastThreeCharacters}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select
+            [style.width]="'100%'"
+            required
+            placeholder="{{currentLanguageSet?.complaintType}}"
+            [(ngModel)]="complaintType"
+            name="complaintType"
+            #complaintTypes="ngModel"
+          >
+            <md-option
+              *ngFor="
+                let item of complaintTypesArray | OrderBy: 'complaintType'
+              "
+              [value]="item.complaintType"
+              >{{ item.complaintType }}</md-option
+            >
+          </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container appNameSpace [style.width]="'100%'">
+            <input
+              mdInput
+              placeholder="{{currentLanguageSet?.whatTypeOfFood}}"
+              required
+              minlength="3"
+              maxlength="150"
+              name="whatTypeOfFood"
+              [(ngModel)]="whatTypeOfFood"
+              #typeOfFood="ngModel"
+            />
+            <md-hint align="end" *ngIf="typeOfFood.dirty">
+              {{ typeOfFood.value.length ? typeOfFood.value.length : 0 }}/150
+            </md-hint>
+            <md-hint
+              *ngIf="
+                typeOfFood.errors && (typeOfFood.touched || typeOfFood.dirty)
+              "
+            >
+              <span class="error_text">{{currentLanguageSet?.enterAtleastThreeCharacters}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container myAddress [style.width]="'100%'">
+            <input
+              mdInput
+              placeholder="{{currentLanguageSet?.foodConsumedFrom}}"
+              required
+              minlength="3"
+              maxlength="25"
+              name="foodConsumedFrom"
+              [(ngModel)]="foodConsumedFrom"
+              #consumedFrom="ngModel"
+            />
+            <md-hint
+              *ngIf="
+                consumedFrom.errors &&
+                (consumedFrom.touched || consumedFrom.dirty)
+              "
+            >
+              <span class="error_text">{{currentLanguageSet?.enterAtleastThreeCharacters}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container appNameSpace [style.width]="'100%'">
+            <input
+              mdInput
+              maxlength="50"
+              placeholder="{{currentLanguageSet?.associatedSymptoms}}"
+              name="associatedSymptoms"
+              [(ngModel)]="associatedSymptoms"
+              #symptoms="ngModel"
+            />
+          </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select
+            [style.width]="'100%'"
+            required
+            placeholder="{{currentLanguageSet?.district}}"
+            [(ngModel)]="district"
+            name="district"
+            (change)="getSubDistrict(district)"
+            #selectDistrict="ngModel"
+          >
+            <md-option
+              *ngFor="let district of districts"
+              [value]="district.districtID"
+            >
+              {{ district.districtName }}
+            </md-option>
+          </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select
+            [style.width]="'100%'"
+            placeholder="{{currentLanguageSet?.subDistrict}}"
+            [(ngModel)]="taluk"
+            name="taluk"
+            (change)="getVillage(taluk)"
+          >
+            <md-option *ngFor="let item of subDistricts" [value]="item.blockID"
+              >{{ item.blockName }}
+            </md-option>
+          </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+          <md-select
+            [style.width]="'100%'"
+            placeholder="{{currentLanguageSet?.village}}"
+            [(ngModel)]="cityVillageName"
+            name="cityVillageName"
+          >
+            <md-option
+              *ngFor="let item of villages"
+              [value]="item.districtBranchID"
+              >{{ item.villageName }}
+            </md-option>
+          </md-select>
+        </div>
+
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-20"
+          *ngIf="currentCampaign == 'INBOUND'"
+        >
+          <md-checkbox
+            color="primary"
+            name="outboundReq"
+            [(ngModel)]="outboundReq"
+          >
+          {{currentLanguageSet?.outboundRequired}}
+          </md-checkbox>
+        </div>
+
+        <div
+          class="col-xs-12 col-sm-6 col-md-3 col-lg-3"
+          *ngIf="outboundReq && currentCampaign == 'INBOUND'"
+        >
+          <md2-datepicker
+            name="dateOfOutbound"
+            placeholder="{{currentLanguageSet?.dateOfOutbound}}"
+            [(ngModel)]="dateOfOutbound"
+            [mode]="mode"
+            [min]="minDate"
+            required
+            [style.width]="'100%'"
+            (keydown)="preventTyping($event)"
+          >
+          </md2-datepicker>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container [style.width]="'100%'">
+            <textarea
+              mdInput
+              textAreaValidator 
+              placeholder="{{currentLanguageSet?.remarks}}"
+              rows="2"
+              name="remarks"
+              maxlength="500"
+              [(ngModel)]="remarks"
+              maxlength="500"
+              (keyup)="updateCount()"
+              #textareaRemarks
+            ></textarea>
+            <md-hint align="end" *ngIf="textareaRemarks.dirty">
+              {{
+                textareaRemarks.value.length ? textareaRemarks.value.length : 0
+              }}/500
+            </md-hint>
+          </md-input-container>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="form-group">
+            <button
+              md-raised-button
+              color="primary"
+              class="p-l-r-38 font-regular f-s-18"
+              (click)="capturePrimaryInfo()"
+            >
+            {{currentLanguageSet?.back}}
+            </button>
+            <button
+              *ngIf="currentCampaign == 'INBOUND'"
+              [disabled]="foodSafetyComplaintForm.invalid"
+              type="button"
+              md-raised-button
+              color="accent"
+              class="font-regular f-s-18 m-r-5 pull-right"
+              (click)="saveFoodSafetyComplaint(foodSafetyComplaintForm.value)"
+            >
+            {{currentLanguageSet?.save}}
+            </button>
+            <button
+              *ngIf="currentCampaign == 'OUTBOUND'"
+              [disabled]="foodSafetyComplaintForm.invalid"
+              type="button"
+              md-raised-button
+              color="accent"
+              class="font-regular f-s-18 m-r-5 pull-right"
+              (click)="saveFoodSafetyComplaint(foodSafetyComplaintForm.value)"
+            >
+            {{currentLanguageSet?.update}}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-12">
+  <div *ngIf="showTable">
+    <div class="row" *ngIf="current_role === 'HAO'">
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-30 m-l-10">
+        <md-radio-group
+          class=""
+          [(ngModel)]="searchType"
+          (change)="filterTerm = ''; onSearchChange(searchType)"
+        >
+          <md-radio-button
+            color="primary"
+            value="ComplaintID"
+            checked="checked"
+            name="ComplaintID"
+            ><strong>{{currentLanguageSet?.complaintId}}</strong>
+          </md-radio-button>
+          <md-radio-button
+            class="m-l-10"
+            color="primary"
+            value="MobileNumber"
+            name="MobileNumber"
+            ><strong>{{currentLanguageSet?.mobileNumber}}</strong>
+          </md-radio-button>
+        </md-radio-group>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4">
+        <form #foodSafetySearch="ngForm">
+          <md-input-container
+            class="m-t-10"
+            style="width: 60%"
+            *ngIf="searchType === 'ComplaintID'"
+          >
+            <input
+              mdInput
+              idValidator
+              placeholder="{{currentLanguageSet?.complaintId}}"
+              name="search"
+              [(ngModel)]="filterTerm"
+              [minlength]="minLength"
+              [maxlength]="maxLength"
+              #search="ngModel"
+              autocomplete="off"
+            />
+          </md-input-container>
+          <md-input-container
+            class="m-t-10"
+            style="width: 60%"
+            *ngIf="searchType === 'MobileNumber'"
+            appMobileNumber
+          >
+            <input
+              mdInput
+              pattern="^[0-9]*$"
+              placeholder="{{currentLanguageSet?.mobileNumber}}"
+              name="search"
+              [(ngModel)]="filterTerm"
+              [minlength]="minLength"
+              [maxlength]="maxLength"
+              #search="ngModel"
+              autocomplete="off"
+              
+            />
+          </md-input-container>
+          <button
+            md-mini-fab
+            color="primary"
+            class="m-r-5 m-l-5"
+            (click)="filterFeedbackList(filterTerm)"
+            [disabled]="foodSafetySearch.invalid"
+          >
+            <md-icon
+              mdSuffix
+              class="mat-icon material-icons"
+              mdTooltip="{{currentLanguageSet?.search}}"
+              role="img"
+              aria-hidden="true"
+              style="cursor: pointer"
+              >search</md-icon
+            >
+          </button>
+          <button
+            md-raised-button
+            color="accent"
+            [disabled]="viewALL"
+            type="button"
+            class="m-l-10"
+            (click)="revertFullTable()"
+          >
+          {{currentLanguageSet?.clear}}
+          </button>
+        </form>
+      </div>
+    </div>
+    <h4>
+      <strong>{{currentLanguageSet?.foodSafetyDetails}}</strong>
+    </h4>
+
+    <div class="table-responsive">
+      <table
+        class="table table-striped"
+        [md2Data]="filteredFeedbackList"
+        #md2="md2DataTable"
+        [rowsPerPage]="4"
+        aria-describedby="sioFoodSafety"
+      >
+        <thead>
+          <tr>
+            <th id="sioFoodSafety" md2SortBy="requestID">
+              {{currentLanguageSet?.complaintId}}
+            </th>
+            <th id="sioFoodSafetyDietHistory">
+              {{currentLanguageSet?.historyOfDiet}}
+            </th>
+            <th id="sioFoodSafetyFoodConsumed">
+              {{currentLanguageSet?.hadConsumedFood}}
+            </th>
+            <th id="sioFoodSafetyTypeOfFood">
+              {{currentLanguageSet?.typeOfFood}}
+            </th>
+            <th id="sioFoodSafetyFoodConsumedFrom">
+              {{currentLanguageSet?.foodConsumedFrom}}
+            </th>
+            <th id="sioFoodSafetyAssociatedSymptoms">
+              {{currentLanguageSet?.associatedSymptoms}}
+            </th>
+            <th id="sioFoodSafetyTypeOfRequest" md2SortBy="typeOfRequest">
+              {{currentLanguageSet?.natureOfComplaint}}
+            </th>
+            <th id="sioFoodSafetyRemarks">
+              {{currentLanguageSet?.remarks}}
+            </th>
+            <th id="sioFoodSafetyDateOfComplaint">
+              {{currentLanguageSet?.dateOfComplaint}}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="md2.data.length < 1">
+            <td colspan="9" class="textAlign">
+              {{currentLanguageSet?.noRecordsFound}}
+            </td>
+          </tr>
+          <tr *ngFor="let sio of md2.data">
+            <td>{{ sio.requestID }}</td>
+            <td>{{ sio.historyOfDiet }}</td>
+            <td>{{ sio.isFoodConsumed ? "Yes" : "No" }}</td>
+            <td>{{ sio.typeOfFood }}</td>
+            <td>{{ sio.foodConsumedFrom }}</td>
+            <td>{{ sio.associatedSymptoms }}</td>
+            <td>{{ sio.typeOfRequest }}</td>
+            <td>{{ sio.remarks }}</td>
+            <td>{{ sio.createdDate | date: "dd/MM/yyyy" }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5">
+              <md2-pagination></md2-pagination>
+            </td>
+            <td colspan="4" class="p-r-0">
+              <button
+                md-raised-button
+                color="primary"
+                class="pull-right"
+                (click)="showForm()"
+              >
+              {{currentLanguageSet?.addFoodSafetyComplaint}}
+              </button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

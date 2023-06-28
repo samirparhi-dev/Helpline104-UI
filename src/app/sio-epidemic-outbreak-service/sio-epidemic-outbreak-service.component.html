@@ -1,0 +1,167 @@
+<div class="col-xs-12 col-sm-12" *ngIf="!showTable">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <h4 class="pull-left">
+        <strong>{{currentLanguageSet?.epidemicDetails}}</strong>
+      </h4>
+      <button *ngIf="currentCampaign == 'INBOUND'" md-raised-button color="accent" type="button" class="pull-right p-l-r-38 m-t-5 font-regular f-s-18 " (click)="showHistory()">{{currentLanguageSet?.history}}</button>
+    </div>
+    <form #epidemic_Details_Form="ngForm" autocomplete="off" id="epidemic_form">
+      <div class="col-xs-12 col-sm-12 p-a-0">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.natureOfComplaint}}" [style.width]="'100%'" [(ngModel)]="noc"
+              name="NOC" required #natureComplaint="ngModel">
+              <md-option *ngFor="let complaintType of epidemicComplaintTypes" [value]="complaintType.feedbackNature">
+                {{complaintType.feedbackNature}}
+              </md-option>
+            </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-9">
+
+          <md-input-container [style.width]="'100%'" appMobileNumber>
+            <input mdInput placeholder="{{currentLanguageSet?.numberOfPeopleAffected}}" id="affectedNumber" name="affectedNumber"
+              [(ngModel)]="affectedNumber" maxlength="9" required #personsAffected="ngModel">
+
+            <md-hint *ngIf="!personsAffected.valid && personsAffected.touched">
+              <span class="error_text">{{currentLanguageSet?.enterNumberOfPerson}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.affectedDistrict}}" [style.width]="'100%'" id="district" name="district"
+              [(ngModel)]="district" required (change)="getTaluks(district,null)">
+              <md-option *ngFor="let district of districts" [value]="district.districtID">{{district.districtName}}
+              </md-option>
+            </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.affectedSubDistrict}}" [style.width]="'100%'" id="Taluk" name="Taluk"
+              [(ngModel)]="taluk" required (change)="getVillages(taluk,null)">
+              <md-option *ngFor="let taluk of taluks" [value]="taluk.blockID">{{taluk.blockName}}
+              </md-option>
+            </md-select>
+        </div>
+        <div class="clearfix visible-lg visible-md"></div>
+        
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3  p-b-1-5">
+            <md-select placeholder="{{currentLanguageSet?.affectedVillage}}" [style.width]="'100%'" id="city_village"
+              name="city_village" [(ngModel)]="city_village">
+              <md-option *ngFor="let village of villages" [value]="village.districtBranchID">{{village.villageName}}
+              </md-option>
+            </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-20" *ngIf="currentCampaign == 'INBOUND'">
+
+            <md-checkbox color="primary" name="outboundReq" (change)="outboundCheckBox($event)">
+              {{currentLanguageSet?.outboundRequired}}
+            </md-checkbox>
+
+          </div>
+          <div class="clearfix visible-sm"></div>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 " *ngIf="outboundReq"  >
+            <md2-datepicker name="dateOfOutbound" placeholder="{{currentLanguageSet?.dateOfOutbound}}" [(ngModel)]="dateOfOutbound"
+              [mode]="mode" [min]="minDate" required [style.width]="'100%'" (keydown)="preventTyping($event)">
+
+            </md2-datepicker>
+
+          </div>
+          <div *ngIf="current_campaign == 'INBOUND'" class="clearfix"></div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+          <md-input-container style="width: 100%">
+            <textarea mdInput textAreaValidator  rows="2" placeholder="{{currentLanguageSet?.remarks}}" name="remarks" [(ngModel)]="remarks"
+              maxlength="500" #remarks1></textarea>
+              <md-hint align="end" *ngIf="remarks1.dirty">{{remarks1.value.length?remarks1.value.length:0}}/500</md-hint>
+          </md-input-container>
+        </div>
+
+        <div *ngIf="currentCampaign == 'INBOUND'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <button  md-raised-button color="accent" type="button" [disabled]="epidemic_Details_Form.invalid" class="font-regular f-s-18 pull-right m-t-10"
+            (click)="registerEpidemicComplaint(epidemic_Details_Form.value)">{{currentLanguageSet?.register}}</button>
+        </div>
+        <div *ngIf="currentCampaign == 'OUTBOUND'" class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <button  md-raised-button color="accent" type="button" [disabled]="epidemic_Details_Form.invalid" class="font-regular f-s-18 pull-right m-t-10"
+            (click)="registerEpidemicComplaint(epidemic_Details_Form.value)">{{currentLanguageSet?.update}}</button>
+        </div>
+      </div>
+
+    </form>
+    <div class="clearfix"></div>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-12 " *ngIf="showTable">
+  <div class="row" *ngIf="current_role === 'HAO'">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-30 m-l-10">
+      <md-radio-group class="" [(ngModel)]="searchType" (change)="filterTerm = '';onSearchChange(searchType);">
+        <md-radio-button color="primary" value="ComplaintID" checked="checked" name="ComplaintID"><strong>{{currentLanguageSet?.complaintId}}</strong>
+        </md-radio-button>
+        <md-radio-button class="m-l-10" color="primary" value="MobileNumber" name="MobileNumber"><strong>{{currentLanguageSet?.mobileNumber}}</strong>
+        </md-radio-button>
+      </md-radio-group>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4 ">
+      <form #epidemicSearch="ngForm">
+      <md-input-container class="m-t-10" style="width: 60%;" *ngIf="searchType === 'ComplaintID'">
+        <input mdInput idValidator placeholder="{{currentLanguageSet?.complaintId}}" name="search" [(ngModel)]="filterTerm" [minlength]="minLength" [maxlength]="maxLength" #search="ngModel" autocomplete="off">
+      </md-input-container>        
+      <md-input-container class="m-t-10" style="width: 60%;" *ngIf="searchType === 'MobileNumber'" appMobileNumber>
+        <input mdInput pattern="^[0-9]*$" placeholder="{{currentLanguageSet?.mobileNumber}}" name="search" [(ngModel)]="filterTerm" [minlength]="minLength" [maxlength]="maxLength" #search="ngModel" autocomplete="off">
+      </md-input-container>
+      <button md-mini-fab color="primary" class="m-r-5 m-l-5" (click)="filterEpidemicList(filterTerm)" [disabled]="epidemicSearch.invalid">
+        <md-icon mdSuffix class="mat-icon material-icons" mdTooltip="{{currentLanguageSet?.search}}" role="img" aria-hidden="true"
+          style="cursor: pointer">search</md-icon>
+      </button>
+      <button md-raised-button color="accent" [disabled]="viewALL" type="button" class="m-l-10"
+        (click)="revertFullTable()">{{currentLanguageSet?.clear}}</button>
+      </form>
+    </div>
+  </div>
+  <h4>
+    <strong>{{currentLanguageSet?.epidemicOutbreakHistory}}</strong>
+  </h4>
+  <div class="table-responsive ">
+
+    <table class="table table-striped" [md2Data]="filteredEpidemicList" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="sioEpIdemicOutbreak">
+      <thead>
+        <tr>
+          <th id="sioEpIdemicOutbreakRequestID" md2SortBy="requestID">{{currentLanguageSet?.complaintId}}</th>
+          <th id="sioEpIdemicOutbreakNatureOfComplaint" md2SortBy="natureOfComplaint">{{currentLanguageSet?.natureOfComplaint}}</th>
+          <th id="sioEpIdemicOutbreakPeople_affected">{{currentLanguageSet?.peopleAffected}}</th>
+          <th id="sioEpIdemicOutbreakDistrict">{{currentLanguageSet?.district}}</th>
+          <th id="sioEpIdemicOutbreakSubDistrict">{{currentLanguageSet?.subDistrict}}</th>
+          <th id="sioEpIdemicOutbreakRemarks">{{currentLanguageSet?.remarks}}</th>
+          <th id="sioEpIdemicOutbreakReportedOn">{{currentLanguageSet?.reportedOn}}</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="md2.data == 0">
+          <td class="record-not-found" colspan="7">{{currentLanguageSet?.noRecordFound}}</td>
+
+        </tr>
+        <tr *ngFor="let ias of md2.data">
+          <td>{{ias.requestID}}</td>
+          <td>{{ias.natureOfComplaint}}</td>
+          <td>{{ias.totalPeopleAffected}}</td>
+          <td>{{ias.m_district?.districtName}}</td>
+          <td>{{ias.m_districtblock?.blockName}}</td>
+          <td>{{ias.remarks}}</td>
+          <td>{{ias.createdDate | utcDate | date: 'dd/MM/yyyy'}}</td>
+
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            <md2-pagination></md2-pagination>
+          </td>
+          <td colspan="4" class="p-r-0">
+            <button md-raised-button color="primary" class="pull-right" (click)="showForm() ">{{currentLanguageSet?.addEpidemicOutbreak}}</button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+
+</div>

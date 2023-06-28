@@ -1,0 +1,423 @@
+<div class="col-xs-12 col-sm-12 m-t-20" *ngIf="!showTable">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h4 class="pull-left">
+      <strong>{{currentLanguageSet?.balvivahComplaints}}</strong>
+    </h4>
+    <button
+      *ngIf="currentCampaign == 'INBOUND'"
+      md-raised-button
+      color="accent"
+      type="button"
+      class="pull-right p-l-r-38 m-t-5 font-regular f-s-18"
+      (click)="showHistory()"
+    >
+    {{currentLanguageSet?.history}}
+    </button>
+  </div>
+  <form #registerForm="ngForm" autocomplete="off">
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-input-container style="width: 125%">
+          <textarea
+            mdInput
+            textAreaValidator 
+            autofocus="autofocus"
+            maxlength="100"
+            placeholder="{{currentLanguageSet?.subjectOfComplaint}}"
+            class="max-width-200 min-width-50"
+            type="text"
+            name="subjectOfComplaint"
+            required
+            [(ngModel)]="subjectOfComplaint"
+          ></textarea>
+        </md-input-container>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-input-container appNameSpace style="width: 100%">
+          <input
+            mdInput
+            class="width120"
+            maxlength="50"
+            placeholder="{{currentLanguageSet?.childsName}}"
+            type="text"
+            name="childsName"
+            required
+            [(ngModel)]="childName"
+          />
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-input-container appNameSpace style="width: 100%">
+          <input
+            mdInput
+            maxlength="50"
+            placeholder="{{currentLanguageSet?.childsFatherName}}"
+            name="fathersName"
+            type="text"
+            required
+            [(ngModel)]="childFatherName"
+          />
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+        <md-input-container appMobileNumber style="width: 100%">
+          <input
+            mdInput
+            placeholder="{{currentLanguageSet?.childsAgeYears}}"
+            required
+            name="age"
+            [(ngModel)]="age"
+            minlength="1"
+            maxlength="2"
+            (keyup)="ageInput(age)"
+            #ageEvent="ngModel"
+          />
+        </md-input-container>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select
+          class="width100"
+          required
+          placeholder="{{currentLanguageSet?.childGender}}"
+          [(ngModel)]="childGender"
+          name="childGender"
+          #genderSelected="ngModel"
+          (change)="genderchange(genderSelected.value)"
+        >
+          <md-option
+            *ngFor="let gen of commonData.m_genders"
+            [value]="gen.genderID"
+          >
+            {{ gen.genderName }}
+          </md-option>
+        </md-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select
+          class="width100"
+          required
+          placeholder="{{currentLanguageSet?.childsState}}"
+          [(ngModel)]="childState"
+          name="childState"
+          #CstateSelected="ngModel"
+          (change)="childGetDistricts(childState)"
+        >
+          <md-option
+            *ngFor="let childState of states"
+            [value]="childState.stateID"
+          >
+            {{ childState.stateName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select
+          placeholder="{{currentLanguageSet?.childsFatherState}}"
+          required
+          [style.width]="'100%'"
+          [(ngModel)]="fatherState"
+          name="fatherState"
+          #FstateSelected="ngModel"
+          (change)="fatherGetDistricts(fatherState)"
+        >
+          <md-option
+            *ngFor="let fatherState of states"
+            [value]="fatherState.stateID"
+          >
+            {{ fatherState.stateName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select
+          class="width100"
+          placeholder="{{currentLanguageSet?.childsDistrict}}"
+          required
+          [(ngModel)]="childDistrict"
+          name="childDistrict"
+          #citySelected="ngModel"
+          (change)="childGetTaluks(childDistrict)"
+        >
+          <md-option
+            *ngFor="let childDistrict of Cdistricts"
+            [value]="childDistrict.districtID"
+          >
+            {{ childDistrict.districtName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select
+          class="width100"
+          placeholder="{{currentLanguageSet?.childsFatherDistrict}}"
+          required
+          [(ngModel)]="fatherDistrict"
+          name="fatherDistrict"
+          #citySelected="ngModel"
+          (change)="fatherGetTaluks(fatherDistrict)"
+        >
+          <md-option
+            *ngFor="let fatherDistrict of Fdistricts"
+            [value]="fatherDistrict.districtID"
+          >
+            {{ fatherDistrict.districtName }}
+          </md-option>
+        </md-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select
+          class="width100"
+          placeholder="{{currentLanguageSet?.childsSubDistrict}}"
+          required
+          [(ngModel)]="childsubDistrict"
+          name="childsubDistrict"
+          (change)="childGetBlocks(childsubDistrict)"
+        >
+          <md-option
+            *ngFor="let childsubDistrict of CsubDistricts"
+            [value]="childsubDistrict.blockID"
+            >{{ childsubDistrict.blockName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select
+          class="width100"
+          placeholder="{{currentLanguageSet?.childsFatherSubDistrict}}"
+          required
+          [(ngModel)]="fatherSubDistrict"
+          name="fatherSubDistrict"
+          (change)="fatherGetBlocks(fatherSubDistrict)"
+        >
+          <md-option
+            *ngFor="let fatherSubDistrict of FsubDistricts"
+            [value]="fatherSubDistrict.blockID"
+            >{{ fatherSubDistrict.blockName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select
+          class="width100"
+          placeholder="{{currentLanguageSet?.childsVillage}}"
+          required
+          [(ngModel)]="childVillage"
+          name="childVillage"
+        >
+          <md-option
+            *ngFor="let childVillage of Cvillages"
+            [value]="childVillage.districtBranchID"
+            >{{ childVillage.villageName }}
+          </md-option>
+        </md-select>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md-select
+          class="width100"
+          placeholder="{{currentLanguageSet?.childsFatherVillage}}"
+          required
+          [(ngModel)]="fatherVillage"
+          name="fatherVillage"
+        >
+          <md-option
+            *ngFor="let fatherVillage of Fvillages"
+            [value]="fatherVillage.districtBranchID"
+            >{{ fatherVillage.villageName }}
+          </md-option>
+        </md-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md2-datepicker
+          [min]="minDate"
+          [max]="maxDate"
+          class="width100"
+          placeholder="{{currentLanguageSet?.marriageDate}}"
+          required
+          name="marriageDate"
+          [(ngModel)]="marriageDate"
+          #mrgeDate="ngModel"
+        ></md2-datepicker>
+        <span class="error_text f-s-10"> </span>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+        <md2-datepicker
+          name="doi"
+          [style.width]="'100%'"
+          required
+          type="datetime"
+          placeholder="{{currentLanguageSet?.complaintDate}}"
+          value="{{ CurrentDate | date: 'short' }}"
+          [disabled]="isDisabled"
+        ></md2-datepicker>
+      </div>
+    </div>
+    <div>
+      <button
+        id="registerButton"
+        class="btn-green pull-right"
+        md-raised-button
+        color="primary"
+        type="accent"
+        [disabled]="registerForm.invalid"
+        (click)="registerComplaint(registerForm.value); registerForm.reset()"
+      >
+      {{currentLanguageSet?.register}}
+      </button>
+    </div>
+  </form>
+</div>
+<div class="col-xs-12 col-sm-12" *ngIf="showTable">
+  <div class="row" *ngIf="current_role === 'HAO'">
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 m-t-30 m-l-10">
+      <md-radio-group
+        class=""
+        [(ngModel)]="searchType"
+        (change)="filterTerm = ''; onSearchChange(searchType)"
+      >
+        <md-radio-button
+          color="primary"
+          value="ComplaintID"
+          checked="checked"
+          name="ComplaintID"
+          ><strong>{{currentLanguageSet?.complaintId}}</strong>
+        </md-radio-button>
+        <md-radio-button
+          class="m-l-10"
+          color="primary"
+          value="MobileNumber"
+          name="MobileNumber"
+          ><strong>{{currentLanguageSet?.mobileNumber}}</strong>
+        </md-radio-button>
+      </md-radio-group>
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-4">
+      <form #foodSafetySearch="ngForm">
+        <md-input-container
+          class="m-t-10"
+          style="width: 60%"
+          *ngIf="searchType === 'ComplaintID'"
+        >
+          <input
+            mdInput
+            idValidator
+            placeholder="{{currentLanguageSet?.complaintId}}"
+            name="search"
+            [(ngModel)]="filterTerm"
+            [minlength]="minLength"
+            [maxlength]="maxLength"
+            #search="ngModel"
+            autocomplete="off"
+          />
+        </md-input-container>
+        <md-input-container
+          class="m-t-10"
+          style="width: 60%"
+          *ngIf="searchType === 'MobileNumber'"
+          appMobileNumber
+        >
+          <input
+            mdInput
+            pattern="^[0-9]*$"
+            placeholder="{{currentLanguageSet?.mobileNumber}}"
+            name="search"
+            [(ngModel)]="filterTerm"
+            [minlength]="minLength"
+            [maxlength]="maxLength"
+            #search="ngModel"
+            autocomplete="off"
+          />
+        </md-input-container>
+        <button
+          md-mini-fab
+          color="primary"
+          class="m-r-5 m-l-5"
+          (click)="filterFeedbackList(filterTerm)"
+          [disabled]="foodSafetySearch.invalid"
+        >
+          <md-icon
+            mdSuffix
+            class="mat-icon material-icons"
+            mdTooltip="{{currentLanguageSet?.search}}"
+            role="img"
+            aria-hidden="true"
+            style="cursor: pointer"
+            >search</md-icon
+          >
+        </button>
+        <button
+          md-raised-button
+          color="accent"
+          [disabled]="viewALL"
+          type="button"
+          class="m-l-10"
+          (click)="revertFullTable()"
+        >
+        {{currentLanguageSet?.clear}}
+        </button>
+      </form>
+    </div>
+  </div>
+  <h4>
+    <strong>{{currentLanguageSet?.balvivahComplaintsHistory}}</strong>
+  </h4>
+  <div class="table-responsive">
+    <table
+      class="table table-striped"
+      [md2Data]="filteredBalVivahList"
+      #md2="md2DataTable"
+      [rowsPerPage]="4"
+      aria-describedby="balVivahComplaints"
+    >
+      <thead>
+        <tr>
+          <th id="balVivahComplaintID" md2SortBy="requestID">{{currentLanguageSet?.complaintId}}</th>
+          <th id="childName">{{currentLanguageSet?.childName}}</th>
+          <th id="fatherName">{{currentLanguageSet?.fatherName}}</th>
+          <th id="subjectComplaint">{{currentLanguageSet?.subjectOfComplaint}}</th>
+          <th id="childDistrict">{{currentLanguageSet?.childDistrict}}</th>
+          <th id="complaintDate">{{currentLanguageSet?.complaintDate}}</th>
+          <th id="marriageDate">{{currentLanguageSet?.marriageDate}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="md2.data == 0">
+          <td class="record-not-found" colspan="7">{{currentLanguageSet?.noRecordFound}}</td>
+        </tr>
+        <tr *ngFor="let ias of md2.data">
+          <td>{{ ias.requestID }}</td>
+          <td>{{ ias.childName }}</td>
+          <td>{{ ias.childFatherName }}</td>
+          <td>{{ ias.subjectOfComplaint }}</td>
+          <td>{{ ias.district?.districtName }}</td>
+          <td>{{ ias.ComplaintDate }}</td>
+          <td>{{ ias.marriageDate }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">
+            <md2-pagination></md2-pagination>
+          </td>
+          <td colspan="4" class="p-r-0">
+            <button
+              md-raised-button
+              color="primary"
+              class="pull-right"
+              (click)="showForm()"
+            >
+            {{currentLanguageSet?.addBalvivahComplaints}}
+            </button>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>

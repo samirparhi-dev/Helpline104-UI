@@ -1,0 +1,318 @@
+<div class="col-xs-12 col-sm-12">
+  <div class="row" *ngIf="showBloodRequestForm">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+      <div class="form-group">
+        <h4 class="f-s-b pull-left" *ngIf="Patient_Details">{{currentLanguageSet?.patientAndHospitalDetails}}</h4>
+        <h4 class="f-s-b pull-left" *ngIf="Bloodbank_Details">{{currentLanguageSet?.bloodBankDetails}}</h4>
+        <button *ngIf="Patient_Details" md-raised-button color="accent" type="button" class="pull-right p-l-r-38 font-regular f-s-18 m-t-5"
+          (click)="showHistory()">{{currentLanguageSet?.history}}</button>
+      </div>
+
+    </div>
+    <div class="col-xs-12 col-sm-12 col-md-12" *ngIf="Patient_Details">
+      <div class="form-group ">
+        <label for="calledEarlier">{{currentLanguageSet?.bloodRequestIsFor}}</label>
+        <md-radio-group  name="bloodreq" (change)="patientDetailsFields(bloodRequestFor)" [(ngModel)]='bloodRequestFor'>
+          <md-radio-button value="self" class="m-l-15" color="primary">{{currentLanguageSet?.self}}</md-radio-button>
+          <md-radio-button value="other" class="m-l-15" color="primary">{{currentLanguageSet?.other}}</md-radio-button>
+        </md-radio-group>
+      </div>
+    </div>
+    <form #patientDetailsForm="ngForm" id="patientDetailsForm" autocomplete="off">
+
+      <div class="clearfix visible-md visible-lg"></div>
+      <div class="col-xs-12 col-sm-12 col-md-12 m-b-5 p-a-0" [hidden]="!Patient_Details">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+
+          <md-input-container appName [style.width]="'100%'">
+            <input mdInput placeholder="{{currentLanguageSet?.firstName}}" required class="test" disabled={{disableFlag}}
+              minlength="3" autofocus="autofocus" maxlength="25" name="firstName" [(ngModel)]="firstName" #first="ngModel"
+              (keyup)="nameInput(firstName)">
+            <md-hint *ngIf="!first.valid && bloodRequestFor == 'other'">
+
+              <span class="error_text" *ngIf="!first.required  && ( first.dirty || first.touched)">{{currentLanguageSet?.enterAtleastThreeCharacters}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+
+          <md-input-container appName [style.width]="'100%'">
+            <input mdInput disabled={{disableFlag}} class="test" placeholder="{{currentLanguageSet?.lastName}}" maxlength="25"
+              name="lastName" [(ngModel)]="lastName">
+          </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select [style.width]="'100%'" class="test" disabled={{disableFlag}} required placeholder="{{currentLanguageSet?.gender}}"
+              [(ngModel)]="gender" name="gender" #genderSelected="ngModel" (change)="genderchange(genderSelected.value)" (blur)="genderchange(genderSelected.value)">
+              <md-option *ngFor="let gen of commonData.m_genders" [value]="gen.genderID">
+                {{gen.genderName}}
+              </md-option>
+            </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-b-9">
+
+          <md-input-container appMobileNumber [style.width]="'100%'">
+            <input mdInput placeholder="{{currentLanguageSet?.age}}" disabled={{disableFlag}} required maxlength="3"
+              name="age" [(ngModel)]="age" (keyup)="ageInput(age)" #ageEvent="ngModel">
+            <md-hint *ngIf=" ageFlag  && bloodRequestFor == 'other'">
+              <span class="error_text" *ngIf=" ageEvent.touched">{{currentLanguageSet?.entervalidAgeMax120}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select [style.width]="'100%'" placeholder="{{currentLanguageSet?.componentType}}" [(ngModel)]="componentType"
+              name="componentType">
+              <md-option *ngFor="let component of componentTypes | OrderBy: 'componentType'" value="{{component.componentTypeID}}">
+                {{component.componentType}}
+              </md-option>
+
+            </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select [style.width]="'100%'" required placeholder="{{currentLanguageSet?.bloodGroup}}" [(ngModel)]="bloodgroup"
+              name="bloodgroup" #bloodGrpSelected="ngModel" (change)="bloodGrpchange(bloodgroup)">
+              <md-option *ngFor="let bloodGroup of bloodGroups | OrderBy: 'bloodGroup'" [value]="bloodGroup.bloodGroupID">
+                {{bloodGroup.bloodGroup}}
+              </md-option>
+
+            </md-select>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+
+          <md-input-container [style.width]="'100%'">
+            <input mdInput appMobileNumber placeholder="{{currentLanguageSet?.bloodUnits}}" required min="1" maxlength="1" name="bloodUnits" [(ngModel)]="bloodUnits"
+              #bloodUnit="ngModel" (keyup)="bloodUnitsDonated(bloodUnits)" (change)="bloodUnitsDonated(bloodUnits)">
+            <md-hint [hidden]="(bloodUnit.valid && !bloodUnitFlag)">
+
+              <span class="error_text" *ngIf="bloodUnitFlag">{{currentLanguageSet?.enterValidBloodUnits}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+      </div>
+    </form>
+    <div class="clearfix visible-lg"></div>
+    <form #hospitalDetailForm="ngForm" id="hospitalDetailForm" autocomplete="off">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+  
+          <md-input-container [style.width]="'100%'">
+            <input mdInput appNameSpace autofocus="autofocus" placeholder="{{currentLanguageSet?.hospitalName}}" required minlength="3"
+              maxlength="150" name="HospitalName" [(ngModel)]="hospitalName" #hospital="ngModel" appNameSpace>
+              <md-hint align="end" *ngIf="hospital.dirty">
+                  {{hospital.value.length?hospital.value.length:0}}/150
+                </md-hint>
+            <md-hint *ngIf="hospital.errors && hospital.touched">
+  
+              <span class="error_text">{{currentLanguageSet?.enterAtleastThreeCharacters}}</span>
+            </md-hint>
+          </md-input-container>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 p-b-1-5">
+            <md-select [style.width]="'100%'" required placeholder="{{currentLanguageSet?.district}}" [(ngModel)]="district" name="district">
+              <md-option *ngFor="let district of districts" [value]="district.districtID">
+                {{district.districtName}}
+              </md-option>
+            </md-select>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
+          <button md-raised-button color="accent" [disabled]="hospitalDetailForm.invalid || patientDetailsForm.invalid || bloodUnitFlag" type="button" class="font-regular pull-right f-s-18 m-t-10"
+            (click)="savePatientDetails(patientDetailsForm.value,hospitalDetailForm.value)">{{currentLanguageSet?.save}}</button>
+        </div>  
+      </form>
+  </div>
+  <div *ngIf="Bloodbank_Details">
+    <div >
+      <h4 class="m-l-15">
+        <strong>{{currentLanguageSet?.bloodRequirement}}</strong>
+        <button *ngIf="current_campaign == 'INBOUND'" md-raised-button color="accent" type="button" class="pull-right p-l-r-38 font-regular f-s-18 " (click)="showHistory()">{{currentLanguageSet?.history}}</button>
+      </h4>
+
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+
+        <md-input-container [style.width]="'100%'">
+          <input mdInput placeholder="{{currentLanguageSet?.componentType}}" disabled value={{componentTypeName}}>
+        </md-input-container>
+
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+
+        <md-input-container [style.width]="'100%'">
+          <input mdInput placeholder="{{currentLanguageSet?.bloodGroup}}" disabled value={{bloodGroupName}}>
+        </md-input-container>
+
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+
+        <md-input-container [style.width]="'100%'">
+          <input mdInput appMobileNumber placeholder="{{currentLanguageSet?.bloodUnits}}" disabled value={{unitRequired}}>
+        </md-input-container>
+
+      </div>
+    </div>
+
+
+    <div class="clearfix"></div>
+    <form [formGroup]="bloodBank" #bloodForm="ngForm" autocomplete="off" id="blood_form">
+      <ng-container formArrayName="bloodBankForm">
+          <h4 class="m-l-15">
+              <strong>{{currentLanguageSet?.bloodBankDetails}}</strong>&nbsp;
+              <a *ngIf="BB_url_exists" href="{{bloodBankURL}}" target="_blank">{{currentLanguageSet?.checkBloodBankDetails}}</a>
+              <a class="m-l-10" *ngIf="blood_related_document.length>0" href="{{blood_related_document[0]?.subCatFilePath}}" target="_blank">
+                <md-icon class="f-s-22 icon" mdTooltip="{{blood_related_document[0]?.fileManger[0]?.fileName}}">file_download</md-icon>
+                <span class="m-l-10">{{blood_related_document[0]?.subCategoryName}}</span>
+              </a>
+            </h4>
+        <div *ngFor="let mail of bloodBank.get('bloodBankForm')['controls']; let i = index; let last = last" class="clearfix">
+
+            <ng-container [formGroupName]="i">
+
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" appNameSpace>
+                <md-input-container [style.width]="'100%'">
+                  <input mdInput autofocus="autofocus" placeholder="{{currentLanguageSet?.contactPerson}}" formControlName="bbPersonName"
+                    #contact_person  maxlength="25">
+                </md-input-container>
+              </div>
+
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" appName>
+                <md-input-container [style.width]="'100%'">
+                  <input mdInput placeholder="{{currentLanguageSet?.designation}}" formControlName="bbPersonDesignation" 
+                     maxlength="25" #design>
+                </md-input-container>
+              </div>
+
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" appMobileNumber >
+                <md-input-container [style.width]="'100%'">
+                  <input mdInput required placeholder="{{currentLanguageSet?.mobileNumber}}"  minlength="10" maxlength="10" formControlName="bbMobileNo"
+                    #number>
+                </md-input-container>
+              </div>
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                <md-input-container [style.width]="'100%'">
+                  <textarea mdInput placeholder="{{currentLanguageSet?.address}}" formControlName="bloodBankAddress"
+                    maxlength="100" rows="1" #fullAddress></textarea>
+                </md-input-container>
+              </div>
+
+              <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                <md-input-container [style.width]="'100%'">
+                  <textarea mdInput textAreaValidator  rows="1" placeholder="{{currentLanguageSet?.remarks}}" formControlName="remarks" ></textarea>
+                </md-input-container>
+              </div>
+              <span *ngIf="bloodBank.get('bloodBankForm')['controls'].length > 1 ">
+                <md-icon (click)="deleteInputField(i)" mdSuffix mdTooltip="{{currentLanguageSet?.deleteRow}}" class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">delete</md-icon>
+              </span>
+              <span *ngIf="last">
+                  <button [disabled]="bloodForm.invalid" md-mini-fab color="primary" class="m-l-10" 
+                  (click)="addInputField()">
+                  <md-icon mdSuffix class="mat-icon material-icons" mdTooltip="{{currentLanguageSet?.addRow}}"role="img" aria-hidden="true" style="cursor: pointer">add</md-icon>
+                </button>
+              </span>
+            </ng-container>
+          </div>
+          
+      </ng-container>
+    </form>
+    <div class="clearfix"></div>
+    <form #bloodForm2="ngForm">
+      <div class="m-b-10">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-20" *ngIf="current_campaign == 'INBOUND'">
+
+          <md-checkbox color="primary" name="outboundReq" [(ngModel)]="outboundReq">
+            {{currentLanguageSet?.outboundRequired}}
+          </md-checkbox>
+
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 " *ngIf="current_campaign == 'INBOUND'" >
+          <md2-datepicker *ngIf="outboundReq" name="dateOfOutbound" placeholder="{{currentLanguageSet?.dateOfOutbound}}" [(ngModel)]="dateOfOutbound"
+            [mode]="mode" [min]="minDate" required [style.width]="'100%'" (keydown)="preventTyping($event)">
+
+          </md2-datepicker>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3" *ngIf="current_campaign == 'OUTBOUND'">
+            <md-input-container >
+                <input mdInput placeholder="{{currentLanguageSet?.beneficiaryNumber}}" disabled  name="benNumber" [(ngModel)]="callerNumber">
+              </md-input-container>
+
+            <button *ngIf="showDialBenificiary" [disabled]="!showDialBlood" md-mini-fab color="accent" (click)="dialBeneficiary()"
+            mdTooltip="{{currentLanguageSet?.dialBeneficiary}}" >
+            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call</md-icon>
+              </button>
+              <button *ngIf="!showDialBenificiary" md-mini-fab color="warn" (click)="closeCall()"
+              mdTooltip="{{currentLanguageSet?.closeCall}}" >
+              <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call_end</md-icon>
+                </button>
+
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3" *ngIf="current_campaign == 'OUTBOUND'">
+            <md-input-container >
+                <input mdInput required placeholder="{{currentLanguageSet?.bloodbankNumber}}" minlength="10" maxlength="10" #number="ngModel" name="mobileNum" [(ngModel)]="phoneNumber">
+              </md-input-container>
+              
+            <button *ngIf="showDialBlood" [disabled]="number.invalid || !showDialBenificiary" md-mini-fab color="accent" (click)="dialBloodBank(phoneNumber)"
+            mdTooltip="{{currentLanguageSet?.dialBloodbank}}" >
+            <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call</md-icon>
+              </button>
+              <button *ngIf="!showDialBlood" md-mini-fab color="warn" (click)="closeCall()"
+              mdTooltip="{{currentLanguageSet?.closeCall}}" >
+              <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call_end</md-icon>
+                </button>
+          </div>
+          <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 m-t-20">
+            <md-checkbox color="primary" class="pull-left m-t-5" name="isRequestFulfilled" (change)="requestFullfiled(isRequestFulfilled,bloodForm.value)" [(ngModel)]="isRequestFulfilled">
+              {{currentLanguageSet?.isRequestFulfilled}}
+            </md-checkbox>
+          </div>
+        <div class="col-xs-12 col-sm-6 col-md-12 col-lg-3">
+          <button [disabled]="bloodForm.invalid || bloodForm2.invalid" md-raised-button color="accent" type="button" class="pull-right m-t-15" (click)="saveBloodDetails(bloodForm.value,bloodForm2.value)">{{currentLanguageSet?.saveAndSend}}</button>
+        </div>
+    </div>
+    </form>
+  </div>
+
+  <div class="table-responsive" *ngIf="showTable">
+    <h4>
+      <strong>{{currentLanguageSet?.bloodOnCallHistory}}</strong>
+    </h4>
+    <div class="table-responsive ">
+      <table class="table table-striped" [md2Data]="data" #md2="md2DataTable" [rowsPerPage]="4" aria-describedby="sioBloodOnCall">
+        <thead>
+          <tr>
+            <th id="sioBloodOnCallRequestID" md2SortBy="requestID">{{currentLanguageSet?.bloodRequestId}}</th>
+            <th id="sioBloodOnCallName">{{currentLanguageSet?.recipientName}}</th>
+            <th id="sioBloodOnCallRecipientAge" md2SortBy="recipientAge">{{currentLanguageSet?.recipientAge}}</th>
+            <th id="sioBloodOnCallBloodBroup">{{currentLanguageSet?.bloodGroup}}</th>
+            <th id="sioBloodOnCallComponentType">{{currentLanguageSet?.componentType}}</th>
+            <th id="sioBloodOnCallHospital">{{currentLanguageSet?.hospitalAdmited}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="md2.data.length == 0">
+            <td class="record-not-found" colspan="6">{{currentLanguageSet?.noRecordsFound}}</td>
+          </tr>
+          <tr *ngFor="let sio of md2.data">
+            <td>{{sio.requestID}}</td>
+            <td>{{sio.recipientName}}</td>
+            <td>{{sio.recipientAge}}</td>
+            <td>{{sio.m_bloodGroup.bloodGroup}}</td>
+            <td>{{sio.m_componentType.componentType}}</td>
+            <td>{{sio.hospitalAdmitted}}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">
+              <md2-pagination></md2-pagination>
+            </td>
+            <td colspan="3" class="p-r-0">
+              <button md-raised-button color="primary" class="pull-right " (click)="showForm() ">{{currentLanguageSet?.addBloodRequest}}</button>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>

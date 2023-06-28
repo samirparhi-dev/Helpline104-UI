@@ -1,0 +1,18 @@
+
+<div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <h4 class="f-s-b m-t-20 m-b-20">
+        {{currentLanguageSet?.pleaseEnterAlgorithmToUploadSymptoms}}
+      </h4>
+  </div>
+
+
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <md-input-container class="example-full-width">
+        <textarea rows="20" required mdInput  textAreaValidator   minlength="1" #cdss="ngModel" placeholder="{{currentLanguageSet?.cdss}}" [(ngModel)]="data" style="border:solid 1px grey;"></textarea>    
+      </md-input-container>
+      <button [disabled]="cdss.invalid" md-raised-button color="accent" class="pull-left m-t-15 m-l-15" (click)='submit()'>{{currentLanguageSet?.submit}}</button>
+  </div>
+</div> 
+  
+  
