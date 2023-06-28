@@ -81,7 +81,7 @@ jobs:
             npm install crypto-js --force
             npm install ng2-smart-table@1.2.1
             npm install --force
-            npm run builld
+            npm run build
             npm run ng build --prod
         
     - name: Create WAR file 
