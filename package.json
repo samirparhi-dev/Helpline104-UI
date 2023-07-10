@@ -82,6 +82,8 @@
     "tslint": "5.2.0",
     "typescript": "2.2.0",
     "webpack": "3.10.0",
-    "xlsx": "^0.13.0"
+    "xlsx": "^0.13.0",
+    "grunt": "1.0.3",
+    "grunt-war": "0.5.1"
   }
 }
