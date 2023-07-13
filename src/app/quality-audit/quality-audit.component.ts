@@ -519,9 +519,12 @@ export class QualityAuditComponent implements OnInit, DoCheck {
           }
         });
         this.CO_data = response.filter((item) => {
-          if (item.actionByCO !== undefined && item.actionByCO !== null) {
+          if (item.treatmentRecommendation !== undefined && item.treatmentRecommendation !== null) {
             return this.setCallGroupAndSubType(item);
           }
+          // if (item.actionByCO !== undefined && item.actionByCO !== null) {
+          //   return this.setCallGroupAndSubType(item);
+          // }
         });
         this.PD_data = response.filter((item) => {
           if (item.actionByPD !== undefined && item.actionByPD !== null) {
