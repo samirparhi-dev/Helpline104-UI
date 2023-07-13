@@ -818,6 +818,7 @@
             <strong>{{ assignSelectedLanguageValue?.patientAge }}</strong>
           </td>
           <td class="col-xs-12 col-sm-3">{{ data.patientAge }}</td>
+
           <td class="col-xs-12 col-sm-3 p-l-0">
             <strong> {{ assignSelectedLanguageValue.gender }} :</strong>
           </td>
@@ -855,10 +856,34 @@
           <td class="col-xs-12 col-sm-3">
             {{ data?.subCategoryDetails?.subCategoryName }}
           </td>
+
           <td class="col-xs-12 col-sm-3 p-l-0">
-            <strong> {{ assignSelectedLanguageValue?.actionByCo }} :</strong>
+            <strong>{{ assignSelectedLanguageValue?.presentChiefComplaint }}</strong>
           </td>
-          <td class="col-xs-12 col-sm-3">{{ data.actionByCO }}</td>
+          <td class="col-xs-12 col-sm-3">{{ data.diseaseSummary }}</td>
+
+          <!-- <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.riskLevel }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.riskLevel }}</td> -->
+
+        </tr>
+
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.treatmentRecommendation }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.treatmentRecommendation }}</td>
+
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <!-- <strong> {{ assignSelectedLanguageValue?.actionByCo }} :</strong> -->
+            <strong>{{
+              data.isChiefComplaint
+                ? "Provisonal/Selected Diagnosis :"
+                : "Information Given :"
+            }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.selecteDiagnosis }}</td>
         </tr>
         <tr>
           <td class="col-xs-12 col-sm-3 p-l-0">
@@ -889,6 +914,12 @@
             <strong>{{ assignSelectedLanguageValue?.callSubtype }} :</strong>
           </td>
           <td class="col-xs-12 col-sm-3">{{ callsType }}</td>
+        </tr>
+        <tr>
+          <td class="col-xs-12 col-sm-3 p-l-0">
+            <strong>{{ assignSelectedLanguageValue?.riskLevel }}</strong>
+          </td>
+          <td class="col-xs-12 col-sm-3">{{ data.riskLevel }}</td>
         </tr>
         <tr>
           <td class="col-xs-12 col-sm-3 p-l-0">

@@ -220,6 +220,10 @@ export class CaseSheetComponent implements OnInit {
   treatmentRecommendation: any;
   riskLevel: any;
   benHihlData: Array<any> = [];
+  pccFlag : boolean = false;
+  treatmentRecommendationFlag : boolean = false;
+  categoryFlag : boolean = false;
+  saveMainFlag : boolean = false;
  
   constructor(
     private _userData: UserBeneficiaryData,
@@ -283,6 +287,7 @@ export class CaseSheetComponent implements OnInit {
   @ViewChild("patientDetailForm") patientDetailForm: NgForm;
   @ViewChild("covidVaccineForm") covidVaccineForm: NgForm;
   ngOnInit() {
+    // this.saveMainFlag = false;
     this.currentLanguageSetValue();
     this.screens = this.saved_data.screens;
     this.getCovidVaccineMaster();
@@ -1542,23 +1547,35 @@ fetchBenenficiaryDetails()
   caseSheetObj: any = {};
   saveCaseSheetData(values: any) {
     if (this.current_role === "CO") {
+      // if(this.pcc.length>0 && this.treatmentRecommendation.length>0){
+      //   this.saveMainFlag = true;
+      // }
       if (
-        this.pcc !== undefined &&
+        (this.pcc !== undefined &&
         this.pcc !== null &&
         this.pcc !== "" &&
-        this.pcc.length !== 0
+        this.pcc.length !== 0)
       ) {
-        this.saveCasesheetValues(values);
-      } else {
-        this.alertMessage.alert(this.currentLanguageSet.pleaseFillPcc);
+        this.pccFlag = true;
       }
+      
+      if(this.pccFlag ){
+        this.saveCasesheetValues(values);
+      }
+
+      else{
+        this.pccFlag=false;
+      }
+
+
     } else {
       if (
         (this.pcc !== undefined && this.pcc !== null && this.pcc !== "") ||
         (values.diseasesSummary !== undefined &&
           values.diseasesSummary !== null &&
-          values.diseasesSummary !== "")
+          values.diseasesSummary !== "") 
       ) {
+          //  this.treatmentRecommendationFlag = true;
         this.saveCasesheetValues(values);
       } else {
         this.alertMessage.alert(
@@ -2056,9 +2073,11 @@ fetchBenenficiaryDetails()
 }
 
   formReset() {
+    this.pccFlag=false;
     this.disablenoSymptom = false;
     this.diableOtherSymptom = false;
     this.pcc = "";
+    this.treatmentRecommendation = "";
     this.sctID_psd = "";
     this.sctID_pcc = "";
     this.sctID_pcc_toSave = "";

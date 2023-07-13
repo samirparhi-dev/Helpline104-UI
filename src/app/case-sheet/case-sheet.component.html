@@ -345,7 +345,7 @@
               placeholder="{{ currentLanguageSet?.presentChiefComplaint }} *"
               rows="2"
               name="copcc"
-              [(ngModel)]="pcc"
+              [(ngModel)]="pcc" 
               #pccs="ngModel"
             ></textarea>
             <md-hint>
@@ -660,6 +660,7 @@
               rows="2"
               name="treatmentRecommendation"
               [(ngModel)]="treatmentRecommendation"
+              required
               maxlength="300" minlength="3"
               #Treatment = "ngModel"
             ></textarea>
@@ -1270,7 +1271,8 @@
             HaoActionErr ||
             MoActionErr ||
             disableSaveButton ||
-            disableSaveForGender
+            disableSaveForGender 
+            
           "
           type="button"
           class="pull-right p-l-r-25"
