@@ -21,28 +21,31 @@
 */
 
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OutboundSearchRecordsComponent } from './outbound-search-records.component';
+module.exports = function(grunt) {
 
-describe('OutboundSearchRecordsComponent', () => {
-  let component: OutboundSearchRecordsComponent;
-  let fixture: ComponentFixture<OutboundSearchRecordsComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ OutboundSearchRecordsComponent ]
-    })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(OutboundSearchRecordsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  grunt.loadNpmTasks('grunt-war');
+  // Project configuration.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    war: {
+      target: {
+        options: {
+          war_dist_folder: 'target',
+          /* Folder where to generate the WAR. */
+          war_name: '104ui-v1.0',
+          /* The name fo the WAR file (.war will be the extension) */
+          webxml_display_name: '104ui-v1.0',
+        },
+        files: [{
+          expand: true,
+          cwd: 'dist',
+          src: ['**'],
+          dest: ''
+        }]
+      }
+    }
   });
 
-  it('should be created', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  grunt.registerTask('default', ['war']);
+};
