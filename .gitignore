@@ -48,4 +48,4 @@ config.json
 *.properties
 debug.log
 npm-debug.log.4044449283
-
+/.vscode
